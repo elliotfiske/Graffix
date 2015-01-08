@@ -9,7 +9,6 @@
 #include "Image.h"
 #include "types.h"
 #include "cage.cpp"
-#include <algorithm>
 
 typedef struct Point {
     int x, y, z;
@@ -21,6 +20,18 @@ int trimin(int a, int b, int c) {
 
 int trimax(int a, int b, int c) {
   return (a > b) ? (a > c ? a : c) : (b > c ? b : c);
+}
+
+double determinant(Point a, Point b, Point c) {
+  return (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y);
+}
+
+Point newPoint(int x, int y, int z) {
+  Point result;
+  result.x = x;
+  result.y = y;
+  result.z = z;
+  return result;
 }
 
 int main(void) {
@@ -41,28 +52,60 @@ int main(void) {
   
   // make a color
   color_t clr;
-
-  clr.r = 0.5;
-  clr.g = 0.5;
-  clr.b = 0.9;
+  
+  color_t clr0, clr1, clr2;
+  clr0.r = 1;
+  clr0.b = 0;
+  clr0.g = 0;
+  
+  clr1.r = 0;
+  clr1.b = 1;
+  clr1.g = 0;
+  
+  clr2.r = 0;
+  clr2.b = 0;
+  clr2.g = 1;
 
   // make a 640x480 image (allocates buffer on the heap)
   Image img(640, 480);
-  char **cagePixels;
-  cagePixels = new char*[gimp_image.height];
-  for (int ndx = 0; ndx < gimp_image.height; ndx++) {
-    cagePixels[ndx] = new char[gimp_image.width * 3];
-  }
+//  char **cagePixels;
+//  cagePixels = new char*[gimp_image.height];
+//  for (int ndx = 0; ndx < gimp_image.height; ndx++) {
+//    cagePixels[ndx] = new char[gimp_image.width * 3];
+//  }
   
 //  memcpy(*cagePixels, gimp_image.pixel_data, gimp_image.width * gimp_image.height * 3);
 
   // set a square to be the color above
+  double totTriangleArea = determinant(points[0], points[1], points[2]);
+  if (totTriangleArea < 0) {
+    Point temp = points[0];
+    points[0] = points[1];
+    points[1] = temp;
+    
+    totTriangleArea = determinant(points[0], points[1], points[2]);
+  }
+  
   for (int i=minX; i < maxX; i++) {
     for (int j=minY; j < maxY; j++) {
-      clr.r = (double) cagePixels[j % gimp_image.height][(i % gimp_image.width)*3] / 255.0;
-      clr.g = (double) cagePixels[j % gimp_image.height][(i % gimp_image.width)*3 + 1] / 255.0;
-      clr.b = (double) cagePixels[j % gimp_image.height][(i % gimp_image.width)*3 + 2] / 255.0;
 
+      Point currPoint = newPoint(i, j, 0);
+      double alpha = determinant(currPoint, points[1], points[2]);
+      double beta = determinant(currPoint, points[2], points[0]);
+      double gamma = determinant(currPoint, points[0], points[1]);
+      
+      if (alpha < 0 || beta < 0 || gamma < 0) {
+        continue;
+      }
+      
+      alpha /= totTriangleArea;
+      beta /= totTriangleArea;
+      gamma /= totTriangleArea;
+      
+      clr.r = (alpha * clr0.r) + (beta * clr1.r) + (gamma * clr2.r);
+      clr.b = (alpha * clr0.b) + (beta * clr1.b) + (gamma * clr2.b);
+      clr.g = (alpha * clr0.g) + (beta * clr1.g) + (gamma * clr2.g);
+      
       img.pixel(i, j, clr);
     }
   }

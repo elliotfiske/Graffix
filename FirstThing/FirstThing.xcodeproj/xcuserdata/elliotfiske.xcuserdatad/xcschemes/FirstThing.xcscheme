@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C97AC2921A5C8C8200AE2276"
-               BuildableName = "Program1"
-               BlueprintName = "Program1"
-               ReferencedContainer = "container:Program1.xcodeproj">
+               BlueprintIdentifier = "C90F98EE1A5F409F002C508F"
+               BuildableName = "FirstThing"
+               BlueprintName = "FirstThing"
+               ReferencedContainer = "container:FirstThing.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C97AC2921A5C8C8200AE2276"
-            BuildableName = "Program1"
-            BlueprintName = "Program1"
-            ReferencedContainer = "container:Program1.xcodeproj">
+            BlueprintIdentifier = "C90F98EE1A5F409F002C508F"
+            BuildableName = "FirstThing"
+            BlueprintName = "FirstThing"
+            ReferencedContainer = "container:FirstThing.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -51,18 +51,12 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C97AC2921A5C8C8200AE2276"
-            BuildableName = "Program1"
-            BlueprintName = "Program1"
-            ReferencedContainer = "container:Program1.xcodeproj">
+            BlueprintIdentifier = "C90F98EE1A5F409F002C508F"
+            BuildableName = "FirstThing"
+            BlueprintName = "FirstThing"
+            ReferencedContainer = "container:FirstThing.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = ""
-            isEnabled = "YES">
-         </CommandLineArgument>
-      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -75,10 +69,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C97AC2921A5C8C8200AE2276"
-            BuildableName = "Program1"
-            BlueprintName = "Program1"
-            ReferencedContainer = "container:Program1.xcodeproj">
+            BlueprintIdentifier = "C90F98EE1A5F409F002C508F"
+            BuildableName = "FirstThing"
+            BlueprintName = "FirstThing"
+            ReferencedContainer = "container:FirstThing.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
