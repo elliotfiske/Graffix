@@ -7,14 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C90F98F31A5F409F002C508F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90F98F21A5F409F002C508F /* main.cpp */; };
+		C90F98FB1A5F4287002C508F /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = C90F98F91A5F4287002C508F /* tiny_obj_loader.cc */; };
+		C90F98FE1A5F4305002C508F /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90F98FC1A5F4305002C508F /* Image.cpp */; };
+		C90F99001A5F431E002C508F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90F98FF1A5F431E002C508F /* main.cpp */; };
+		C983CC791A5F531600AA417B /* Triangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C983CC771A5F531600AA417B /* Triangle.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		C90F98ED1A5F409F002C508F /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
+			dstPath = /usr/share/man/man1;
 			dstSubfolderSpec = 0;
 			files = (
 			);
@@ -24,7 +27,13 @@
 
 /* Begin PBXFileReference section */
 		C90F98EF1A5F409F002C508F /* FirstThing */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FirstThing; sourceTree = BUILT_PRODUCTS_DIR; };
-		C90F98F21A5F409F002C508F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		C90F98F91A5F4287002C508F /* tiny_obj_loader.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tiny_obj_loader.cc; sourceTree = SOURCE_ROOT; };
+		C90F98FA1A5F4287002C508F /* tiny_obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tiny_obj_loader.h; sourceTree = SOURCE_ROOT; };
+		C90F98FC1A5F4305002C508F /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = SOURCE_ROOT; };
+		C90F98FD1A5F4305002C508F /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = SOURCE_ROOT; };
+		C90F98FF1A5F431E002C508F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		C983CC771A5F531600AA417B /* Triangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Triangle.cpp; sourceTree = SOURCE_ROOT; };
+		C983CC781A5F531600AA417B /* Triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Triangle.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +66,13 @@
 		C90F98F11A5F409F002C508F /* FirstThing */ = {
 			isa = PBXGroup;
 			children = (
-				C90F98F21A5F409F002C508F /* main.cpp */,
+				C90F98F91A5F4287002C508F /* tiny_obj_loader.cc */,
+				C90F98FA1A5F4287002C508F /* tiny_obj_loader.h */,
+				C90F98FC1A5F4305002C508F /* Image.cpp */,
+				C90F98FD1A5F4305002C508F /* Image.h */,
+				C90F98FF1A5F431E002C508F /* main.cpp */,
+				C983CC771A5F531600AA417B /* Triangle.cpp */,
+				C983CC781A5F531600AA417B /* Triangle.h */,
 			);
 			path = FirstThing;
 			sourceTree = "<group>";
@@ -118,7 +133,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C90F98F31A5F409F002C508F /* main.cpp in Sources */,
+				C90F98FB1A5F4287002C508F /* tiny_obj_loader.cc in Sources */,
+				C90F98FE1A5F4305002C508F /* Image.cpp in Sources */,
+				C90F99001A5F431E002C508F /* main.cpp in Sources */,
+				C983CC791A5F531600AA417B /* Triangle.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,6 +250,7 @@
 				C90F98F81A5F409F002C508F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
