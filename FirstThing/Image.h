@@ -11,14 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
-/* Color struct */
-typedef struct color_struct {
-    double r;
-    double g;
-    double b;
-    double f; // "filter" or "alpha"
-} color_t;
+#include "Triangle.h"
 
 class Image {
 public:

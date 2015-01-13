@@ -53,6 +53,7 @@ int main( int argc, const char* argv[] )
             img.pixel(i, j, clr);
         }
     }
+    
     // write the targa file to disk
     // true to scale to max color, false to clamp to 1.0
     img.WriteTga((char *)"awesome.tga", true);

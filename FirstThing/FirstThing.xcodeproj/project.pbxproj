@@ -10,6 +10,8 @@
 		C90F98FB1A5F4287002C508F /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = C90F98F91A5F4287002C508F /* tiny_obj_loader.cc */; };
 		C90F98FE1A5F4305002C508F /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90F98FC1A5F4305002C508F /* Image.cpp */; };
 		C90F99001A5F431E002C508F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90F98FF1A5F431E002C508F /* main.cpp */; };
+		C91C79161A64B80E00CA3A3B /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C91C79141A64B80E00CA3A3B /* Camera.cpp */; };
+		C91C79191A64B84C00CA3A3B /* unit-tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C91C79181A64B84C00CA3A3B /* unit-tests.cpp */; };
 		C983CC791A5F531600AA417B /* Triangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C983CC771A5F531600AA417B /* Triangle.cpp */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +34,9 @@
 		C90F98FC1A5F4305002C508F /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = SOURCE_ROOT; };
 		C90F98FD1A5F4305002C508F /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = SOURCE_ROOT; };
 		C90F98FF1A5F431E002C508F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		C91C79141A64B80E00CA3A3B /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
+		C91C79151A64B80E00CA3A3B /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
+		C91C79181A64B84C00CA3A3B /* unit-tests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "unit-tests.cpp"; sourceTree = "<group>"; };
 		C983CC771A5F531600AA417B /* Triangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Triangle.cpp; sourceTree = SOURCE_ROOT; };
 		C983CC781A5F531600AA417B /* Triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Triangle.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -50,7 +55,9 @@
 		C90F98E61A5F409F002C508F = {
 			isa = PBXGroup;
 			children = (
-				C90F98F11A5F409F002C508F /* FirstThing */,
+				C91C79171A64B83800CA3A3B /* Tests */,
+				C91C79131A64B7E900CA3A3B /* My Code */,
+				C90F98F11A5F409F002C508F /* Existing Code */,
 				C90F98F01A5F409F002C508F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -63,7 +70,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C90F98F11A5F409F002C508F /* FirstThing */ = {
+		C90F98F11A5F409F002C508F /* Existing Code */ = {
 			isa = PBXGroup;
 			children = (
 				C90F98F91A5F4287002C508F /* tiny_obj_loader.cc */,
@@ -71,10 +78,28 @@
 				C90F98FC1A5F4305002C508F /* Image.cpp */,
 				C90F98FD1A5F4305002C508F /* Image.h */,
 				C90F98FF1A5F431E002C508F /* main.cpp */,
+			);
+			name = "Existing Code";
+			path = FirstThing;
+			sourceTree = "<group>";
+		};
+		C91C79131A64B7E900CA3A3B /* My Code */ = {
+			isa = PBXGroup;
+			children = (
 				C983CC771A5F531600AA417B /* Triangle.cpp */,
 				C983CC781A5F531600AA417B /* Triangle.h */,
+				C91C79141A64B80E00CA3A3B /* Camera.cpp */,
+				C91C79151A64B80E00CA3A3B /* Camera.h */,
 			);
-			path = FirstThing;
+			name = "My Code";
+			sourceTree = "<group>";
+		};
+		C91C79171A64B83800CA3A3B /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				C91C79181A64B84C00CA3A3B /* unit-tests.cpp */,
+			);
+			name = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,8 +160,10 @@
 			files = (
 				C90F98FB1A5F4287002C508F /* tiny_obj_loader.cc in Sources */,
 				C90F98FE1A5F4305002C508F /* Image.cpp in Sources */,
+				C91C79161A64B80E00CA3A3B /* Camera.cpp in Sources */,
 				C90F99001A5F431E002C508F /* main.cpp in Sources */,
 				C983CC791A5F531600AA417B /* Triangle.cpp in Sources */,
+				C91C79191A64B84C00CA3A3B /* unit-tests.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
