@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "Triangle.h"
+#include "Shapes.h"
 
 class Image {
 public:

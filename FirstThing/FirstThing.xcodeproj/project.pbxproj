@@ -12,7 +12,7 @@
 		C90F99001A5F431E002C508F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90F98FF1A5F431E002C508F /* main.cpp */; };
 		C91C79161A64B80E00CA3A3B /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C91C79141A64B80E00CA3A3B /* Camera.cpp */; };
 		C91C79191A64B84C00CA3A3B /* unit-tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C91C79181A64B84C00CA3A3B /* unit-tests.cpp */; };
-		C983CC791A5F531600AA417B /* Triangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C983CC771A5F531600AA417B /* Triangle.cpp */; };
+		C983CC791A5F531600AA417B /* Shapes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C983CC771A5F531600AA417B /* Shapes.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,8 +37,8 @@
 		C91C79141A64B80E00CA3A3B /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		C91C79151A64B80E00CA3A3B /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		C91C79181A64B84C00CA3A3B /* unit-tests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "unit-tests.cpp"; sourceTree = "<group>"; };
-		C983CC771A5F531600AA417B /* Triangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Triangle.cpp; sourceTree = SOURCE_ROOT; };
-		C983CC781A5F531600AA417B /* Triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Triangle.h; sourceTree = SOURCE_ROOT; };
+		C983CC771A5F531600AA417B /* Shapes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shapes.cpp; sourceTree = SOURCE_ROOT; };
+		C983CC781A5F531600AA417B /* Shapes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shapes.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,8 +86,8 @@
 		C91C79131A64B7E900CA3A3B /* My Code */ = {
 			isa = PBXGroup;
 			children = (
-				C983CC771A5F531600AA417B /* Triangle.cpp */,
-				C983CC781A5F531600AA417B /* Triangle.h */,
+				C983CC771A5F531600AA417B /* Shapes.cpp */,
+				C983CC781A5F531600AA417B /* Shapes.h */,
 				C91C79141A64B80E00CA3A3B /* Camera.cpp */,
 				C91C79151A64B80E00CA3A3B /* Camera.h */,
 			);
@@ -162,7 +162,7 @@
 				C90F98FE1A5F4305002C508F /* Image.cpp in Sources */,
 				C91C79161A64B80E00CA3A3B /* Camera.cpp in Sources */,
 				C90F99001A5F431E002C508F /* main.cpp in Sources */,
-				C983CC791A5F531600AA417B /* Triangle.cpp in Sources */,
+				C983CC791A5F531600AA417B /* Shapes.cpp in Sources */,
 				C91C79191A64B84C00CA3A3B /* unit-tests.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

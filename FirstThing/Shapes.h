@@ -1,5 +1,5 @@
 //
-//  Triangle.h
+//  Shapes.h
 //  FirstThing
 //
 //  Created by Elliot Fiske on 1/8/15.
@@ -33,6 +33,17 @@ public:
     color_t color;
 };
 
+/** Rectangles are GO! */
+typedef struct GET_REKT {
+    double x, y;
+    double width, height;
+} Rect;
+
+/** Handy way to return all the stuff we need from the determinant */
+typedef struct determinantResult {
+    double alpha, beta, gamma;
+} determinantResult;
+
 /**
  * Defines a triangle in 3D space.
  *  A triangle is made up of 3 vertices, each with a specified color.
@@ -44,6 +55,9 @@ public:
     Triangle(Point v1, Point v2, Point v3);
     
     Point v1, v2, v3;
+    Rect boundingBox();
 };
+
+
 
 #endif /* defined(__FirstThing__Triangle__) */
