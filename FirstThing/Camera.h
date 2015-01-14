@@ -9,10 +9,8 @@
 #ifndef __FirstThing__Camera__
 #define __FirstThing__Camera__
 
-#include <stdio.h>
 #include "Image.h"
 #include <iostream>
-#include "tiny_obj_loader.h"
 
 /** Temp variable to figure out how to map from "real" coordinates to image coordinates */
 #define REAL_TO_IMAGE 100
@@ -40,7 +38,8 @@ private:
     /** What will the camera be rendering? */
     std::vector<tinyobj::shape_t> _shapes;
     /** Bounds of the vertices we're rendering */
-    float _minX, _maxX, _minY, _maxY;
+    float _minX, _maxX, _minY, _maxY, _minZ, _maxZ;
+    std::vector<Triangle> _triangles;
 };
 
 #endif /* defined(__FirstThing__Camera__) */

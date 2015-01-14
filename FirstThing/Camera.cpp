@@ -25,16 +25,19 @@ void Camera::setShapes(std::vector<tinyobj::shape_t> shapes) {
     _shapes = shapes;
 
     // Find the bounds of the vertices
-    _minX = std::numeric_limits<float>::max();
+    _minX = _minY = _minZ = std::numeric_limits<float>::max();
     _minY = _minX;
+    _minZ = _minX;
     _maxX = std::numeric_limits<float>::min();
     _maxY = _maxX;
+    _maxZ = _maxX;
     
     std::numeric_limits<float>::min();
     for (int ndx = 0; ndx < shapes.size(); ndx++) {
         for (size_t vert = 0; vert < shapes[ndx].mesh.positions.size() / 3; vert++) {
             float currX = _shapes[ndx].mesh.positions[3*vert+0];
             float currY = _shapes[ndx].mesh.positions[3*vert+1];
+            float currZ = _shapes[ndx].mesh.positions[3*vert+2];
             
             if (currX < _minX) { _minX = currX; }
             
@@ -43,6 +46,10 @@ void Camera::setShapes(std::vector<tinyobj::shape_t> shapes) {
             if (currY < _minY) { _minY = currY; }
             
             if (currY > _maxY) { _maxY = currY; }
+            
+            if (currZ < _minZ) { _minZ = currZ; }
+            
+            if (currZ > _maxZ) { _maxZ = currZ; }
         }
     }
     
@@ -64,6 +71,8 @@ void Camera::setShapes(std::vector<tinyobj::shape_t> shapes) {
             printf("converting to: %f, %f\n",             _shapes[ndx].mesh.positions[3*vert+0],             _shapes[ndx].mesh.positions[3*vert+1]);
         }
     }
+    
+    _triangles = getTriangles(_shapes);
 }
 
 
@@ -99,6 +108,10 @@ Image Camera::makeImage(int width, int height) {
     yOffset = -yScale * B;
     
     for (size_t ndx = 0; ndx < _shapes.size(); ndx++) {
+        for (size_t triNdx = 0; triNdx < _shapes[ndx].mesh.indices.size() / 3; triNdx++) {
+                        printf("  triangle[%ld] = %d, %d, %d\n", triNdx, _shapes[ndx].mesh.indices[3*triNdx+0], _shapes[ndx].mesh.indices[3*triNdx+1], _shapes[ndx].mesh.indices[3*triNdx+2]);
+        }
+        
         for (size_t vert = 0; vert < _shapes[ndx].mesh.positions.size() / 3; vert++) {
             float vX = _shapes[ndx].mesh.positions[3*vert+0];
             float vY = _shapes[ndx].mesh.positions[3*vert+1];
@@ -107,7 +120,7 @@ Image Camera::makeImage(int width, int height) {
             int imgX = vX * xScale + xOffset;// / vZ * REAL_TO_IMAGE;
             int imgY = vY * yScale + yOffset;// / vZ * REAL_TO_IMAGE;
             
-            printf("Rendering vertex[%ld] = (%d, %d)\n", vert, imgX, imgY);
+//            printf("Rendering vertex[%ld] = (%d, %d)\n", vert, imgX, imgY);
             
             if (imgX < 0 || imgY < 0) {
                 // Vertex is behind us.  Awkward.
@@ -116,10 +129,11 @@ Image Camera::makeImage(int width, int height) {
             
             // Check if rendered vertex is even on screen
             if (imgX < width - 1 && imgY < height - 1) {
-                result.pixel(imgX, imgY, white);
+//                result.pixel(imgX, imgY, white);
             }
         }
     }
+    
     
     return result;
 }

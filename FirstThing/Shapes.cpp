@@ -48,3 +48,40 @@ Rect Triangle::boundingBox() {
     return result;
 }
 
+/**
+ * Return a Point object based on the specified shapes vector.
+ */
+Point pointAtIndex(std::vector<tinyobj::shape_t> shapes, int shapeNdx, int index) {
+    Point result(0, 0, 0);
+    
+    result.x = shapes[shapeNdx].mesh.positions[index*3 + 0];
+    result.y = shapes[shapeNdx].mesh.positions[index*3 + 1];
+    result.z = shapes[shapeNdx].mesh.positions[index*3 + 2];
+    
+    return result;
+}
+
+/**
+ * Given a bunch of shapes, make a bunch of triangle objects that repreesnt them.
+ */
+std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> shapes) {
+    std::vector<Triangle> result;
+    
+    for (int ndx = 0; ndx < shapes.size(); ndx++) {
+        for (size_t triNdx = 0; triNdx < shapes[ndx].mesh.indices.size() / 3; triNdx++) {
+            int index1 = shapes[ndx].mesh.indices[3*triNdx+0];
+            int index2 = shapes[ndx].mesh.indices[3*triNdx+1];
+            int index3 = shapes[ndx].mesh.indices[3*triNdx+2];
+            
+            Point vert1 = pointAtIndex(shapes, ndx, index1);
+            Point vert2 = pointAtIndex(shapes, ndx, index2);
+            Point vert3 = pointAtIndex(shapes, ndx, index3);
+            
+            Triangle newTriangle(vert1, vert2, vert3);
+            result.push_back(newTriangle);
+        }
+    }
+    
+    return result;
+}
+

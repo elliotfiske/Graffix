@@ -10,6 +10,7 @@
 #define __FirstThing__Triangle__
 
 #include <stdio.h>
+#include "tiny_obj_loader.h"
 
 
 /* Color struct */
@@ -57,6 +58,8 @@ public:
     Point v1, v2, v3;
     Rect boundingBox();
 };
+
+std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> shapes);
 
 
 
