@@ -18,8 +18,8 @@ double getMin(double a, double b, double c) {
 
 double getMax(double a, double b, double c) {
     double max = a;
-    if (b < max) max = b;
-    if (c < max) max = c;
+    if (b > max) max = b;
+    if (c > max) max = c;
     return max;
 }
 
@@ -51,7 +51,7 @@ Rect Triangle::boundingBox() {
 /**
  * Return a Point object based on the specified shapes vector.
  */
-Point pointAtIndex(std::vector<tinyobj::shape_t> shapes, int shapeNdx, int index) {
+Point pointAtIndex(std::vector<tinyobj::shape_t> &shapes, int shapeNdx, int index) {
     Point result(0, 0, 0);
     
     result.x = shapes[shapeNdx].mesh.positions[index*3 + 0];
@@ -64,7 +64,7 @@ Point pointAtIndex(std::vector<tinyobj::shape_t> shapes, int shapeNdx, int index
 /**
  * Given a bunch of shapes, make a bunch of triangle objects that repreesnt them.
  */
-std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> shapes) {
+std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> &shapes) {
     std::vector<Triangle> result;
     
     for (int ndx = 0; ndx < shapes.size(); ndx++) {
@@ -83,5 +83,26 @@ std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> shapes) {
     }
     
     return result;
+}
+
+/**
+ * Scales up a rectangle from world coords to pixel coords
+ */
+Rect rectToImageCoords(Rect in, double xScale, double xOffset, double yScale, double yOffset) {
+    in.x *= xScale;
+    in.x += xOffset;
+    in.y *= yScale;
+    in.y += yOffset;
+    
+    in.width *= xScale;
+    in.height *= yScale;
+    
+    // Round to a whole number
+    in.x = floor(in.x);
+    in.y = floor(in.y);
+    in.width = floor(in.width);
+    in.height = floor(in.height);
+    
+    return in;
 }
 

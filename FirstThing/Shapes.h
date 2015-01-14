@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "tiny_obj_loader.h"
+#include <math.h>
 
 
 /* Color struct */
@@ -61,6 +62,7 @@ public:
 
 std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> shapes);
 
+Rect rectToImageCoords(Rect in, double xScale, double xOffset, double yScale, double yOffset);
 
 
 #endif /* defined(__FirstThing__Triangle__) */

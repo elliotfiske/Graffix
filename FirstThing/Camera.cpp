@@ -1,4 +1,4 @@
-//
+ //
 //  Camera.cpp
 //  FirstThing
 //
@@ -67,8 +67,6 @@ void Camera::setShapes(std::vector<tinyobj::shape_t> shapes) {
             
             _shapes[ndx].mesh.positions[3*vert+0] = (currX - _minX) * (TARGET_X_MAX - TARGET_X_MIN) / xRange + TARGET_X_MIN;
             _shapes[ndx].mesh.positions[3*vert+1] = (currY - _minY) * (TARGET_Y_MAX - TARGET_Y_MIN) / yRange + TARGET_Y_MIN;
-            
-            printf("converting to: %f, %f\n",             _shapes[ndx].mesh.positions[3*vert+0],             _shapes[ndx].mesh.positions[3*vert+1]);
         }
     }
     
@@ -108,10 +106,6 @@ Image Camera::makeImage(int width, int height) {
     yOffset = -yScale * B;
     
     for (size_t ndx = 0; ndx < _shapes.size(); ndx++) {
-        for (size_t triNdx = 0; triNdx < _shapes[ndx].mesh.indices.size() / 3; triNdx++) {
-                        printf("  triangle[%ld] = %d, %d, %d\n", triNdx, _shapes[ndx].mesh.indices[3*triNdx+0], _shapes[ndx].mesh.indices[3*triNdx+1], _shapes[ndx].mesh.indices[3*triNdx+2]);
-        }
-        
         for (size_t vert = 0; vert < _shapes[ndx].mesh.positions.size() / 3; vert++) {
             float vX = _shapes[ndx].mesh.positions[3*vert+0];
             float vY = _shapes[ndx].mesh.positions[3*vert+1];
@@ -132,6 +126,27 @@ Image Camera::makeImage(int width, int height) {
 //                result.pixel(imgX, imgY, white);
             }
         }
+    }
+    
+    for (int ndx = 0; ndx < _triangles.size(); ndx++) {
+        Rect triBounds = _triangles[ndx].boundingBox();
+        
+        // Convert rectangle to image coordinates
+        triBounds = rectToImageCoords(triBounds, xScale, xOffset, yScale, yOffset);
+        
+        for (int rx = triBounds.x; rx < triBounds.x + triBounds.width; rx++) {
+            for (int ry = triBounds.y; ry < triBounds.y + triBounds.height; ry++) {
+                if (rx < 0 || ry < 0) {
+                    // Vertex is behind us.  Awkward.
+                    continue;
+                }
+                
+                if (rx < width - 1 && ry < height - 1) {
+                    result.pixel(rx, ry, white);
+                }
+            }
+        }
+        
     }
     
     
