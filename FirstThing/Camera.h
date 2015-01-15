@@ -24,7 +24,7 @@ public:
     Camera();
     
     /** Generate image of dimension (xRes, yRes) */
-    Image makeImage(int xRes, int yRes);
+    Image makeImage(int width, int height, bool depth);
     
     void setShapes(std::vector<tinyobj::shape_t> shapes);
     

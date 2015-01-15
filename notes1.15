@@ -69,4 +69,10 @@ Woah hey!  PARALLEL DATA TYPES.  Syntax will be weird.  OpenGL 2.1 vs 3.3, blah 
     Attribute: Unique per processor
     Varying data:  data ran thru a rasterizer and interpolated
 
+
 something called GLEW?  To help glue together OpenGL 2.1 and 3.3? Idk.
+
+
+
+We also need a Vertex Shader, which are computations run per-vertex
+    +Fragment Shader, a fragment is a pixel with DEPTH.

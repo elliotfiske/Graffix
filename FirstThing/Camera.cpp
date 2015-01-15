@@ -90,8 +90,12 @@ void Camera::setShapes(std::vector<tinyobj::shape_t> shapes) {
 }
 
 
-/** Generate image of dimension (xRes, yRes) */
-Image Camera::makeImage(int width, int height) {
+/** 
+ * Generate image of dimension (xRes, yRes)
+ *  If depth is true, does the funky shaded depth thing.  Otherwise, just goes from blue->green
+ *  when you render
+ */
+Image Camera::makeImage(int width, int height, bool depth) {
     Image result(width, height);
     float zBuffer[width * height];
     for (int ndx = 0; ndx < width * height; ndx++) {
@@ -167,13 +171,18 @@ Image Camera::makeImage(int width, int height) {
                         continue;
                     }
                     
-                    double blueness  = (rx + 1) / 2;
-                    double greenness =  1 - blueness;
-                    color_t teal = WHITE;
-                    teal.b = blueness;
-                    teal.g = greenness;
+                    if (depth) {
+                        result.pixel(rx, ry, shadedRed);
+                    }
+                    else {
+                        double blueness  = (rx + 1) / 2;
+                        double greenness =  1 - blueness;
+                        color_t teal = WHITE;
+                        teal.b = blueness;
+                        teal.g = greenness;
+                        result.pixel(rx, ry, teal);
+                    }
                     
-                    result.pixel(rx, ry, shadedRed);
                     zBuffer[width * ry + rx] = zValue;
                 }
             }

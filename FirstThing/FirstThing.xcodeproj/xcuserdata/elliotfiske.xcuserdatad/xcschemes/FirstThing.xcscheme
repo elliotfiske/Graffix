@@ -62,6 +62,18 @@
             argument = "bunny.obj"
             isEnabled = "YES">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "200"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "100"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "2"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
