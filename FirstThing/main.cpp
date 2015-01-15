@@ -43,7 +43,7 @@ int main( int argc, const char* argv[] )
     // write the targa file to disk
     // true to scale to max color, false to clamp to 1.0
     Point cameraPos(0, 0, 0);
-    Camera camera(cameraPos, 10, 0, 0, 0);
+    Camera camera(cameraPos);
     camera.setShapes(shapes);
     
     Image img = camera.makeImage(600, 480);

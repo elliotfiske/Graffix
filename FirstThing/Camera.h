@@ -21,14 +21,9 @@
  */
 class Camera {
 public:
-    Camera(Point pos, double focalLength, double xRot, double yRot, double zRot);
+    Camera(Point pos);
     
     Point position;
-    double focalLength;
-    
-    /** Defines where the camera is pointing.  (0, 0, 0) is straight up. */
-    double xRot, yRot, zRot;
-    
     /** Generate image of dimension (xRes, yRes) */
     Image makeImage(int xRes, int yRes);
     

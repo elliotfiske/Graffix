@@ -27,8 +27,22 @@ Point::Point(double x, double y, double z): x(x), y(y), z(z) {
     // good job boo you made a point.  hope you feel good about it.
 }
 
+/**
+ * Get the determinant of 3 points. Only accurate for counter-clockwise triangles.
+ */
+double getDeterminant(Point a, Point b, Point c) {
+    return (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y);
+}
+
+
+
 Triangle::Triangle(Point v1, Point v2, Point v3): v1(v1), v2(v2), v3(v3) {
-    // whoo you did it!
+    // We want to make sure all our triangles are the same direction (counter-clockwise!)
+    if (getDeterminant(v1, v2, v3) < 0) {
+        Point temp = v1;
+        v1 = v2;
+        v2 = temp;
+    }
 }
 
 /**
@@ -46,6 +60,32 @@ Rect Triangle::boundingBox() {
     result.height = _maxY - result.y;
     
     return result;
+}
+
+/**
+ * Given a point, determine what the z-value of the point in the triangle.
+ *  Returns -100 if the point is outside the triangle.
+ */
+double Triangle::zDeterminant(Point inside) {
+    double alpha = 0; // Opposite to vertex 1
+    double beta  = 0; // Opposite to vertex 2
+    double gamma = 0; // Opposite to vertex 3
+    
+    alpha = getDeterminant(inside, v2, v3);
+    beta  = getDeterminant(inside, v3, v1);
+    gamma = getDeterminant(inside, v1, v2);
+    
+    if (alpha < 0 || beta < 0 || gamma < 0) {
+        return -100;
+    }
+    
+    double totalArea = alpha + beta + gamma;
+    
+    alpha /= totalArea;
+    beta  /= totalArea;
+    gamma /= totalArea;
+    
+    return v1.z*alpha + v2.z*beta + v3.z*gamma;
 }
 
 /**
@@ -86,6 +126,28 @@ std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> &shapes) {
 }
 
 /**
+ * Scales up a triangle from world coords to pixel coords
+ */
+Triangle triangleToImageCoords(Triangle in, double xScale, double xOffset, double yScale, double yOffset) {
+    in.v1.x *= xScale;
+    in.v1.x += xOffset;
+    in.v1.y *= yScale;
+    in.v1.y += yOffset;
+    
+    in.v2.x *= xScale;
+    in.v2.x += xOffset;
+    in.v2.y *= yScale;
+    in.v2.y += yOffset;
+    
+    in.v3.x *= xScale;
+    in.v3.x += xOffset;
+    in.v3.y *= yScale;
+    in.v3.y += yOffset;
+    
+    return in;
+}
+
+/**
  * Scales up a rectangle from world coords to pixel coords
  */
 Rect rectToImageCoords(Rect in, double xScale, double xOffset, double yScale, double yOffset) {
@@ -100,8 +162,8 @@ Rect rectToImageCoords(Rect in, double xScale, double xOffset, double yScale, do
     // Round to a whole number
     in.x = floor(in.x);
     in.y = floor(in.y);
-    in.width = floor(in.width);
-    in.height = floor(in.height);
+    in.width = ceil(in.width);
+    in.height = ceil(in.height);
     
     return in;
 }

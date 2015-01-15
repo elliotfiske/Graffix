@@ -8,14 +8,76 @@
 
 #include "Camera.h"
 #include <limits>
+#include <assert.h>
 
-Camera::Camera(Point pos,
-               double focalLength,
-               double xRot,
-               double yRot,
-               double zRot): position(pos), focalLength(focalLength), xRot(xRot), yRot(yRot), zRot(zRot) {
+Camera::Camera(Point pos): position(pos) {
     // GOOD JUB DUNKY U MADE CAMERA
 }
+
+//Given a vector of shapes which has already been read from an obj file
+// resize all vertices to the range [-1, 1]
+void resize_obj(std::vector<tinyobj::shape_t> &shapes){
+    float minX, minY, minZ;
+    float maxX, maxY, maxZ;
+    float scaleX, scaleY, scaleZ;
+    float shiftX, shiftY, shiftZ;
+    float epsilon = 0.001;
+    
+    minX = minY = minZ = 1.1754E+38F;
+    maxX = maxY = maxZ = -1.1754E+38F;
+    
+    //Go through all vertices to determine min and max of each dimension
+    for (size_t i = 0; i < shapes.size(); i++) {
+        for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
+            if(shapes[i].mesh.positions[3*v+0] < minX) minX = shapes[i].mesh.positions[3*v+0];
+            if(shapes[i].mesh.positions[3*v+0] > maxX) maxX = shapes[i].mesh.positions[3*v+0];
+            
+            if(shapes[i].mesh.positions[3*v+1] < minY) minY = shapes[i].mesh.positions[3*v+1];
+            if(shapes[i].mesh.positions[3*v+1] > maxY) maxY = shapes[i].mesh.positions[3*v+1];
+            
+            if(shapes[i].mesh.positions[3*v+2] < minZ) minZ = shapes[i].mesh.positions[3*v+2];
+            if(shapes[i].mesh.positions[3*v+2] > maxZ) maxZ = shapes[i].mesh.positions[3*v+2];
+        }
+    }
+    
+    //From min and max compute necessary scale and shift for each dimension
+    float maxExtent = 1, xExtent, yExtent, zExtent;
+    xExtent = maxX-minX;
+    yExtent = maxY-minY;
+    zExtent = maxZ-minZ;
+    if (xExtent >= yExtent && xExtent >= zExtent) {
+        maxExtent = xExtent;
+    }
+    if (yExtent >= xExtent && yExtent >= zExtent) {
+        maxExtent = yExtent;
+    }
+    if (zExtent >= xExtent && zExtent >= yExtent) {
+        maxExtent = zExtent;
+    }
+    scaleX = 2.0 / maxExtent;
+    shiftX = minX + (xExtent/ 2.0);
+    scaleY = 2.0 / maxExtent;
+    shiftY = minY + (yExtent / 2.0);
+    scaleZ = 2.0/ maxExtent;
+    shiftZ = minZ + (zExtent)/2.0;
+    
+    //Go through all verticies shift and scale them
+    for (size_t i = 0; i < shapes.size(); i++) {
+        for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
+            shapes[i].mesh.positions[3*v+0] = (shapes[i].mesh.positions[3*v+0] - shiftX) * scaleX;
+            assert(shapes[i].mesh.positions[3*v+0] >= -1.0 - epsilon);
+            assert(shapes[i].mesh.positions[3*v+0] <= 1.0 + epsilon);
+            shapes[i].mesh.positions[3*v+1] = (shapes[i].mesh.positions[3*v+1] - shiftY) * scaleY;
+            assert(shapes[i].mesh.positions[3*v+1] >= -1.0 - epsilon);
+            assert(shapes[i].mesh.positions[3*v+1] <= 1.0 + epsilon);
+            shapes[i].mesh.positions[3*v+2] = (shapes[i].mesh.positions[3*v+2] - shiftZ) * scaleZ;
+            assert(shapes[i].mesh.positions[3*v+2] >= -1.0 - epsilon);
+            assert(shapes[i].mesh.positions[3*v+2] <= 1.0 + epsilon);
+        }
+    }
+}
+
+
 
 /**
  * Tell the camera what shapes you want rendered.
@@ -23,53 +85,8 @@ Camera::Camera(Point pos,
  */
 void Camera::setShapes(std::vector<tinyobj::shape_t> shapes) {
     _shapes = shapes;
-
-    // Find the bounds of the vertices
-    _minX = _minY = _minZ = std::numeric_limits<float>::max();
-    _minY = _minX;
-    _minZ = _minX;
-    _maxX = std::numeric_limits<float>::min();
-    _maxY = _maxX;
-    _maxZ = _maxX;
     
-    std::numeric_limits<float>::min();
-    for (int ndx = 0; ndx < shapes.size(); ndx++) {
-        for (size_t vert = 0; vert < shapes[ndx].mesh.positions.size() / 3; vert++) {
-            float currX = _shapes[ndx].mesh.positions[3*vert+0];
-            float currY = _shapes[ndx].mesh.positions[3*vert+1];
-            float currZ = _shapes[ndx].mesh.positions[3*vert+2];
-            
-            if (currX < _minX) { _minX = currX; }
-            
-            if (currX > _maxX) { _maxX = currX; }
-            
-            if (currY < _minY) { _minY = currY; }
-            
-            if (currY > _maxY) { _maxY = currY; }
-            
-            if (currZ < _minZ) { _minZ = currZ; }
-            
-            if (currZ > _maxZ) { _maxZ = currZ; }
-        }
-    }
-    
-    float xRange = _maxX - _minX;
-    float yRange = xRange; // Make sure we don't scale the X and Y coords differently
-    
-    float TARGET_X_MAX = 0.8, TARGET_X_MIN = -0.8;
-    float TARGET_Y_MAX = 0.8, TARGET_Y_MIN = -0.8;
-    
-    // Fix those dumb vertices if they're in a weird scale
-    for (int ndx = 0; ndx < shapes.size(); ndx++) {
-        for (size_t vert = 0; vert < shapes[ndx].mesh.positions.size() / 3; vert++) {
-            float currX = _shapes[ndx].mesh.positions[3*vert+0];
-            float currY = _shapes[ndx].mesh.positions[3*vert+1];
-            
-            _shapes[ndx].mesh.positions[3*vert+0] = (currX - _minX) * (TARGET_X_MAX - TARGET_X_MIN) / xRange + TARGET_X_MIN;
-            _shapes[ndx].mesh.positions[3*vert+1] = (currY - _minY) * (TARGET_Y_MAX - TARGET_Y_MIN) / yRange + TARGET_Y_MIN;
-        }
-    }
-    
+    resize_obj(_shapes);
     _triangles = getTriangles(_shapes);
 }
 
@@ -77,8 +94,17 @@ void Camera::setShapes(std::vector<tinyobj::shape_t> shapes) {
 /** Generate image of dimension (xRes, yRes) */
 Image Camera::makeImage(int width, int height) {
     Image result(width, height);
-    color_t white;
-    white.r = white.b = white.g = 1;
+    
+    color_t white = WHITE;
+    color_t bgColor = BG_COLOR;
+    color_t red = RED;
+    
+    // Make the image background a pleasing shade of blue
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            result.pixel(x, y, bgColor);
+        }
+    }
     
     double xScale = 1, xOffset = 0;
     double yScale = 1, yOffset = 0;
@@ -105,34 +131,13 @@ Image Camera::makeImage(int width, int height) {
     yScale = (1 - height) / (B - T);
     yOffset = -yScale * B;
     
-    for (size_t ndx = 0; ndx < _shapes.size(); ndx++) {
-        for (size_t vert = 0; vert < _shapes[ndx].mesh.positions.size() / 3; vert++) {
-            float vX = _shapes[ndx].mesh.positions[3*vert+0];
-            float vY = _shapes[ndx].mesh.positions[3*vert+1];
-            float vZ = _shapes[ndx].mesh.positions[3*vert+2];
-            
-            int imgX = vX * xScale + xOffset;// / vZ * REAL_TO_IMAGE;
-            int imgY = vY * yScale + yOffset;// / vZ * REAL_TO_IMAGE;
-            
-//            printf("Rendering vertex[%ld] = (%d, %d)\n", vert, imgX, imgY);
-            
-            if (imgX < 0 || imgY < 0) {
-                // Vertex is behind us.  Awkward.
-                continue;
-            }
-            
-            // Check if rendered vertex is even on screen
-            if (imgX < width - 1 && imgY < height - 1) {
-//                result.pixel(imgX, imgY, white);
-            }
-        }
+    std::vector<Triangle> scaledTriangles = _triangles;
+    for (int ndx = 0; ndx < scaledTriangles.size(); ndx++) {
+        scaledTriangles[ndx] = triangleToImageCoords(scaledTriangles[ndx]);
     }
     
     for (int ndx = 0; ndx < _triangles.size(); ndx++) {
         Rect triBounds = _triangles[ndx].boundingBox();
-        
-        // Convert rectangle to image coordinates
-        triBounds = rectToImageCoords(triBounds, xScale, xOffset, yScale, yOffset);
         
         for (int rx = triBounds.x; rx < triBounds.x + triBounds.width; rx++) {
             for (int ry = triBounds.y; ry < triBounds.y + triBounds.height; ry++) {
@@ -142,11 +147,43 @@ Image Camera::makeImage(int width, int height) {
                 }
                 
                 if (rx < width - 1 && ry < height - 1) {
-                    result.pixel(rx, ry, white);
+                    double zValue = _triangles[ndx].zDeterminant(Point(rx, ry, 0));
+                    
+                    if (zValue == -100) {
+                        continue;
+                    }
+                    
+                    zValue++;
+                    zValue /= 2;
+                    
+                    color_t shadedRed = BLACK;
+                    shadedRed.r = zValue;
+                    
+                    result.pixel(rx, ry, shadedRed);
                 }
             }
         }
-        
+    }
+    
+    
+    for (size_t ndx = 0; ndx < _shapes.size(); ndx++) {
+        for (size_t vert = 0; vert < _shapes[ndx].mesh.positions.size() / 3; vert++) {
+            float vX = _shapes[ndx].mesh.positions[3*vert+0];
+            float vY = _shapes[ndx].mesh.positions[3*vert+1];
+            
+            int imgX = vX * xScale + xOffset;
+            int imgY = vY * yScale + yOffset;
+            
+            if (imgX < 0 || imgY < 0) {
+                // Vertex is behind us.  Awkward.
+                continue;
+            }
+            
+            // Check if rendered vertex is even on screen
+            if (imgX < width - 1 && imgY < height - 1) {
+                result.pixel(imgX, imgY, white);
+            }
+        }
     }
     
     

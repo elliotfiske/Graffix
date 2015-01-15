@@ -22,6 +22,11 @@ typedef struct color_struct {
     double f; // "filter" or "alpha"
 } color_t;
 
+/** Some basic colors */
+#define BG_COLOR { 0.5, 0.5, 0.9, 1 }
+#define RED      { 1,   0,   0,   1 }
+#define WHITE    /* Thomas Steinke */{ 1,   1,   1,   1 }
+#define BLACK    { 0, 0, 0, 1 }
 
 /**
  * Defines a 3D Point in space.
@@ -41,10 +46,7 @@ typedef struct GET_REKT {
     double width, height;
 } Rect;
 
-/** Handy way to return all the stuff we need from the determinant */
-typedef struct determinantResult {
-    double alpha, beta, gamma;
-} determinantResult;
+double getDeterminant(Point a, Point b, Point c);
 
 /**
  * Defines a triangle in 3D space.
@@ -58,9 +60,10 @@ public:
     
     Point v1, v2, v3;
     Rect boundingBox();
+    double zDeterminant(Point inside);
 };
 
-std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> shapes);
+std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> &shapes);
 
 Rect rectToImageCoords(Rect in, double xScale, double xOffset, double yScale, double yOffset);
 
