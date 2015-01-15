@@ -53,11 +53,14 @@ Rect Triangle::boundingBox() {
     result.x = getMin(v1.x, v2.x, v3.x);
     result.y = getMin(v1.y, v2.y, v3.y);
     
+    result.x = floor(result.x);
+    result.y = floor(result.y);
+    
     double _maxX = getMax(v1.x, v2.x, v3.x);
     double _maxY = getMax(v1.y, v2.y, v3.y);
     
-    result.width =  _maxX - result.x;
-    result.height = _maxY - result.y;
+    result.width =  ceil(_maxX - result.x);
+    result.height = ceil(_maxY - result.y);
     
     return result;
 }
@@ -128,42 +131,21 @@ std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> &shapes) {
 /**
  * Scales up a triangle from world coords to pixel coords
  */
-Triangle triangleToImageCoords(Triangle in, double xScale, double xOffset, double yScale, double yOffset) {
-    in.v1.x *= xScale;
+Triangle triangleToImageCoords(Triangle in, double scale, double xOffset, double yOffset) {
+    in.v1.x *= scale;
     in.v1.x += xOffset;
-    in.v1.y *= yScale;
+    in.v1.y *= scale;
     in.v1.y += yOffset;
     
-    in.v2.x *= xScale;
+    in.v2.x *= scale;
     in.v2.x += xOffset;
-    in.v2.y *= yScale;
+    in.v2.y *= scale;
     in.v2.y += yOffset;
     
-    in.v3.x *= xScale;
+    in.v3.x *= scale;
     in.v3.x += xOffset;
-    in.v3.y *= yScale;
+    in.v3.y *= scale;
     in.v3.y += yOffset;
-    
-    return in;
-}
-
-/**
- * Scales up a rectangle from world coords to pixel coords
- */
-Rect rectToImageCoords(Rect in, double xScale, double xOffset, double yScale, double yOffset) {
-    in.x *= xScale;
-    in.x += xOffset;
-    in.y *= yScale;
-    in.y += yOffset;
-    
-    in.width *= xScale;
-    in.height *= yScale;
-    
-    // Round to a whole number
-    in.x = floor(in.x);
-    in.y = floor(in.y);
-    in.width = ceil(in.width);
-    in.height = ceil(in.height);
     
     return in;
 }

@@ -1,0 +1,72 @@
+We made a 3D app.  Now what?  Let's make it interactive!
+
+Let's do this:
+
+    -Open a window + initiate state
+    
+    Loop:
+        -Draw data
+        -Get user input
+        -Update data state
+
+Let's think about our rasterizer.
+
+We take 3D data and spit out a 2D image.
+  - Sampled vertices -> ∆
+  - detph
+  - transform
+
+It's a lot of work!  Lotsa sequential computation.
+
+         ~~~~~~~~~~~~~~~~~~~~~~
+Let's... | PARALLELLIZE IT!!! |
+         ~~~~~~~~~~~~~~~~~~~~~~
+
+For every pixel we can be running computation simultaneously to update 'em ALL at once wowhhahoooah
+GPU: SIMD, it's a massively parallel machine.
+single instruction, multiple data
+       |
+   //// \\\\
+   |||||||||
+      GPU!
+   |||||||||
+   |||||||||
+    *magic*
+   |||||||||
+   \\\\ ////
+       |
+     image 
+
+We're the director! Let's do:
+    set up the camera
+    set up lighting
+
+Program (our graphics pipeline):
+    take a model, transform it  (Apply to vertices)
+    view transform
+    clip & cull
+    lighting/textures
+    rasterization
+
+
+Some libraries!
+    GLFW: Opens a window!
+    OpenGL: Draw data!  Basically OpenGL is a super big state machine.  Let's set its state.
+        OpenGL c++ application
+           |__> interacts with a bus to the GPU.  Busses are slow!  It's a bottleneck.  Suck.
+           |__> 
+    GLSL: Graphics Language Shader Language
+        This is what actually draws data on the screen.  Directly programs the GPU.  oooooh.
+        Sorta c-like, but with vec3, mat4, handy data structures we use in graphical math.  Ballerino!
+            Has a bunch of dot product, cross product, etc.  That's what it's THERE for!!!
+            Can't print!!! what the heckballs?
+
+In general, we pack data into arrays and send to the GPU once.
+  Handle on CPU to access data..?   
+
+Woah hey!  PARALLEL DATA TYPES.  Syntax will be weird.  OpenGL 2.1 vs 3.3, blah blah blah.
+    Uniform: this will be the same for ALL GPUs.
+    Attribute: Unique per processor
+    Varying data:  data ran thru a rasterizer and interpolated
+
+something called GLEW?  To help glue together OpenGL 2.1 and 3.3? Idk.

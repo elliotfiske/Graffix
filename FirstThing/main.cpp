@@ -22,31 +22,12 @@ int main( int argc, const char* argv[] )
         exit(1);
     }
     
-    std::cout << "# of shapes    : " << shapes.size() << std::endl;
-    for (size_t i = 0; i < shapes.size(); i++) {
-//        printf("Size of shape[%ld].indices: %ld\n", i, shapes[i].mesh.indices.size());
-        assert((shapes[i].mesh.indices.size() % 3) == 0);
-        for (size_t f = 0; f < shapes[i].mesh.indices.size() / 3; f++) {
-//            printf("  triangle[%ld] = %d, %d, %d\n", f, shapes[i].mesh.indices[3*f+0], shapes[i].mesh.indices[3*f+1], shapes[i].mesh.indices[3*f+2]);
-        }
-        
-        printf("shape[%ld].vertices: %ld\n", i, shapes[i].mesh.positions.size());
-        assert((shapes[i].mesh.positions.size() % 3) == 0);
-        for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
-//            printf("  vertex[%ld] = (%f, %f, %f)\n", v,
-//                   shapes[i].mesh.positions[3*v+0],
-//                   shapes[i].mesh.positions[3*v+1],
-//                   shapes[i].mesh.positions[3*v+2]);
-        }
-    }
-    
     // write the targa file to disk
     // true to scale to max color, false to clamp to 1.0
-    Point cameraPos(0, 0, 0);
-    Camera camera(cameraPos);
+    Camera camera = *new Camera();
     camera.setShapes(shapes);
     
-    Image img = camera.makeImage(600, 480);
+    Image img = camera.makeImage(1200, 800);
     img.WriteTga((char *)"awesome.tga", true);
     
     return 0;

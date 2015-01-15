@@ -27,6 +27,7 @@ typedef struct color_struct {
 #define RED      { 1,   0,   0,   1 }
 #define WHITE    /* Thomas Steinke */{ 1,   1,   1,   1 }
 #define BLACK    { 0, 0, 0, 1 }
+#define GREEN    { 0, 1, 0, 1 }
 
 /**
  * Defines a 3D Point in space.
@@ -65,7 +66,7 @@ public:
 
 std::vector<Triangle> getTriangles(std::vector<tinyobj::shape_t> &shapes);
 
-Rect rectToImageCoords(Rect in, double xScale, double xOffset, double yScale, double yOffset);
+Triangle triangleToImageCoords(Triangle in, double scale, double xOffset, double yOffset);
 
 
 #endif /* defined(__FirstThing__Triangle__) */

@@ -21,9 +21,8 @@
  */
 class Camera {
 public:
-    Camera(Point pos);
+    Camera();
     
-    Point position;
     /** Generate image of dimension (xRes, yRes) */
     Image makeImage(int xRes, int yRes);
     

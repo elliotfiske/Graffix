@@ -10,11 +10,11 @@
 #include <limits>
 #include <assert.h>
 
-Camera::Camera(Point pos): position(pos) {
+Camera::Camera() {
     // GOOD JUB DUNKY U MADE CAMERA
 }
 
-//Given a vector of shapes which has already been read from an obj file
+// Given a vector of shapes which has already been read from an obj file
 // resize all vertices to the range [-1, 1]
 void resize_obj(std::vector<tinyobj::shape_t> &shapes){
     float minX, minY, minZ;
@@ -81,7 +81,6 @@ void resize_obj(std::vector<tinyobj::shape_t> &shapes){
 
 /**
  * Tell the camera what shapes you want rendered.
- *  Here we also figure out the smallest/biggest X/Y value we need to draw.
  */
 void Camera::setShapes(std::vector<tinyobj::shape_t> shapes) {
     _shapes = shapes;
@@ -94,10 +93,12 @@ void Camera::setShapes(std::vector<tinyobj::shape_t> shapes) {
 /** Generate image of dimension (xRes, yRes) */
 Image Camera::makeImage(int width, int height) {
     Image result(width, height);
+    float zBuffer[width * height];
+    for (int ndx = 0; ndx < width * height; ndx++) {
+        zBuffer[ndx] = -10000;
+    }
     
-    color_t white = WHITE;
-    color_t bgColor = BG_COLOR;
-    color_t red = RED;
+    color_t bgColor = WHITE;
     
     // Make the image background a pleasing shade of blue
     for (int x = 0; x < width; x++) {
@@ -131,13 +132,16 @@ Image Camera::makeImage(int width, int height) {
     yScale = (1 - height) / (B - T);
     yOffset = -yScale * B;
     
+    double scale = fmin(xScale, yScale);
+    
+    // Convert triangles to image coordinates
     std::vector<Triangle> scaledTriangles = _triangles;
     for (int ndx = 0; ndx < scaledTriangles.size(); ndx++) {
-        scaledTriangles[ndx] = triangleToImageCoords(scaledTriangles[ndx]);
+        scaledTriangles[ndx] = triangleToImageCoords(scaledTriangles[ndx], scale, xOffset, yOffset);
     }
     
-    for (int ndx = 0; ndx < _triangles.size(); ndx++) {
-        Rect triBounds = _triangles[ndx].boundingBox();
+    for (int ndx = 0; ndx < scaledTriangles.size(); ndx++) {
+        Rect triBounds = scaledTriangles[ndx].boundingBox();
         
         for (int rx = triBounds.x; rx < triBounds.x + triBounds.width; rx++) {
             for (int ry = triBounds.y; ry < triBounds.y + triBounds.height; ry++) {
@@ -147,7 +151,7 @@ Image Camera::makeImage(int width, int height) {
                 }
                 
                 if (rx < width - 1 && ry < height - 1) {
-                    double zValue = _triangles[ndx].zDeterminant(Point(rx, ry, 0));
+                    double zValue = scaledTriangles[ndx].zDeterminant(Point(rx, ry, 0));
                     
                     if (zValue == -100) {
                         continue;
@@ -159,33 +163,22 @@ Image Camera::makeImage(int width, int height) {
                     color_t shadedRed = BLACK;
                     shadedRed.r = zValue;
                     
+                    if (zBuffer[width * ry + rx] > zValue) {
+                        continue;
+                    }
+                    
+                    double blueness  = (rx + 1) / 2;
+                    double greenness =  1 - blueness;
+                    color_t teal = WHITE;
+                    teal.b = blueness;
+                    teal.g = greenness;
+                    
                     result.pixel(rx, ry, shadedRed);
+                    zBuffer[width * ry + rx] = zValue;
                 }
             }
         }
     }
-    
-    
-    for (size_t ndx = 0; ndx < _shapes.size(); ndx++) {
-        for (size_t vert = 0; vert < _shapes[ndx].mesh.positions.size() / 3; vert++) {
-            float vX = _shapes[ndx].mesh.positions[3*vert+0];
-            float vY = _shapes[ndx].mesh.positions[3*vert+1];
-            
-            int imgX = vX * xScale + xOffset;
-            int imgY = vY * yScale + yOffset;
-            
-            if (imgX < 0 || imgY < 0) {
-                // Vertex is behind us.  Awkward.
-                continue;
-            }
-            
-            // Check if rendered vertex is even on screen
-            if (imgX < width - 1 && imgY < height - 1) {
-                result.pixel(imgX, imgY, white);
-            }
-        }
-    }
-    
     
     return result;
 }
