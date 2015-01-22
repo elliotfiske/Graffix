@@ -1,0 +1,906 @@
+// !$*UTF8*$!
+{
+       archiveVersion = 1;
+       classes = {
+       };
+       objectVersion = 46;
+       objects = {
+
+/* Begin PBXAggregateTarget section */
+              4FE14725C497492AAC531C96 /* install */ = {
+                     isa = PBXAggregateTarget;
+                     buildConfigurationList = 63B00DCF88F8472789215D4E /* Build configuration list for PBXAggregateTarget "install" */;
+                     buildPhases = (
+                            45DE7AD97ECD446CB7ED798D /* CMake PostBuild Rules */,
+                     );
+                     dependencies = (
+                            AF44595E1E8645929A03D82D /* PBXTargetDependency */,
+                     );
+                     name = install;
+                     productName = install;
+              };
+              36F6A599323947648B9593D4 /* ALL_BUILD */ = {
+                     isa = PBXAggregateTarget;
+                     buildConfigurationList = 0497FFAF04184B788379A197 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+                     buildPhases = (
+                            C2D781D2EB1A402FBC83493B /* CMake Rules */,
+                     );
+                     dependencies = (
+                            10AF47B88541410DACC37419 /* PBXTargetDependency */,
+                            CD38F58B4282416EB608B5CD /* PBXTargetDependency */,
+                     );
+                     name = ALL_BUILD;
+                     productName = ALL_BUILD;
+              };
+              BFA2ADDCB7834202BB64C056 /* ZERO_CHECK */ = {
+                     isa = PBXAggregateTarget;
+                     buildConfigurationList = 39C98E7D9241474B95576682 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+                     buildPhases = (
+                            D1F90A229CFE439DA2B63F57 /* CMake Rules */,
+                     );
+                     dependencies = (
+                     );
+                     name = ZERO_CHECK;
+                     productName = ZERO_CHECK;
+              };
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+83825902FD0B4A3C90BB57AA /* /Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src/config.h */ = {isa = PBXBuildFile; fileRef = 54FCD2EBB36A4726825A86B4 /* /Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src/config.h */; settings = { COMPILER_FLAGS = ""; }; };
+9D2CB260EA004B769309A9C8 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/include/GLFW/glfw3.h */ = {isa = PBXBuildFile; fileRef = 480C2B03E83D4F26BFB07446 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/include/GLFW/glfw3.h */; settings = { COMPILER_FLAGS = ""; }; };
+95C88CFD8F0F4741AF39CDFE /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/include/GLFW/glfw3native.h */ = {isa = PBXBuildFile; fileRef = 6C251E5ADF03448089BBFF4F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/include/GLFW/glfw3native.h */; settings = { COMPILER_FLAGS = ""; }; };
+6E66B9B2C98149DC86273C20 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 57CC7BE0BE424EEAA69849C1 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/CMakeLists.txt */; settings = { COMPILER_FLAGS = ""; }; };
+F9BC1A76C79347CC9B1DB0B1 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/clipboard.c */ = {isa = PBXBuildFile; fileRef = 0EC6D34F27204FBA82FA5B46 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/clipboard.c */; settings = { COMPILER_FLAGS = ""; }; };
+3F31B642E58C439FA49D5B40 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_clipboard.m */ = {isa = PBXBuildFile; fileRef = 0519CD5CE1A6451E9C810701 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_clipboard.m */; settings = { COMPILER_FLAGS = ""; }; };
+6DC34B892E844400B6429A0F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_gamma.c */ = {isa = PBXBuildFile; fileRef = 4499160680784989AA252C28 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_gamma.c */; settings = { COMPILER_FLAGS = ""; }; };
+84F017E78C794CB2BDB5AFC8 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_init.m */ = {isa = PBXBuildFile; fileRef = 7427454BE79B44C99DD1CBCB /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_init.m */; settings = { COMPILER_FLAGS = ""; }; };
+1821E775D4C849009DBA7210 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_joystick.m */ = {isa = PBXBuildFile; fileRef = EFA79C9CA18649E492874C88 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_joystick.m */; settings = { COMPILER_FLAGS = ""; }; };
+9E6B217A1FFA41F5B7A43A15 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_monitor.m */ = {isa = PBXBuildFile; fileRef = F03E311292C847EEBB599BD7 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_monitor.m */; settings = { COMPILER_FLAGS = ""; }; };
+5D84F68D44664C8DA3D0A9FD /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_platform.h */ = {isa = PBXBuildFile; fileRef = 6E43F1EAA3DF4355B6E64D63 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_platform.h */; settings = { COMPILER_FLAGS = ""; }; };
+69769401F954473EAE53F3F4 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_time.c */ = {isa = PBXBuildFile; fileRef = B96AD791ED5B494B990A155F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_time.c */; settings = { COMPILER_FLAGS = ""; }; };
+B0030516A5FE4B32BA1ADE8C /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_window.m */ = {isa = PBXBuildFile; fileRef = 17F425D581384A63A527F05D /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_window.m */; settings = { COMPILER_FLAGS = ""; }; };
+0B8E1805714E4AE0BAB6AE78 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/context.c */ = {isa = PBXBuildFile; fileRef = 63AB9E5E09AF4F9EAED07A16 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/context.c */; settings = { COMPILER_FLAGS = ""; }; };
+4911AFB258BF445790230939 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/gamma.c */ = {isa = PBXBuildFile; fileRef = AA768A6318724A3CA5149D16 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/gamma.c */; settings = { COMPILER_FLAGS = ""; }; };
+AEA8AE0F91DD4E2D94A82440 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/init.c */ = {isa = PBXBuildFile; fileRef = 54DCC0E4227E4711B0BAB26F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/init.c */; settings = { COMPILER_FLAGS = ""; }; };
+6029EACC5B6D4F5181DB584E /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/input.c */ = {isa = PBXBuildFile; fileRef = 12DA6C9F92FE47C39B63B84C /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/input.c */; settings = { COMPILER_FLAGS = ""; }; };
+4C752BC2E1B243E394C1C337 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/internal.h */ = {isa = PBXBuildFile; fileRef = 0CD5FD4AE37F43F0B97BB037 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/internal.h */; settings = { COMPILER_FLAGS = ""; }; };
+B78FA9CC147A4531843508F1 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/joystick.c */ = {isa = PBXBuildFile; fileRef = 3E5EAFF35C5A43A8B976B400 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/joystick.c */; settings = { COMPILER_FLAGS = ""; }; };
+4884EE4A016E46609BB438EA /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/monitor.c */ = {isa = PBXBuildFile; fileRef = E3BAE8220AA5480AA91FCC61 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/monitor.c */; settings = { COMPILER_FLAGS = ""; }; };
+F409141DCB1E4AB685EE6747 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/nsgl_context.m */ = {isa = PBXBuildFile; fileRef = E9284BC37EDC4808939A9D2F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/nsgl_context.m */; settings = { COMPILER_FLAGS = ""; }; };
+F90A874F785C4EE598F0813D /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/nsgl_platform.h */ = {isa = PBXBuildFile; fileRef = A60E3A6B31AB41A591C654E7 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/nsgl_platform.h */; settings = { COMPILER_FLAGS = ""; }; };
+9BFE164359D640C0A6DD7EF4 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/time.c */ = {isa = PBXBuildFile; fileRef = FDE2C3A0480849B1BFAFD8A8 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/time.c */; settings = { COMPILER_FLAGS = ""; }; };
+5A346048B54A4244ACBFA356 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/window.c */ = {isa = PBXBuildFile; fileRef = 00B1704CFE5742269FDDA147 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/window.c */; settings = { COMPILER_FLAGS = ""; }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+              B4E28EDF75A146A898266FED /*  */ = {
+                     isa = PBXBuildStyle;
+              };
+              67C2595004C74DABBD9E2A4E /* Debug */ = {
+                     isa = PBXBuildStyle;
+                     buildSettings = {
+                            COPY_PHASE_STRIP = NO;
+                     };
+                     name = Debug;
+              };
+              0EFE662F163B45849B706049 /* Release */ = {
+                     isa = PBXBuildStyle;
+                     buildSettings = {
+                            COPY_PHASE_STRIP = NO;
+                     };
+                     name = Release;
+              };
+              5F0A75B1D99A434DA528CCE4 /* MinSizeRel */ = {
+                     isa = PBXBuildStyle;
+                     buildSettings = {
+                            COPY_PHASE_STRIP = NO;
+                     };
+                     name = MinSizeRel;
+              };
+              87EE8B861100414D919C99FB /* RelWithDebInfo */ = {
+                     isa = PBXBuildStyle;
+                     buildSettings = {
+                            COPY_PHASE_STRIP = NO;
+                     };
+                     name = RelWithDebInfo;
+              };
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+              F3A52EA91D9A40FA91966123 /* PBXContainerItemProxy */ = {
+                     isa = PBXContainerItemProxy;
+                     containerPortal = 0CFC816E00914A35BB810C01 /* Project object */;
+                     proxyType = 1;
+                     remoteGlobalIDString = 36F6A599323947648B9593D4;
+                     remoteInfo = ALL_BUILD;
+              };
+              1FCD70A1F3124505909C7714 /* PBXContainerItemProxy */ = {
+                     isa = PBXContainerItemProxy;
+                     containerPortal = 0CFC816E00914A35BB810C01 /* Project object */;
+                     proxyType = 1;
+                     remoteGlobalIDString = BFA2ADDCB7834202BB64C056;
+                     remoteInfo = ZERO_CHECK;
+              };
+              3E72AA22B16847829C48C676 /* PBXContainerItemProxy */ = {
+                     isa = PBXContainerItemProxy;
+                     containerPortal = 0CFC816E00914A35BB810C01 /* Project object */;
+                     proxyType = 1;
+                     remoteGlobalIDString = AAEB479116394DEAA79E15B4;
+                     remoteInfo = GLFW_303;
+              };
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+C042267539504181AAF08437 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = "sourcecode.text"; fileEncoding = 4; name = "CMakeLists.txt"; path = "CMakeLists.txt"; sourceTree = SOURCE_ROOT; };
+4CC61BED33044F2880959805 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = "sourcecode.text"; fileEncoding = 4; name = "CMakeLists.txt"; path = "CMakeLists.txt"; sourceTree = SOURCE_ROOT; };
+54FCD2EBB36A4726825A86B4 /* /Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src/config.h */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.h"; fileEncoding = 4; name = "config.h"; path = "../../../../../471/CMake lovelies/external/glfw-3.0.3/src/config.h"; sourceTree = SOURCE_ROOT; };
+480C2B03E83D4F26BFB07446 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/include/GLFW/glfw3.h */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.h"; fileEncoding = 4; name = "glfw3.h"; path = "include/GLFW/glfw3.h"; sourceTree = SOURCE_ROOT; };
+6C251E5ADF03448089BBFF4F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/include/GLFW/glfw3native.h */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.h"; fileEncoding = 4; name = "glfw3native.h"; path = "include/GLFW/glfw3native.h"; sourceTree = SOURCE_ROOT; };
+57CC7BE0BE424EEAA69849C1 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = "sourcecode.text"; fileEncoding = 4; name = "CMakeLists.txt"; path = "src/CMakeLists.txt"; sourceTree = SOURCE_ROOT; };
+0EC6D34F27204FBA82FA5B46 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/clipboard.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "clipboard.c"; path = "src/clipboard.c"; sourceTree = SOURCE_ROOT; };
+0519CD5CE1A6451E9C810701 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_clipboard.m */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.objc"; fileEncoding = 4; name = "cocoa_clipboard.m"; path = "src/cocoa_clipboard.m"; sourceTree = SOURCE_ROOT; };
+4499160680784989AA252C28 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_gamma.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "cocoa_gamma.c"; path = "src/cocoa_gamma.c"; sourceTree = SOURCE_ROOT; };
+7427454BE79B44C99DD1CBCB /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_init.m */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.objc"; fileEncoding = 4; name = "cocoa_init.m"; path = "src/cocoa_init.m"; sourceTree = SOURCE_ROOT; };
+EFA79C9CA18649E492874C88 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_joystick.m */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.objc"; fileEncoding = 4; name = "cocoa_joystick.m"; path = "src/cocoa_joystick.m"; sourceTree = SOURCE_ROOT; };
+F03E311292C847EEBB599BD7 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_monitor.m */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.objc"; fileEncoding = 4; name = "cocoa_monitor.m"; path = "src/cocoa_monitor.m"; sourceTree = SOURCE_ROOT; };
+6E43F1EAA3DF4355B6E64D63 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_platform.h */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.h"; fileEncoding = 4; name = "cocoa_platform.h"; path = "src/cocoa_platform.h"; sourceTree = SOURCE_ROOT; };
+B96AD791ED5B494B990A155F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_time.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "cocoa_time.c"; path = "src/cocoa_time.c"; sourceTree = SOURCE_ROOT; };
+17F425D581384A63A527F05D /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_window.m */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.objc"; fileEncoding = 4; name = "cocoa_window.m"; path = "src/cocoa_window.m"; sourceTree = SOURCE_ROOT; };
+63AB9E5E09AF4F9EAED07A16 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/context.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "context.c"; path = "src/context.c"; sourceTree = SOURCE_ROOT; };
+AA768A6318724A3CA5149D16 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/gamma.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "gamma.c"; path = "src/gamma.c"; sourceTree = SOURCE_ROOT; };
+54DCC0E4227E4711B0BAB26F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/init.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "init.c"; path = "src/init.c"; sourceTree = SOURCE_ROOT; };
+12DA6C9F92FE47C39B63B84C /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/input.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "input.c"; path = "src/input.c"; sourceTree = SOURCE_ROOT; };
+0CD5FD4AE37F43F0B97BB037 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/internal.h */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.h"; fileEncoding = 4; name = "internal.h"; path = "src/internal.h"; sourceTree = SOURCE_ROOT; };
+3E5EAFF35C5A43A8B976B400 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/joystick.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "joystick.c"; path = "src/joystick.c"; sourceTree = SOURCE_ROOT; };
+E3BAE8220AA5480AA91FCC61 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/monitor.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "monitor.c"; path = "src/monitor.c"; sourceTree = SOURCE_ROOT; };
+E9284BC37EDC4808939A9D2F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/nsgl_context.m */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.objc"; fileEncoding = 4; name = "nsgl_context.m"; path = "src/nsgl_context.m"; sourceTree = SOURCE_ROOT; };
+A60E3A6B31AB41A591C654E7 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/nsgl_platform.h */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.h"; fileEncoding = 4; name = "nsgl_platform.h"; path = "src/nsgl_platform.h"; sourceTree = SOURCE_ROOT; };
+FDE2C3A0480849B1BFAFD8A8 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/time.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "time.c"; path = "src/time.c"; sourceTree = SOURCE_ROOT; };
+00B1704CFE5742269FDDA147 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/window.c */ = {isa = PBXFileReference; explicitFileType = "sourcecode.c.c"; fileEncoding = 4; name = "window.c"; path = "src/window.c"; sourceTree = SOURCE_ROOT; };
+64A013FCD3004693AD5A459C /* GLFW_303 */ = {isa = PBXFileReference; explicitFileType = "archive.ar"; path = "libglfw3.a"; refType = 0; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+              FE73B449CE2D4555A7A0F6EC  = {
+                     isa = PBXGroup;
+                     children = (
+                            64D0B0EF42F240F3A6967E53 /* Sources */,
+                            D25407D66ACD4A47828B0FEF /* Resources */,
+                            67C7A6AB8A50495EB2E8083C /* Products */,
+                     );
+                     sourceTree = "<group>";
+              };
+              64D0B0EF42F240F3A6967E53 /* Sources */ = {
+                     isa = PBXGroup;
+                     children = (
+                            858518855CE5488385D23140 /* ALL_BUILD */,
+                            FADA5237DDBF4A459C7E5124 /* ZERO_CHECK */,
+                            04FEE26A5F0243BAB155C07C /* GLFW_303 */,
+                     );
+                     name = Sources;
+                     sourceTree = "<group>";
+              };
+              D25407D66ACD4A47828B0FEF /* Resources */ = {
+                     isa = PBXGroup;
+                     children = (
+                     );
+                     name = Resources;
+                     sourceTree = "<group>";
+              };
+              858518855CE5488385D23140 /* ALL_BUILD */ = {
+                     isa = PBXGroup;
+                     children = (
+                            E4A3C40C8BF046B6A5C0AE00 /* CMake Rules */,
+                            C042267539504181AAF08437 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/CMakeLists.txt */,
+                     );
+                     name = ALL_BUILD;
+                     sourceTree = "<group>";
+              };
+              E4A3C40C8BF046B6A5C0AE00 /* CMake Rules */ = {
+                     isa = PBXGroup;
+                     children = (
+                     );
+                     name = "CMake Rules";
+                     sourceTree = "<group>";
+              };
+              FADA5237DDBF4A459C7E5124 /* ZERO_CHECK */ = {
+                     isa = PBXGroup;
+                     children = (
+                            7372F3385DE04AF9A40DAA3E /* CMake Rules */,
+                            4CC61BED33044F2880959805 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/CMakeLists.txt */,
+                     );
+                     name = ZERO_CHECK;
+                     sourceTree = "<group>";
+              };
+              7372F3385DE04AF9A40DAA3E /* CMake Rules */ = {
+                     isa = PBXGroup;
+                     children = (
+                     );
+                     name = "CMake Rules";
+                     sourceTree = "<group>";
+              };
+              04FEE26A5F0243BAB155C07C /* GLFW_303 */ = {
+                     isa = PBXGroup;
+                     children = (
+                            7C896D7B7F77458ABEDEDDB1 /* Source Files */,
+                            6A5B4C3F32764035A53DEA84 /* Header Files */,
+                            57CC7BE0BE424EEAA69849C1 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/CMakeLists.txt */,
+                     );
+                     name = GLFW_303;
+                     sourceTree = "<group>";
+              };
+              7C896D7B7F77458ABEDEDDB1 /* Source Files */ = {
+                     isa = PBXGroup;
+                     children = (
+                            0EC6D34F27204FBA82FA5B46 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/clipboard.c */,
+                            0519CD5CE1A6451E9C810701 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_clipboard.m */,
+                            4499160680784989AA252C28 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_gamma.c */,
+                            7427454BE79B44C99DD1CBCB /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_init.m */,
+                            EFA79C9CA18649E492874C88 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_joystick.m */,
+                            F03E311292C847EEBB599BD7 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_monitor.m */,
+                            B96AD791ED5B494B990A155F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_time.c */,
+                            17F425D581384A63A527F05D /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_window.m */,
+                            63AB9E5E09AF4F9EAED07A16 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/context.c */,
+                            AA768A6318724A3CA5149D16 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/gamma.c */,
+                            54DCC0E4227E4711B0BAB26F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/init.c */,
+                            12DA6C9F92FE47C39B63B84C /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/input.c */,
+                            3E5EAFF35C5A43A8B976B400 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/joystick.c */,
+                            E3BAE8220AA5480AA91FCC61 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/monitor.c */,
+                            E9284BC37EDC4808939A9D2F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/nsgl_context.m */,
+                            FDE2C3A0480849B1BFAFD8A8 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/time.c */,
+                            00B1704CFE5742269FDDA147 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/window.c */,
+                     );
+                     name = "Source Files";
+                     sourceTree = "<group>";
+              };
+              6A5B4C3F32764035A53DEA84 /* Header Files */ = {
+                     isa = PBXGroup;
+                     children = (
+                            54FCD2EBB36A4726825A86B4 /* /Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src/config.h */,
+                            480C2B03E83D4F26BFB07446 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/include/GLFW/glfw3.h */,
+                            6C251E5ADF03448089BBFF4F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/include/GLFW/glfw3native.h */,
+                            6E43F1EAA3DF4355B6E64D63 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_platform.h */,
+                            0CD5FD4AE37F43F0B97BB037 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/internal.h */,
+                            A60E3A6B31AB41A591C654E7 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/nsgl_platform.h */,
+                     );
+                     name = "Header Files";
+                     sourceTree = "<group>";
+              };
+              67C7A6AB8A50495EB2E8083C /* Products */ = {
+                     isa = PBXGroup;
+                     children = (
+                            64A013FCD3004693AD5A459C /* GLFW_303 */,
+                     );
+                     name = Products;
+                     sourceTree = "<group>";
+              };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+              AAEB479116394DEAA79E15B4 /* GLFW_303 */ = {
+                     isa = PBXNativeTarget;
+                     buildConfigurationList = D7ED65B50253431E9248DEBE /* Build configuration list for PBXNativeTarget "GLFW_303" */;
+                     buildPhases = (
+                            15296BC75ABC42EFAF29341B /* Sources */,
+                     );
+                     buildRules = (
+                     );
+                     dependencies = (
+                     );
+                     name = GLFW_303;
+                     productName = GLFW_303;
+                     productReference = 64A013FCD3004693AD5A459C /* GLFW_303 */;
+                     productType = "com.apple.product-type.library.static";
+              };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+              0CFC816E00914A35BB810C01 /* Project object */ = {
+                     isa = PBXProject;
+                     attributes = {
+                            BuildIndependentTargetsInParallel = YES;
+                     };
+                     buildConfigurationList = B598CF90856A4CC7800679DF /* Build configuration list for PBXProject  "GLFW" */;
+                     buildSettings = {
+                     };
+                     buildStyles = (
+                            67C2595004C74DABBD9E2A4E /* Debug */,
+                            0EFE662F163B45849B706049 /* Release */,
+                            5F0A75B1D99A434DA528CCE4 /* MinSizeRel */,
+                            87EE8B861100414D919C99FB /* RelWithDebInfo */,
+                     );
+                     compatibilityVersion = "Xcode 3.2";
+                     hasScannedForEncodings = 0;
+                     mainGroup = FE73B449CE2D4555A7A0F6EC;
+                     projectDirPath = "/Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3";
+                     projectRoot = "";
+                     targets = (
+                            4FE14725C497492AAC531C96 /* install */,
+                            36F6A599323947648B9593D4 /* ALL_BUILD */,
+                            BFA2ADDCB7834202BB64C056 /* ZERO_CHECK */,
+                            AAEB479116394DEAA79E15B4 /* GLFW_303 */,
+                     );
+              };
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+              5F59A10403054F03A622C046 /*  */ = {
+                     isa = PBXShellScriptBuildPhase;
+                     buildActionMask = 2147483647;
+                     files = (
+                     );
+                     inputPaths = (
+                     );
+                     outputPaths = (
+                     );
+                     runOnlyForDeploymentPostprocessing = 0;
+                     shellPath = /bin/sh;
+                     shellScript = "# shell script goes here
+exit 0";
+                     showEnvVarsInLog = 0;
+              };
+              45DE7AD97ECD446CB7ED798D /* CMake PostBuild Rules */ = {
+                     isa = PBXShellScriptBuildPhase;
+                     buildActionMask = 2147483647;
+                     files = (
+                     );
+                     name = "CMake PostBuild Rules";
+                     runOnlyForDeploymentPostprocessing = 0;
+                     shellPath = /bin/sh;
+                     shellScript = "make -C /Users/elliotfiske/471/CMake\\ lovelies/external/glfw-3.0.3 -f /Users/elliotfiske/471/CMake\\ lovelies/external/glfw-3.0.3/CMakeScripts/install_postBuildPhase.make$CONFIGURATION all";
+                     showEnvVarsInLog = 0;
+              };
+              157BF00148A54898B1784161 /*  */ = {
+                     isa = PBXShellScriptBuildPhase;
+                     buildActionMask = 2147483647;
+                     files = (
+                     );
+                     inputPaths = (
+                     );
+                     outputPaths = (
+                     );
+                     runOnlyForDeploymentPostprocessing = 0;
+                     shellPath = /bin/sh;
+                     shellScript = "# shell script goes here
+exit 0";
+                     showEnvVarsInLog = 0;
+              };
+              C2D781D2EB1A402FBC83493B /* CMake Rules */ = {
+                     isa = PBXShellScriptBuildPhase;
+                     buildActionMask = 2147483647;
+                     files = (
+                     );
+                     name = "CMake Rules";
+                     runOnlyForDeploymentPostprocessing = 0;
+                     shellPath = /bin/sh;
+                     shellScript = "make -C /Users/elliotfiske/471/CMake\\ lovelies/external/glfw-3.0.3 -f /Users/elliotfiske/471/CMake\\ lovelies/external/glfw-3.0.3/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
+                     showEnvVarsInLog = 0;
+              };
+              3F6CD4E2BCF148CFBB3B2397 /*  */ = {
+                     isa = PBXShellScriptBuildPhase;
+                     buildActionMask = 2147483647;
+                     files = (
+                     );
+                     inputPaths = (
+                     );
+                     outputPaths = (
+                     );
+                     runOnlyForDeploymentPostprocessing = 0;
+                     shellPath = /bin/sh;
+                     shellScript = "# shell script goes here
+exit 0";
+                     showEnvVarsInLog = 0;
+              };
+              D1F90A229CFE439DA2B63F57 /* CMake Rules */ = {
+                     isa = PBXShellScriptBuildPhase;
+                     buildActionMask = 2147483647;
+                     files = (
+                     );
+                     name = "CMake Rules";
+                     runOnlyForDeploymentPostprocessing = 0;
+                     shellPath = /bin/sh;
+                     shellScript = "make -C /Users/elliotfiske/471/CMake\\ lovelies/external/glfw-3.0.3 -f /Users/elliotfiske/471/CMake\\ lovelies/external/glfw-3.0.3/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
+                     showEnvVarsInLog = 0;
+              };
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+              15296BC75ABC42EFAF29341B /* Sources */ = {
+                     isa = PBXSourcesBuildPhase;
+                     buildActionMask = 2147483647;
+                     files = (
+                            F9BC1A76C79347CC9B1DB0B1 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/clipboard.c */,
+                            3F31B642E58C439FA49D5B40 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_clipboard.m */,
+                            6DC34B892E844400B6429A0F /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_gamma.c */,
+                            84F017E78C794CB2BDB5AFC8 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_init.m */,
+                            1821E775D4C849009DBA7210 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_joystick.m */,
+                            9E6B217A1FFA41F5B7A43A15 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_monitor.m */,
+                            69769401F954473EAE53F3F4 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_time.c */,
+                            B0030516A5FE4B32BA1ADE8C /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/cocoa_window.m */,
+                            0B8E1805714E4AE0BAB6AE78 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/context.c */,
+                            4911AFB258BF445790230939 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/gamma.c */,
+                            AEA8AE0F91DD4E2D94A82440 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/init.c */,
+                            6029EACC5B6D4F5181DB584E /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/input.c */,
+                            B78FA9CC147A4531843508F1 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/joystick.c */,
+                            4884EE4A016E46609BB438EA /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/monitor.c */,
+                            F409141DCB1E4AB685EE6747 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/nsgl_context.m */,
+                            9BFE164359D640C0A6DD7EF4 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/time.c */,
+                            5A346048B54A4244ACBFA356 /* /Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src/window.c */,
+                     );
+                     runOnlyForDeploymentPostprocessing = 0;
+              };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+              AF44595E1E8645929A03D82D /* PBXTargetDependency */ = {
+                     isa = PBXTargetDependency;
+                     target = 36F6A599323947648B9593D4 /* ALL_BUILD */;
+                     targetProxy = F3A52EA91D9A40FA91966123 /* PBXContainerItemProxy */;
+              };
+              10AF47B88541410DACC37419 /* PBXTargetDependency */ = {
+                     isa = PBXTargetDependency;
+                     target = BFA2ADDCB7834202BB64C056 /* ZERO_CHECK */;
+                     targetProxy = 1FCD70A1F3124505909C7714 /* PBXContainerItemProxy */;
+              };
+              CD38F58B4282416EB608B5CD /* PBXTargetDependency */ = {
+                     isa = PBXTargetDependency;
+                     target = AAEB479116394DEAA79E15B4 /* GLFW_303 */;
+                     targetProxy = 3E72AA22B16847829C48C676 /* PBXContainerItemProxy */;
+              };
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+              343264F61FF045CBA7BB1037 /* Debug */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+                            ONLY_ACTIVE_ARCH = YES;
+                            SDKROOT = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/build";
+                     };
+                     name = Debug;
+              };
+              F025CF72080F454C80CEE51D /* Release */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+                            ONLY_ACTIVE_ARCH = YES;
+                            SDKROOT = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/build";
+                     };
+                     name = Release;
+              };
+              8F4373BDA1DE496CA9C18E77 /* MinSizeRel */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+                            ONLY_ACTIVE_ARCH = YES;
+                            SDKROOT = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/build";
+                     };
+                     name = MinSizeRel;
+              };
+              EEDC285C0C964045A3D656F9 /* RelWithDebInfo */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+                            ONLY_ACTIVE_ARCH = YES;
+                            SDKROOT = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/build";
+                     };
+                     name = RelWithDebInfo;
+              };
+              6CA0C946B3CB479D9124BD0C /* Debug */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = install;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = Debug;
+              };
+              D8803E31621A470098D473D3 /* Release */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = install;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = Release;
+              };
+              D6B528B563354AAAB025E40D /* MinSizeRel */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = install;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = MinSizeRel;
+              };
+              634238B42304496089F64D99 /* RelWithDebInfo */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = install;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = RelWithDebInfo;
+              };
+              446B330108134B46BA234E08 /* Debug */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = ALL_BUILD;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = Debug;
+              };
+              1113EA3DA66E4401977C31CC /* Release */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = ALL_BUILD;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = Release;
+              };
+              68F82ECF68FE43FE92F74C98 /* MinSizeRel */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = ALL_BUILD;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = MinSizeRel;
+              };
+              75CE37C05D214C938627ABD0 /* RelWithDebInfo */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = ALL_BUILD;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = RelWithDebInfo;
+              };
+              CA6D4CA6C21E4150B5BAEEAE /* Debug */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = ZERO_CHECK;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = Debug;
+              };
+              4F956BCB93FF4460B026FABA /* Release */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = ZERO_CHECK;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = Release;
+              };
+              C2C2151680174AF7BF283A03 /* MinSizeRel */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = ZERO_CHECK;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = MinSizeRel;
+              };
+              44A90CC0A04545C39418F756 /* RelWithDebInfo */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            INSTALL_PATH = "";
+                            OTHER_CFLAGS = "   -Wall";
+                            OTHER_LDFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = ZERO_CHECK;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = RelWithDebInfo;
+              };
+              23C41FDA1DA04D0388D24AC4 /* Debug */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            EXECUTABLE_PREFIX = lib;
+                            EXECUTABLE_SUFFIX = ".a";
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 0;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            HEADER_SEARCH_PATHS = ("\"/Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src\"", "\"/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src\"", );
+                            INSTALL_PATH = "";
+                            LIBRARY_STYLE = STATIC;
+                            OTHER_CFLAGS = "     -Wall";
+                            OTHER_LIBTOOLFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = glfw3;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = Debug;
+              };
+              77AC5FDD9E1B4C58813F644A /* Release */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            EXECUTABLE_PREFIX = lib;
+                            EXECUTABLE_SUFFIX = ".a";
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 3;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            HEADER_SEARCH_PATHS = ("\"/Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src\"", "\"/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src\"", );
+                            INSTALL_PATH = "";
+                            LIBRARY_STYLE = STATIC;
+                            OTHER_CFLAGS = "    -DNDEBUG   -Wall";
+                            OTHER_LIBTOOLFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = glfw3;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = Release;
+              };
+              C8EE314E1A2C48258DCD2FD7 /* MinSizeRel */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            EXECUTABLE_PREFIX = lib;
+                            EXECUTABLE_SUFFIX = ".a";
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = s;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            HEADER_SEARCH_PATHS = ("\"/Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src\"", "\"/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src\"", );
+                            INSTALL_PATH = "";
+                            LIBRARY_STYLE = STATIC;
+                            OTHER_CFLAGS = "    -DNDEBUG   -Wall";
+                            OTHER_LIBTOOLFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = glfw3;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = MinSizeRel;
+              };
+              2E883A5BD94A44AEB26C5843 /* RelWithDebInfo */ = {
+                     isa = XCBuildConfiguration;
+                     buildSettings = {
+                            COMBINE_HIDPI_IMAGES = YES;
+                            EXECUTABLE_PREFIX = lib;
+                            EXECUTABLE_SUFFIX = ".a";
+                            GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+                            GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+                            GCC_OPTIMIZATION_LEVEL = 2;
+                            GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", TW_STATIC, TW_NO_LIB_PRAGMA, TW_NO_DIRECT3D, GLEW_STATIC, _CRT_SECURE_NO_WARNINGS, );
+                            GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+                            HEADER_SEARCH_PATHS = ("\"/Users/elliotfiske/Downloads/Ass ass ass ass/OpenGL-tutorial_v0014_21/external/glfw-3.0.3/src\"", "\"/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src\"", );
+                            INSTALL_PATH = "";
+                            LIBRARY_STYLE = STATIC;
+                            OTHER_CFLAGS = "       -DNDEBUG   -Wall";
+                            OTHER_LIBTOOLFLAGS = " ";
+                            OTHER_REZFLAGS = "";
+                            PRODUCT_NAME = glfw3;
+                            SECTORDER_FLAGS = "";
+                            SYMROOT = "/Users/elliotfiske/471/CMake lovelies/external/glfw-3.0.3/src";
+                            USE_HEADERMAP = NO;
+                            WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", );
+                     };
+                     name = RelWithDebInfo;
+              };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+              B598CF90856A4CC7800679DF /* Build configuration list for PBXProject  "GLFW" */ = {
+                     isa = XCConfigurationList;
+                     buildConfigurations = (
+                            343264F61FF045CBA7BB1037 /* Debug */,
+                            F025CF72080F454C80CEE51D /* Release */,
+                            8F4373BDA1DE496CA9C18E77 /* MinSizeRel */,
+                            EEDC285C0C964045A3D656F9 /* RelWithDebInfo */,
+                     );
+                     defaultConfigurationIsVisible = 0;
+                     defaultConfigurationName = Debug;
+              };
+              63B00DCF88F8472789215D4E /* Build configuration list for PBXAggregateTarget "install" */ = {
+                     isa = XCConfigurationList;
+                     buildConfigurations = (
+                            6CA0C946B3CB479D9124BD0C /* Debug */,
+                            D8803E31621A470098D473D3 /* Release */,
+                            D6B528B563354AAAB025E40D /* MinSizeRel */,
+                            634238B42304496089F64D99 /* RelWithDebInfo */,
+                     );
+                     defaultConfigurationIsVisible = 0;
+                     defaultConfigurationName = Debug;
+              };
+              0497FFAF04184B788379A197 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+                     isa = XCConfigurationList;
+                     buildConfigurations = (
+                            446B330108134B46BA234E08 /* Debug */,
+                            1113EA3DA66E4401977C31CC /* Release */,
+                            68F82ECF68FE43FE92F74C98 /* MinSizeRel */,
+                            75CE37C05D214C938627ABD0 /* RelWithDebInfo */,
+                     );
+                     defaultConfigurationIsVisible = 0;
+                     defaultConfigurationName = Debug;
+              };
+              39C98E7D9241474B95576682 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+                     isa = XCConfigurationList;
+                     buildConfigurations = (
+                            CA6D4CA6C21E4150B5BAEEAE /* Debug */,
+                            4F956BCB93FF4460B026FABA /* Release */,
+                            C2C2151680174AF7BF283A03 /* MinSizeRel */,
+                            44A90CC0A04545C39418F756 /* RelWithDebInfo */,
+                     );
+                     defaultConfigurationIsVisible = 0;
+                     defaultConfigurationName = Debug;
+              };
+              D7ED65B50253431E9248DEBE /* Build configuration list for PBXNativeTarget "GLFW_303" */ = {
+                     isa = XCConfigurationList;
+                     buildConfigurations = (
+                            23C41FDA1DA04D0388D24AC4 /* Debug */,
+                            77AC5FDD9E1B4C58813F644A /* Release */,
+                            C8EE314E1A2C48258DCD2FD7 /* MinSizeRel */,
+                            2E883A5BD94A44AEB26C5843 /* RelWithDebInfo */,
+                     );
+                     defaultConfigurationIsVisible = 0;
+                     defaultConfigurationName = Debug;
+              };
+/* End XCConfigurationList section */
+       };
+       rootObject = 0CFC816E00914A35BB810C01;
+}

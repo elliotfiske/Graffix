@@ -1,0 +1,45 @@
+HELLO
+
+run my program with: 
+
+make
+
+-- THEN -- :
+
+./a.out bunny.obj 500 200 1
+
+Where you can specify any .obj file in the same directory, a width/height, then either 1 or 2.
+1:  Depth rendering, where the .obj file is rendered with further vertices being darker
+2:  X-ramp rendering, where the object's pixels are colored based on their distance along the x-axis.
+
+tl;dr:
+
+./a.out <.obj file>  <width>  <height>  <1/2>
+
+
+
+Design overview:
+
+There's 3 main components (to the code I wrote at least)
+
+The 'Shapes' file defines Point, Triangle and Rect data structures.  It also has a few helper functions to turn the shapes vector into a bunch of Triangles and Points.  The 'Triangles' class has a function called 'boundingBox()' that will return the bounding box of the triangle.  I loop through this rectangle and continuously call the determinant() function of Triangle to determine what to color each pixel.
+
+That is done in the 'Camera' class, a simple class that spits out an image based on the shapes you give it.  Its makeImage() function does all the fun window transformation and pixel rendering. I used a 'Camera' object because it mimics how cameras make beautiful pictures in real life.  Real life!
+
+Finally the 'main' class reads in arguments and calls the necessary Camera functions.  Neato!
+
+
+
+Everything works beautifully as according to the spec.  Unless you put a height bigger than the width.  Then stuff blows up everywhere :(
+
+
+
+complimentary giraffe:
+               ._ o o
+               \_`-)|_
+            ,""       \ 
+          ,"  ## |   * *. 
+        ," ##   ,-\__    `.
+      ,"       /     `--._;)
+    ,"     ## /
+  ,"   ##    /
