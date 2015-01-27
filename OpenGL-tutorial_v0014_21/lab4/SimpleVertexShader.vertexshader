@@ -4,12 +4,18 @@
 attribute vec3 vertexPosition_modelspace;
 attribute vec3 vertexColor;
 
+// Scale points based on the position and size of the window
+uniform vec2 uWinScale;
+
 // Output data ; will be interpolated for each fragment.
 varying vec3 fragmentColor;
 
-void main(){
+void main() {
 
-	gl_Position = vec4(vertexPosition_modelspace, 1.0);
+	gl_Position = vec4(vertexPosition_modelspace.x * uWinScale.x,
+                       vertexPosition_modelspace.y * uWinScale.y,
+                       vertexPosition_modelspace.z,
+                       1.0);
 
     // The color of each vertex will be interpolated
     // to produce the color of each fragment

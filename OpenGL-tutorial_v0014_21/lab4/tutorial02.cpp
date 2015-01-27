@@ -15,6 +15,15 @@ using namespace glm;
 
 #include <common/shader.hpp>
 
+int width, height;
+
+void window_resized(GLFWwindow* window, int width_, int height_) {
+    printf("Width: %d, Height: %d\n", width, height);
+    width = width_;
+    height = height_;
+    glViewport(0, 0, width, height);
+}
+
 int main( void )
 {
 	// Initialise GLFW
@@ -30,7 +39,7 @@ int main( void )
 
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Tutorial 02 - Red triangle", NULL, NULL);
+	window = glfwCreateWindow( 1024, 768, "Tutorial 37 - Red briangle", NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		glfwTerminate();
@@ -46,6 +55,8 @@ int main( void )
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+    
+    glfwSetWindowSizeCallback(window, window_resized);
 
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -56,6 +67,7 @@ int main( void )
 	// Get a handle for our buffers
 	GLuint vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
     GLuint vertexColorID = glGetAttribLocation(programID, "vertexColor");
+    GLuint winScaleID = glGetUniformLocation(programID, "uWinScale");
 
     GLfloat sideMargin = 0.15;
     GLfloat triangleMargin = 0.1;
@@ -106,6 +118,9 @@ int main( void )
 		// Use our shader
 		glUseProgram(programID);
 
+        // Tell the shader how to scale the vertices to account for the window size
+        glUniform2f(winScaleID, fmaxf(1, height / (float) width), fmaxf(1, width / (float) height));
+        
 		// 1st attribute buffer : vertices
 		glEnableVertexAttribArray(vertexPosition_modelspaceID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);

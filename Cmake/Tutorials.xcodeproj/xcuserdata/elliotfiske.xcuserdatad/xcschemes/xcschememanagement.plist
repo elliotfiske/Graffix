@@ -39,6 +39,11 @@
 			<key>orderHint</key>
 			<integer>31</integer>
 		</dict>
+		<key>Lab4Junk.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>38</integer>
+		</dict>
 		<key>LinearMath.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -73,6 +78,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>20</integer>
+		</dict>
+		<key>playground copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>39</integer>
 		</dict>
 		<key>playground.xcscheme</key>
 		<dict>
@@ -348,6 +358,16 @@
 			<true/>
 		</dict>
 		<key>BCB60B009B304B55A5739334</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C93C0A921A7711FF0094D85A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C93C0A9C1A7712240094D85A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
