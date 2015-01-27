@@ -2,11 +2,24 @@
 
 // Interpolated values from the vertex shaders
 varying vec3 fragmentColor;
+uniform vec2 uWinCenter;
 
 void main()
 {
-
-	// Output color = red 
-	gl_FragColor = vec4(fragmentColor,1);
-
+    // Carve a hole in the middle
+    if (distance(vec2(gl_FragCoord), uWinCenter) < 20) {
+        discard;
+    }
+    
+	// Output color = interpolated from vertex shader
+    if (gl_FragCoord.y < uWinCenter.y) {
+        gl_FragColor = vec4(fragmentColor,1);
+    }
+    else {
+        gl_FragColor = vec4(0, 0.286275, 0.521569, 1);
+    }
+    
+    float distToCenter = distance(vec2(gl_FragCoord), uWinCenter) / 250;
+    
+    gl_FragColor = mix(gl_FragColor, vec4(1, 1, 1, 1), distToCenter);
 }

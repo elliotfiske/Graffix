@@ -15,12 +15,13 @@ using namespace glm;
 
 #include <common/shader.hpp>
 
-int windowWidth, windowHeight;
+int width, height;
 
-void window_resized(GLFWwindow* window, int width, int height) {
-    windowWidth = width;
-    windowHeight = height;
+void window_resized(GLFWwindow* window, int width_, int height_) {
     printf("Width: %d, Height: %d\n", width, height);
+    width = width_;
+    height = height_;
+    glViewport(0, 0, width, height);
 }
 
 int main( void )
@@ -38,7 +39,9 @@ int main( void )
     
     
     // Open a window and create its OpenGL context
-    window = glfwCreateWindow( 1024, 768, "Tutorial 37 - Red briangle", NULL, NULL);
+    width = 1024;
+    height = 768;
+    window = glfwCreateWindow( width, height, "Tutorial 37 - Red briangle", NULL, NULL);
     if( window == NULL ){
         fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
         glfwTerminate();
@@ -57,8 +60,8 @@ int main( void )
     
     glfwSetWindowSizeCallback(window, window_resized);
     
-    // Dark blue background
-    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    // white background
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     
     // Create and compile our GLSL program from the shaders
     GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
@@ -66,6 +69,8 @@ int main( void )
     // Get a handle for our buffers
     GLuint vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
     GLuint vertexColorID = glGetAttribLocation(programID, "vertexColor");
+    GLuint winScaleID = glGetUniformLocation(programID, "uWinScale");
+    GLuint winCenterID = glGetUniformLocation(programID, "uWinCenter");
     
     GLfloat sideMargin = 0.15;
     GLfloat triangleMargin = 0.1;
@@ -116,6 +121,16 @@ int main( void )
         // Use our shader
         glUseProgram(programID);
         
+        // Tell the shader how to scale the vertices to account for the window size
+        if (width > height) {
+            glUniform2f(winScaleID, height / (float) width, 1);
+        }
+        else {
+            glUniform2f(winScaleID, 1, width / (float) height);
+        }
+        
+        glUniform2f(winCenterID, (float) width / 2, (float) height / 2);
+        
         // 1st attribute buffer : vertices
         glEnableVertexAttribArray(vertexPosition_modelspaceID);
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -142,7 +157,6 @@ int main( void )
         
         // Draw the triangle !
         glDrawArrays(GL_TRIANGLES, 0, 12);
-        
         
         glDisableVertexAttribArray(vertexPosition_modelspaceID);
         
