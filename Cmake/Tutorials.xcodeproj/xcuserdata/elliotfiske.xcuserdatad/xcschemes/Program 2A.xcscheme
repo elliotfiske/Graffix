@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C93C0A9C1A7712240094D85A"
                BuildableName = "playground copy"
-               BlueprintName = "lab4 Junk REAL"
+               BlueprintName = "Program 2A"
                ReferencedContainer = "container:../Cmake/Tutorials.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,7 +34,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C93C0A9C1A7712240094D85A"
             BuildableName = "playground copy"
-            BlueprintName = "lab4 Junk REAL"
+            BlueprintName = "Program 2A"
             ReferencedContainer = "container:../Cmake/Tutorials.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -53,7 +53,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C93C0A9C1A7712240094D85A"
             BuildableName = "playground copy"
-            BlueprintName = "lab4 Junk REAL"
+            BlueprintName = "Program 2A"
             ReferencedContainer = "container:../Cmake/Tutorials.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -71,7 +71,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C93C0A9C1A7712240094D85A"
             BuildableName = "playground copy"
-            BlueprintName = "lab4 Junk REAL"
+            BlueprintName = "Program 2A"
             ReferencedContainer = "container:../Cmake/Tutorials.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

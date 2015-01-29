@@ -49,6 +49,11 @@
 			<key>orderHint</key>
 			<integer>37</integer>
 		</dict>
+		<key>Program 2A.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>39</integer>
+		</dict>
 		<key>ZERO_CHECK.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -78,11 +83,6 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>20</integer>
-		</dict>
-		<key>playground copy.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>39</integer>
 		</dict>
 		<key>playground.xcscheme</key>
 		<dict>

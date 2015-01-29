@@ -6,16 +6,27 @@ attribute vec3 vertexColor;
 
 // Scale points based on the position and size of the window
 uniform vec2 uWinScale;
+uniform vec2 uWinCenter;
+
+// Let us know what time it is, to animate the points better
+uniform float uTime;
+
+// Let us know how far from the center points should chill out
+uniform float targetDist;
 
 // Output data ; will be interpolated for each fragment.
 varying vec3 fragmentColor;
 
 void main() {
 
+    
+    
 	gl_Position = vec4(vertexPosition_modelspace.x * uWinScale.x,
                        vertexPosition_modelspace.y * uWinScale.y,
                        vertexPosition_modelspace.z,
                        1.0);
+    
+    gl_PointSize = 20;
 
     // The color of each vertex will be interpolated
     // to produce the color of each fragment

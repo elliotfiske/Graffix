@@ -3,10 +3,12 @@
 // Interpolated values from the vertex shaders
 varying vec3 fragmentColor;
 
+uniform vec2 uWinCenter;
+
 void main()
 {
 
 	// Output color = interpolated from vertex shader 
-	gl_FragColor = vec4(fragmentColor,1);
+	gl_FragColor = vec4(1, 1, 1, 1);
 
 }

@@ -1,6 +1,7 @@
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 // Include GLEW
 #include <GL/glew.h>
@@ -16,6 +17,7 @@ using namespace glm;
 #include <common/shader.hpp>
 
 int width, height;
+#define NUM_POINTS 40
 
 void window_resized(GLFWwindow* window, int width_, int height_) {
     printf("Width: %d, Height: %d\n", width, height);
@@ -39,7 +41,7 @@ int main( void )
 
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Tutorial 37 - Red briangle", NULL, NULL);
+	window = glfwCreateWindow( 1024, 768, "Program 2A - fun with points", NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		glfwTerminate();
@@ -60,6 +62,7 @@ int main( void )
 
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
@@ -68,47 +71,36 @@ int main( void )
 	GLuint vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
     GLuint vertexColorID = glGetAttribLocation(programID, "vertexColor");
     GLuint winScaleID = glGetUniformLocation(programID, "uWinScale");
-
-    GLfloat sideMargin = 0.15;
-    GLfloat triangleMargin = 0.1;
+    GLuint winCenterID = glGetUniformLocation(programID, "uWinCenter");
+    GLuint timeID = glGetUniformLocation(programID, "uTime");
+    GLuint targetDistID = glGetUniformLocation(programID, "uTargetDist");
     
-	static const GLfloat g_vertex_buffer_data[] = { 
-         -1.0f + sideMargin,     -1.0f + sideMargin, 0.0f,
-          0.0f - triangleMargin,  1.0f - sideMargin, 0.0f,
-         -1.0f + sideMargin,      1.0f - sideMargin, 0.0f,
-        
-         -1.0f + sideMargin + triangleMargin, -1.0f + sideMargin, 0.0f,
-          1.0f - sideMargin - triangleMargin, -1.0f + sideMargin, 0.0f,
-          0.0f,  1.0f - sideMargin, 0.0f,
-        
-          1.0f - sideMargin,     -1.0f + sideMargin, 0.0f,
-          1.0f - sideMargin,      1.0f - sideMargin, 0.0f,
-          0.0f + triangleMargin,  1.0f - sideMargin, 0.0f,
-	};
+    static GLfloat g_point_buffer_data[NUM_POINTS * 2];
+    srand((unsigned int)time(NULL));
+    for (int i = 0; i < NUM_POINTS * 2; i++) {
+        float newPointCoord = (float)rand()/(float)(RAND_MAX/2.0) - 1;
+        g_point_buffer_data[i] = newPointCoord;
+    }
+    
+    
     
     static const GLfloat g_color_buffer_data[] = {
-        1.0f,  0.0f,  0.0f,
-        0.0f,  0.0f,  1.0f,
-        0.0f,  0.0f,  1.0f,
-
-        0.0f,  1.0f,  0.0f,
-        1.0f,  1.0f,  0.0f,
-        0.0f,  0.0f,  1.0f,
-        
-        1.0f,  0.0f,  0.0f,
-        0.0f,  0.0f,  1.0f,
-        0.0f,  0.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
     };
 
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_point_buffer_data), g_point_buffer_data, GL_STATIC_DRAW);
 
     GLuint colorbuffer;
     glGenBuffers(1, &colorbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+    
+    /** WHAT TIIIIME IS IT? */
+    float l_time = 0;
     
 	do{
 
@@ -119,7 +111,21 @@ int main( void )
 		glUseProgram(programID);
 
         // Tell the shader how to scale the vertices to account for the window size
+        if (width > height) {
+            
+        }
+        else {
+            
+        }
         glUniform2f(winScaleID, fmaxf(1, height / (float) width), fmaxf(1, width / (float) height));
+        glUniform2f(winCenterID, )
+        
+        // Tell the shader what time it is
+        glUniform1f(timeID, l_time);
+        if (l_time < 100000) {  // Prevents an (unlikely) overflow.  The points will be done moving by then anyways.
+            l_time += 0.1;
+        }
+        
         
 		// 1st attribute buffer : vertices
 		glEnableVertexAttribArray(vertexPosition_modelspaceID);
@@ -145,8 +151,8 @@ int main( void )
                               (void*)0                     // array buffer offset
                               );
 
-		// Draw the triangle !
-        glDrawArrays(GL_TRIANGLES, 0, 12);
+		// Draw the point !
+        glDrawArrays(GL_POINTS, 0, NUM_POINTS);
         
 		glDisableVertexAttribArray(vertexPosition_modelspaceID);
 

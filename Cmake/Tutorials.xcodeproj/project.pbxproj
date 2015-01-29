@@ -404,10 +404,10 @@
 		C71A80313E5947958C8C703B /* ProcessHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1207751ECB7448D28977EC93 /* ProcessHelper.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		C8904CEB1161442A939704C1 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD36483CA548421186749D80 /* shader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		C8F1DBF8DC4F4F40B1A8D6CD /* OptimizeGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8A8ED4BEAF742FD84F9EBB5 /* OptimizeGraph.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		C93C0A841A71B1EA0094D85A /* tutorial02.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C93C0A821A71B1EA0094D85A /* tutorial02.cpp */; };
+		C93C0A841A71B1EA0094D85A /* prog2A.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C93C0A821A71B1EA0094D85A /* prog2A.cpp */; };
 		C93C0A961A7712000094D85A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C93C0A951A7712000094D85A /* main.cpp */; };
 		C93C0AA41A7712240094D85A /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 442B3EAF8FD440768650D98B /* shader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		C93C0AA51A7712240094D85A /* playground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4F4FDA94E4B17A4E57A42 /* playground.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		C9703D201A7847A700521E4A /* prog2A.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C93C0A821A71B1EA0094D85A /* prog2A.cpp */; };
 		C9AC1652D16646038C47AA38 /* UnrealLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191266CB8B8941CFB5535D21 /* UnrealLoader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		C9C268621BAD4868BC754234 /* controls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDB4FD35B4D5419BA9315B21 /* controls.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		CA8B7E7370A64B3AB5A5DF83 /* ACLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AEAF19063A843779CC4DE27 /* ACLoader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -2326,7 +2326,7 @@
 		C93C0A7F1A71B1EA0094D85A /* triangle_no_shader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triangle_no_shader.png; sourceTree = "<group>"; };
 		C93C0A801A71B1EA0094D85A /* SimpleFragmentShader.fragmentshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleFragmentShader.fragmentshader; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		C93C0A811A71B1EA0094D85A /* SimpleVertexShader.vertexshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleVertexShader.vertexshader; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
-		C93C0A821A71B1EA0094D85A /* tutorial02.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tutorial02.cpp; sourceTree = "<group>"; };
+		C93C0A821A71B1EA0094D85A /* prog2A.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = prog2A.cpp; sourceTree = "<group>"; };
 		C93C0A831A71B1EA0094D85A /* tutorial02_red_triangle */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = tutorial02_red_triangle; sourceTree = "<group>"; };
 		C93C0A931A7711FF0094D85A /* Lab4Junk */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Lab4Junk; sourceTree = BUILT_PRODUCTS_DIR; };
 		C93C0A951A7712000094D85A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -4640,7 +4640,7 @@
 				C93C0A7B1A71B1EA0094D85A /* screenshots */,
 				C93C0A801A71B1EA0094D85A /* SimpleFragmentShader.fragmentshader */,
 				C93C0A811A71B1EA0094D85A /* SimpleVertexShader.vertexshader */,
-				C93C0A821A71B1EA0094D85A /* tutorial02.cpp */,
+				C93C0A821A71B1EA0094D85A /* prog2A.cpp */,
 				C93C0A831A71B1EA0094D85A /* tutorial02_red_triangle */,
 			);
 			path = lab4;
@@ -5738,9 +5738,9 @@
 			productReference = C93C0A931A7711FF0094D85A /* Lab4Junk */;
 			productType = "com.apple.product-type.tool";
 		};
-		C93C0A9C1A7712240094D85A /* lab4 Junk REAL */ = {
+		C93C0A9C1A7712240094D85A /* Program 2A */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C93C0AA61A7712240094D85A /* Build configuration list for PBXNativeTarget "lab4 Junk REAL" */;
+			buildConfigurationList = C93C0AA61A7712240094D85A /* Build configuration list for PBXNativeTarget "Program 2A" */;
 			buildPhases = (
 				C93C0AA31A7712240094D85A /* Sources */,
 			);
@@ -5751,7 +5751,7 @@
 				C93C0A9F1A7712240094D85A /* PBXTargetDependency */,
 				C93C0AA11A7712240094D85A /* PBXTargetDependency */,
 			);
-			name = "lab4 Junk REAL";
+			name = "Program 2A";
 			productName = playground;
 			productReference = C93C0AAB1A7712240094D85A /* playground copy */;
 			productType = "com.apple.product-type.tool";
@@ -5924,7 +5924,7 @@
 				CCF9D2497EB34F3993C3BDE6 /* BulletCollision */,
 				14FBD71F9869401785739DFB /* BulletDynamics */,
 				9BDA00E27795438EBFD57562 /* LinearMath */,
-				C93C0A9C1A7712240094D85A /* lab4 Junk REAL */,
+				C93C0A9C1A7712240094D85A /* Program 2A */,
 			);
 		};
 /* End PBXProject section */
@@ -6379,7 +6379,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBADB35BCB754FD584EFCA98 /* shader.cpp in Sources */,
-				C93C0A841A71B1EA0094D85A /* tutorial02.cpp in Sources */,
+				C93C0A841A71B1EA0094D85A /* prog2A.cpp in Sources */,
 				7DEC761E579D487495ABFD98 /* texture.cpp in Sources */,
 				46C8DC3003154B40AD7A4F90 /* tutorial05.cpp in Sources */,
 			);
@@ -6549,8 +6549,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9703D201A7847A700521E4A /* prog2A.cpp in Sources */,
 				C93C0AA41A7712240094D85A /* shader.cpp in Sources */,
-				C93C0AA51A7712240094D85A /* playground.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -15095,7 +15095,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = "/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/playground/";
+				CONFIGURATION_BUILD_DIR = "/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/lab4/";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -15160,7 +15160,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = "/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/playground/";
+				CONFIGURATION_BUILD_DIR = "/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/lab4/";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -15225,7 +15225,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = "/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/playground/";
+				CONFIGURATION_BUILD_DIR = "/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/lab4/";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -15290,7 +15290,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = "/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/playground/";
+				CONFIGURATION_BUILD_DIR = "/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/lab4/";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -16990,8 +16990,9 @@
 				C93C0A9B1A7712000094D85A /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
-		C93C0AA61A7712240094D85A /* Build configuration list for PBXNativeTarget "lab4 Junk REAL" */ = {
+		C93C0AA61A7712240094D85A /* Build configuration list for PBXNativeTarget "Program 2A" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C93C0AA71A7712240094D85A /* Debug */,
