@@ -1,35 +1,47 @@
 #version 120
 
 // Input vertex data, different for all executions of this shader.
-attribute vec3 vertexPosition_modelspace;
+attribute vec2 vertexPosition_modelspace;
 attribute vec3 vertexColor;
 
 // Scale points based on the position and size of the window
 uniform vec2 uWinScale;
-uniform vec2 uWinCenter;
 
 // Let us know what time it is, to animate the points better
 uniform float uTime;
 
 // Let us know how far from the center points should chill out
-uniform float targetDist;
+uniform float uTargetDist;
 
-// Output data ; will be interpolated for each fragment.
-varying vec3 fragmentColor;
+varying float gradientPoint;
 
 void main() {
-
+    
+    if (vertexColor.x < 0.1) { // Regular points
+        // targetPoint is where the points will be at the END of the animation
+        vec4 targetPoint = vec4(normalize(vec2(vertexPosition_modelspace.x, vertexPosition_modelspace.y)), 0, 1);
+        targetPoint.x *= uTargetDist;
+        targetPoint.y *= uTargetDist;
+        
+        // Get how far they are from their target position
+        vec4 difference = vec4(vertexPosition_modelspace, 0, 1) - targetPoint;
+        // ..and move them along it based on the given time
+        difference *= pow(uTime, 8);
+        
+        gl_Position = vec4(vertexPosition_modelspace, 0, 1) - difference;
+    
+        gl_PointSize = 20;
+        gradientPoint = 0.0f;
+    }
+    else {
+        // Background points
+        gl_Position = vec4(vertexPosition_modelspace, 0, 1);
+        gl_PointSize = 200;
+        gradientPoint = 1.0f;
+    }
     
     
-	gl_Position = vec4(vertexPosition_modelspace.x * uWinScale.x,
-                       vertexPosition_modelspace.y * uWinScale.y,
-                       vertexPosition_modelspace.z,
-                       1.0);
-    
-    gl_PointSize = 20;
-
-    // The color of each vertex will be interpolated
-    // to produce the color of each fragment
-    fragmentColor = vertexColor;
+    // Account for non-rectangular windows
+    gl_Position.x *= uWinScale.x;
+    gl_Position.y *= uWinScale.y;
 }
-

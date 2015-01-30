@@ -1,14 +1,34 @@
 #version 120
 
-// Interpolated values from the vertex shaders
-varying vec3 fragmentColor;
+// Given to us from the vertex shader
+uniform float uCircleScale;
+uniform float uTargetDist;
 
 uniform vec2 uWinCenter;
+
+uniform vec4 pointColor;
+uniform float uTime;
+
+varying float gradientPoint;
 
 void main()
 {
 
 	// Output color = interpolated from vertex shader 
-	gl_FragColor = vec4(1, 1, 1, 1);
-
+    gl_FragColor = vec4(0, 0, 0, 1);
+    
+    float distToCenter = distance(gl_FragCoord, vec4(uWinCenter, 0, 1));
+    float circleRadius = uCircleScale * uTargetDist / 2;
+    if (distToCenter < circleRadius) {
+        gl_FragColor = vec4(1, 0, 0, 1);
+    }
+    
+    gl_FragColor.w = circleRadius / distToCenter;
+    
+    if (gradientPoint > 0.5) {
+        float redComp = sin(distToCenter + pow(uTime, 8) * 30);
+        gl_FragColor = vec4(redComp, 1, 1, 1);
+        
+        gl_FragColor = mix(gl_FragColor, vec4(1, 1, 1, 1), sqrt(distToCenter/(circleRadius*1.5)));
+    }
 }

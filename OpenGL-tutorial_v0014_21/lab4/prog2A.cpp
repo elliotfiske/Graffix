@@ -41,7 +41,9 @@ int main( void )
 
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Program 2A - fun with points", NULL, NULL);
+    width = 800;
+    height = 800;
+	window = glfwCreateWindow( width, height, "Program 2A - fun with points", NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		glfwTerminate();
@@ -61,12 +63,14 @@ int main( void )
     glfwSetWindowSizeCallback(window, window_resized);
 
 	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
-
+    GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
+    
 	// Get a handle for our buffers
 	GLuint vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
     GLuint vertexColorID = glGetAttribLocation(programID, "vertexColor");
@@ -74,19 +78,53 @@ int main( void )
     GLuint winCenterID = glGetUniformLocation(programID, "uWinCenter");
     GLuint timeID = glGetUniformLocation(programID, "uTime");
     GLuint targetDistID = glGetUniformLocation(programID, "uTargetDist");
+    GLuint circleScaleID = glGetUniformLocation(programID, "uCircleScale");
     
-    static GLfloat g_point_buffer_data[NUM_POINTS * 2];
+    static GLfloat g_point_buffer_data[NUM_POINTS * 2 + 18];
+    
     srand((unsigned int)time(NULL));
-    for (int i = 0; i < NUM_POINTS * 2; i++) {
+    g_point_buffer_data[0] = -0.0f;
+    g_point_buffer_data[1] = -0.0f;
+    
+    g_point_buffer_data[2] = -0.2f;
+    g_point_buffer_data[3] = -0.2f;
+    
+    g_point_buffer_data[4] =  0.0f;
+    g_point_buffer_data[5] = -0.2f;
+    
+    g_point_buffer_data[6] =  0.2f;
+    g_point_buffer_data[7] = -0.2f;
+    
+    g_point_buffer_data[8] =  0.2f;
+    g_point_buffer_data[9] =  0.0f;
+    
+    g_point_buffer_data[10] =  0.2f;
+    g_point_buffer_data[11] =  0.2f;
+    
+    g_point_buffer_data[12] =  0.0f;
+    g_point_buffer_data[13] =  0.2f;
+    
+    g_point_buffer_data[14] = -0.2f;
+    g_point_buffer_data[15] =  0.2f;
+    
+    g_point_buffer_data[16] = -0.2f;
+    g_point_buffer_data[17] =  0.0f;
+    
+    for (int i = 18; i < NUM_POINTS * 2 + 18; i++) {
         float newPointCoord = (float)rand()/(float)(RAND_MAX/2.0) - 1;
         g_point_buffer_data[i] = newPointCoord;
     }
     
-    
-    
     static const GLfloat g_color_buffer_data[] = {
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
     };
 
 	GLuint vertexbuffer;
@@ -101,6 +139,8 @@ int main( void )
     
     /** WHAT TIIIIME IS IT? */
     float l_time = 0;
+    /** How many seconds until the points reach their destination */
+    const float targetTime = 2;
     
 	do{
 
@@ -112,33 +152,36 @@ int main( void )
 
         // Tell the shader how to scale the vertices to account for the window size
         if (width > height) {
-            
+            glUniform2f(winScaleID, height / (float) width, 1);
         }
         else {
-            
+            glUniform2f(winScaleID, 1, width / (float) height);
         }
-        glUniform2f(winScaleID, fmaxf(1, height / (float) width), fmaxf(1, width / (float) height));
-        glUniform2f(winCenterID, )
+        glUniform2f(winCenterID, (float) width/2, (float) height/2);
+        glUniform1f(targetDistID, 0.3f);
+        glUniform1f(circleScaleID, fminf(width, height));
         
         // Tell the shader what time it is
-        glUniform1f(timeID, l_time);
-        if (l_time < 100000) {  // Prevents an (unlikely) overflow.  The points will be done moving by then anyways.
-            l_time += 0.1;
+        glUniform1f(timeID, l_time / targetTime);
+        if (l_time + 0.01 < targetTime) {
+            l_time += 0.01;
         }
-        
+        else {
+            l_time = targetTime;
+        }
         
 		// 1st attribute buffer : vertices
 		glEnableVertexAttribArray(vertexPosition_modelspaceID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 		glVertexAttribPointer(
 			vertexPosition_modelspaceID, // The attribute we want to configure
-			3,                  // size
+			2,                  // size
 			GL_FLOAT,           // type
 			GL_FALSE,           // normalized?
 			0,                  // stride
 			(void*)0            // array buffer offset
 		);
-        
+
         // 2nd attribute buffer : colors
         glEnableVertexAttribArray(vertexColorID);
         glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
@@ -150,12 +193,12 @@ int main( void )
                               0,                           // stride
                               (void*)0                     // array buffer offset
                               );
-
+        
 		// Draw the point !
-        glDrawArrays(GL_POINTS, 0, NUM_POINTS);
+        glDrawArrays(GL_POINTS, 0, NUM_POINTS * 2);
         
 		glDisableVertexAttribArray(vertexPosition_modelspaceID);
-
+        
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
