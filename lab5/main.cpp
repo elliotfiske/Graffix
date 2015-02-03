@@ -171,6 +171,11 @@ float getMat(int i, int j, float *mat) {
     return mat[i + MATRIX_SIZE*j];
 }
 
+/** Const? Whatever, man. */
+float getMat(int i, int j, const float *mat) {
+    return mat[i + MATRIX_SIZE*j];
+}
+
 /** Handily set the [i, j]th element in the matrix */
 void setMat(int i, int j, float *mat, float value) {
     mat[i + MATRIX_SIZE*j] = value;
@@ -188,28 +193,56 @@ void createIdentityMat(float *M)
 
 void createTranslateMat(float *T, float x, float y, float z)
 {
-    // IMPLEMENT ME
+    createIdentityMat(T);
+    setMat(0, 3, T, x);
+    setMat(1, 3, T, y);
+    setMat(2, 3, T, z);
 }
 
 void createScaleMat(float *S, float x, float y, float z)
 {
-    // IMPLEMENT ME
+    createIdentityMat(S);
+    setMat(0, 0, S, x);
+    setMat(1, 1, S, y);
+    setMat(2, 2, S, z);
 }
 
 void createRotateMatX(float *R, float radians)
 {
-    // IMPLEMENT ME
+    createIdentityMat(R);
+    float sinR = sin(radians);
+    float cosR = cos(radians);
+    
+    setMat(1, 1, R,  cosR);
+    setMat(1, 2, R, -sinR);
+    setMat(2, 1, R,  sinR);
+    setMat(2, 2, R,  cosR);
 }
 
 void createRotateMatY(float *R, float radians)
 {
-    // IMPLEMENT ME
+    createIdentityMat(R);
+    float sinR = sin(radians);
+    float cosR = cos(radians);
+    
+    setMat(0, 0, R,  cosR);
+    setMat(2, 0, R, -sinR);
+    setMat(0, 2, R,  sinR);
+    setMat(2, 2, R,  cosR);
 }
 
 void createRotateMatZ(float *R, float radians)
 {
-    // IMPLEMENT ME
+    createIdentityMat(R);
+    float sinR = sin(radians);
+    float cosR = cos(radians);
+    
+    setMat(0, 0, R,  cosR);
+    setMat(0, 1, R, -sinR);
+    setMat(1, 0, R,  sinR);
+    setMat(1, 1, R,  cosR);
 }
+
 
 void multMat(float *C, const float *A, const float *B)
 {
@@ -223,10 +256,45 @@ void multMat(float *C, const float *A, const float *B)
             c = 0;
             //vector dot
             for(int j = 0; j < 4; ++j) {
-                // IMPLEMENT ME
+                // Grab what we need from A
+                float a = getMat(i, j, A);
+                
+                // Grab what we need from B
+                float b = getMat(j, k, B);
+                
+                c += a*b;
             }
+            
+            setMat(i, k, C, c);
         }
     }
+}
+
+
+// NOTE: Scales, then rotates, then translates.
+void makeCube(float *MAT, float tX, float tY, float tZ, float rX, float rY, float rZ, float sX, float sY, float sZ) {
+    createIdentityMat(MAT);
+    
+    float OTHER[16] = {0};
+    
+    float T[16] = {0};
+    float RX[16] = {0};
+    float RY[16] = {0};
+    float RZ[16] = {0};
+    
+    float S[16] = {0};
+    
+    createTranslateMat(T, tX, tY, tZ);
+    createRotateMatX(RX, rX);
+    createRotateMatY(RY, rY);
+    createRotateMatZ(RZ, rZ);
+    
+    createScaleMat(S, sX, sY, sZ);
+    
+    multMat(OTHER,    T, RX);
+    multMat(MAT, OTHER, RZ);
+    multMat(OTHER, MAT, RY);
+    multMat(MAT, OTHER, S);
 }
 
 void createPerspectiveMat(float *m, float fovy, float aspect, float zNear, float zFar)
@@ -253,6 +321,10 @@ void createPerspectiveMat(float *m, float fovy, float aspect, float zNear, float
 
 void drawGL()
 {
+    
+    float PI = M_PI;
+    
+    
     // Clear the screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -274,8 +346,15 @@ void drawGL()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObj);
     
     // Compute and send the projection matrix
+    float Pin[16];
+    createPerspectiveMat(Pin, 45.0f, (float)width/height, 0.01f, 100.0f);
+    
+    float T[16];
+    createRotateMatX(T, PI / 20);
+    
     float P[16];
-    createPerspectiveMat(P, 45.0f, (float)width/height, 0.01f, 100.0f);
+    multMat(P, Pin, T);
+    
     glUniformMatrix4fv(uP, 1, GL_FALSE, P);
     
     if (DEBUG) {
@@ -289,7 +368,57 @@ void drawGL()
     }
     
     float MV[16] = {0};
-    createIdentityMat(MV);
+    
+    makeCube(MV, -1.584, 0, -4, 0, 0, 0, 0.127, 1.604, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, -1.332, 0, -4, 0, 0, 90, 0.127, 0.364, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, -1.104, 0, -4, 0, 0, 0, 0.127, 1.604, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, -0.71, -0.475, -4, 0, 0, 0, 0.127, 0.588, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, -0.467, -0.141, -4, 0, 0, PI/2, 0.127, 0.588, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, -0.467, -0.703, -4, 0, 0, PI/2, 0.127, 0.588, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, -0.467, -0.445, -4, 0, 0, PI/2, 0.127, 0.588, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, 0.179, 0, -4, 0, 0, 0, 0.127, 1.604, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, 0.574, 0, -4, 0, 0, 0, 0.127, 1.604, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, 1.304, 0.26, -4.515, -PI/1.8, 0, PI/2, 0.127, 0.694, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, 1.15, -0.317, -3.558, -PI, -0.01, 6 * PI / 4, 0.127, 0.694, 0.407 );
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    makeCube(MV, 1, 0, -4, 0, 0, 0, 0.127, 0.694, 0.407);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    
+    makeCube(MV, 1.342, 0, -4, 0, 0, 0, 0.127, 0.694, 0.407);
     glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
     
@@ -300,7 +429,6 @@ void drawGL()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glUseProgram(0);
     assert(glGetError() == GL_NO_ERROR);
-    
 }
 
 void reshapeGL(int w, int h)
