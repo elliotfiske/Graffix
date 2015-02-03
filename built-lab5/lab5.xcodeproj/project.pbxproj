@@ -71,6 +71,10 @@
 		41E480F46AFA4E56995CC2E4 /* GLSL.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = GLSL.cpp; sourceTree = SOURCE_ROOT; };
 		7B26B4F375894BB2B34806FF /* tiny_obj_loader.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = tiny_obj_loader.cc; sourceTree = SOURCE_ROOT; };
 		9583DA5025C84E62906EC6CE /* main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		C90B226F1A8066C3001880FC /* cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
+		C90B22701A8066C3001880FC /* frag.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = frag.glsl; sourceTree = "<group>"; };
+		C90B22711A8066C3001880FC /* lab5 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = lab5; sourceTree = "<group>"; };
+		C90B22721A8066C3001880FC /* vert.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vert.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -106,6 +110,8 @@
 		627B480D26F243D7B176C3B5 = {
 			isa = PBXGroup;
 			children = (
+				C90B226E1A8066C3001880FC /* REAL products */,
+				4F3A5BAC3C1648039BBEF98D /* Source Files */,
 				3DD960C940DA45BF8A3851D5 /* Sources */,
 				B7BD93A9A7E243458CC24A45 /* Resources */,
 				BE257EDB7F584F4497672AEA /* Products */,
@@ -122,7 +128,6 @@
 		8D2E13B5AE9940559ACCD856 /* lab5 */ = {
 			isa = PBXGroup;
 			children = (
-				4F3A5BAC3C1648039BBEF98D /* Source Files */,
 				068523C3262142B0903E419A /* CMakeLists.txt */,
 			);
 			name = lab5;
@@ -148,6 +153,18 @@
 				3AF8F3C676DF4D50857A0A8F /* lab5 */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C90B226E1A8066C3001880FC /* REAL products */ = {
+			isa = PBXGroup;
+			children = (
+				C90B226F1A8066C3001880FC /* cube.obj */,
+				C90B22701A8066C3001880FC /* frag.glsl */,
+				C90B22711A8066C3001880FC /* lab5 */,
+				C90B22721A8066C3001880FC /* vert.glsl */,
+			);
+			name = "REAL products";
+			path = "../built-lab5/Debug";
 			sourceTree = "<group>";
 		};
 		E8B7BCFE42844862A094EC00 /* ALL_BUILD */ = {
