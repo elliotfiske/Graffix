@@ -1,10 +1,11 @@
 varying vec3 vCol;
+varying vec3 norms;
 uniform int shapeID;
 
 void main()
 {
     vec3 viewVec = vec3(0, 0, -1);
-    vec3 normalVec = normalize(vCol);
+    vec3 normalVec = normalize(norms);
     
     if (shapeID == 0 || shapeID == 1) {  // Normal interpolation for color
         gl_FragColor = vec4(vCol.r, vCol.g, vCol.b, 1.0);

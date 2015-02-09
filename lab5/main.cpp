@@ -214,8 +214,10 @@ void createScaleMat(float *S, float x, float y, float z)
     setMat(2, 2, S, z);
 }
 
-void createRotateMatX(float *R, float radians)
+void createRotateMatX(float *R, float degrees)
 {
+    float radians = degrees * M_PI / 180.0;
+    
     createIdentityMat(R);
     float sinR = sin(radians);
     float cosR = cos(radians);
@@ -226,8 +228,10 @@ void createRotateMatX(float *R, float radians)
     setMat(2, 2, R,  cosR);
 }
 
-void createRotateMatY(float *R, float radians)
+void createRotateMatY(float *R, float degrees)
 {
+    float radians = degrees * M_PI / 180.0;
+    
     createIdentityMat(R);
     float sinR = sin(radians);
     float cosR = cos(radians);
@@ -238,8 +242,10 @@ void createRotateMatY(float *R, float radians)
     setMat(2, 2, R,  cosR);
 }
 
-void createRotateMatZ(float *R, float radians)
+void createRotateMatZ(float *R, float degrees)
 {
+    float radians = degrees * M_PI / 180.0;
+    
     createIdentityMat(R);
     float sinR = sin(radians);
     float cosR = cos(radians);
@@ -279,8 +285,11 @@ void multMat(float *C, const float *A, const float *B)
 
 
 // NOTE: Scales, then rotates, then translates.
-void makeCube(float *MAT, float tX, float tY, float tZ, float rX, float rY, float rZ, float sX, float sY, float sZ) {
+void makeTransformMatrix(float *MAT, float tX, float tY, float tZ, float rX, float rY, float rZ, float sX, float sY, float sZ) {
     createIdentityMat(MAT);
+    
+    float IDEN[16] = {0};
+    createIdentityMat(IDEN);
     
     float OTHER[16] = {0};
     
@@ -302,12 +311,22 @@ void makeCube(float *MAT, float tX, float tY, float tZ, float rX, float rY, floa
     createScaleMat(S, sX, sY, sZ);
     
     
-    multMat(MAT,    R_CAM, T); // Translate last
-    multMat(OTHER, MAT, RX);
-    multMat(MAT, OTHER, RZ);
-    multMat(OTHER, MAT, RY);
+    multMat(MAT,    T, RX); // Translate last
+    multMat(OTHER, MAT, RZ);
+    multMat(MAT, OTHER, RY);
+    multMat(OTHER, MAT, S);
     
-    multMat(MAT, OTHER, S); // Camera last
+    multMat(MAT, OTHER, IDEN); // Camera last
+}
+
+/** Creates a global translate and rotate to simulate a camera */
+void createCameraMat(float *CAM) {
+    float CAM_T[16] = {0};
+    float CAM_R[16] = {0};
+    createRotateMatY(CAM_R, cameraAngle);
+    createTranslateMat(CAM_T, 0, 0, -3);
+    
+    multMat(CAM, CAM_T, CAM_R);
 }
 
 void createPerspectiveMat(float *m, float fovy, float aspect, float zNear, float zFar)
@@ -332,6 +351,22 @@ void createPerspectiveMat(float *m, float fovy, float aspect, float zNear, float
     m[15] = 0.0f;
 }
 
+/** Draw a guy at the specified coordinates, scaling and rotation */
+void drawGuyWithCoords(float tX, float tY, float tZ, float rX, float rY, float rZ, float sX, float sY, float sZ, int nIndices) {
+    float MV[16] = {0};
+    float CAM[16] = {0};
+    float RESULT[16] = {0};
+    
+    createCameraMat(CAM);
+    
+    makeTransformMatrix(MV, tX, tY, tZ, rX, rY, rZ, sX, sY, sZ);
+    multMat(RESULT, CAM, MV);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, RESULT);
+    glUniform1i(uShapeID, 0);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+}
+
+float currTime = 0;
 void drawGL()
 {
     
@@ -359,11 +394,11 @@ void drawGL()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObj);
     
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        cameraAngle += 0.1;
+        cameraAngle += 1.5;
     }
     
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        cameraAngle -= 0.1;
+        cameraAngle -= 1.5;
     }
     
     // Compute and send the projection matrix
@@ -371,7 +406,7 @@ void drawGL()
     createPerspectiveMat(Pin, 45.0f, (float)width/height, 0.01f, 100.0f);
     
     float T[16];
-    makeCube(T, 0, 0, 0, 0, 0, 0, 1, 1, 1);
+    makeTransformMatrix(T, 0, 0, 0, 0, 0, 0, 1, 1, 1);
     
     float P[16];
     multMat(P, Pin, T);
@@ -387,20 +422,34 @@ void drawGL()
         printMat(B, "B");
         printMat(C, "C");
     }
-    
-    float MV[16] = {0};
-    
-    makeCube(MV, 0, 0, 0, 0, 0, 0, 0.3, 0.3, 0.3);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glUniform1i(uShapeID, 0);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+
+    drawGuyWithCoords(0, -0.259, 0, 0, 0, 0, 0.273, 0.17, 0.282, nIndices); // SNOWGLOBE BUTT
     
     
-    makeCube(MV, 0, 0, 0, 0, 0, 0, 0.04, 0.04, 0.04f );
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    drawGuyWithCoords( -0.4, 0, 0, 0, 67.6, 0, 0.02, 0.02, 0.02, nIndices ); // BAD GUY 1
+    
+    
+    makeTransformMatrix(MV, 0.419, 0, 0, 0, -75.403, 0, 0.02, 0.02, 0.02, nIndices ); // BAD GUY 2
+    multMat(RESULT, CAM, MV);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, RESULT);
     glUniform1i(uShapeID, 1);
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
     
+    // Sad guy floats between -0.096 and 0.325
+    float maxY = 0.325;
+    float minY = -0.096;
+    
+    float sadGuyY = (sin(currTime) + 1.0) / 2;    // Value is currently between 0 and 1
+    sadGuyY *= (maxY - minY);                     // Value now has the correct range, but needs a little offset
+    sadGuyY += minY;
+    
+    currTime += 0.07;
+    
+    makeTransformMatrix(MV, 0.012, sadGuyY, 0, 0, 90, 90, 0.015, 0.015, 0.015 ); // SAD GUY
+    multMat(RESULT, CAM, MV);
+    glUniformMatrix4fv(uMV, 1, GL_FALSE, RESULT);
+    glUniform1i(uShapeID, 1);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
     
     // Disable and unbind
     GLSL::disableVertexAttribArray(aPos);

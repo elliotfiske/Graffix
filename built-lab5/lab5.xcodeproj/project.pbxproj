@@ -70,7 +70,7 @@
 		3AF8F3C676DF4D50857A0A8F /* lab5 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = lab5; sourceTree = BUILT_PRODUCTS_DIR; };
 		41E480F46AFA4E56995CC2E4 /* GLSL.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = GLSL.cpp; sourceTree = SOURCE_ROOT; };
 		7B26B4F375894BB2B34806FF /* tiny_obj_loader.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = tiny_obj_loader.cc; sourceTree = SOURCE_ROOT; };
-		9583DA5025C84E62906EC6CE /* main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		9583DA5025C84E62906EC6CE /* main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = main.cpp; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C90B226F1A8066C3001880FC /* cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
 		C90B22701A8066C3001880FC /* frag.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = frag.glsl; sourceTree = "<group>"; };
 		C90B22711A8066C3001880FC /* lab5 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = lab5; sourceTree = "<group>"; };
