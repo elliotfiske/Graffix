@@ -371,7 +371,7 @@ void drawGL()
     createPerspectiveMat(Pin, 45.0f, (float)width/height, 0.01f, 100.0f);
     
     float T[16];
-    makeCube(T, 0, 0, -6, 0, 0, 0, 1, 1, 1);
+    makeCube(T, 0, 0, 0, 0, 0, 0, 1, 1, 1);
     
     float P[16];
     multMat(P, Pin, T);
