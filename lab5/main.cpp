@@ -36,6 +36,8 @@ int DEBUG = 0;
 int width = 1;
 int height = 1;
 
+float cameraAngle = 0;
+
 void loadShapes(const string &objFile)
 {
     string err = tinyobj::LoadObj(shapes, materials, objFile.c_str());
@@ -50,6 +52,8 @@ void initGL()
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     // Enable Z-buffer test
     glEnable(GL_DEPTH_TEST);
+    
+    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     // Send the position array to the GPU
@@ -284,6 +288,7 @@ void makeCube(float *MAT, float tX, float tY, float tZ, float rX, float rY, floa
     float RX[16] = {0};
     float RY[16] = {0};
     float RZ[16] = {0};
+    float R_CAM[16] = {0};
     
     float S[16] = {0};
     
@@ -292,12 +297,17 @@ void makeCube(float *MAT, float tX, float tY, float tZ, float rX, float rY, floa
     createRotateMatY(RY, rY);
     createRotateMatZ(RZ, rZ);
     
+    createRotateMatY(R_CAM, cameraAngle);
+    
     createScaleMat(S, sX, sY, sZ);
     
-    multMat(OTHER,    T, RX);
+    
+    multMat(MAT,    R_CAM, T); // Translate last
+    multMat(OTHER, MAT, RX);
     multMat(MAT, OTHER, RZ);
     multMat(OTHER, MAT, RY);
-    multMat(MAT, OTHER, S);
+    
+    multMat(MAT, OTHER, S); // Camera last
 }
 
 void createPerspectiveMat(float *m, float fovy, float aspect, float zNear, float zFar)
@@ -348,17 +358,25 @@ void drawGL()
     int nIndices = (int)shapes[0].mesh.indices.size();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObj);
     
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        cameraAngle += 0.1;
+    }
+    
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        cameraAngle -= 0.1;
+    }
+    
     // Compute and send the projection matrix
     float Pin[16];
     createPerspectiveMat(Pin, 45.0f, (float)width/height, 0.01f, 100.0f);
     
     float T[16];
-    createRotateMatX(T, PI / 20);
+    makeCube(T, 0, 0, -6, 0, 0, 0, 1, 1, 1);
     
     float P[16];
     multMat(P, Pin, T);
     
-    glUniformMatrix4fv(uP, 1, GL_FALSE, Pin);
+    glUniformMatrix4fv(uP, 1, GL_FALSE, P);
     
     if (DEBUG) {
         float A[16], B[16], C[16];
@@ -372,13 +390,13 @@ void drawGL()
     
     float MV[16] = {0};
     
-    makeCube(MV, 0, 0, -3, 0, 0, 0, 0.1, 0.1, 0.1);
+    makeCube(MV, 0, 0, 0, 0, 0, 0, 0.3, 0.3, 0.3);
     glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
     glUniform1i(uShapeID, 0);
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
     
     
-    makeCube(MV, 0, 0, -2, 0, 0, 0, 0.03, 0.03, 0.03);
+    makeCube(MV, 0, 0, 0, 0, 0, 0, 0.04, 0.04, 0.04f );
     glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
     glUniform1i(uShapeID, 1);
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
@@ -432,7 +450,7 @@ int main(int argc, char **argv)
     }
     
     // Ensure we can capture the escape key being pressed below
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+//    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     
     loadShapes("dude.obj");
     initGL();

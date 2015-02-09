@@ -3,15 +3,21 @@ uniform int shapeID;
 
 void main()
 {
-    gl_FragColor = vec4(vCol.r, vCol.g, vCol.b, 0.2);
+    vec3 viewVec = vec3(0, 0, -1);
+    vec3 normalVec = normalize(vCol);
     
-    if (shapeID == 0) {  // Make the half-sided snowglobe
-        gl_FragColor.w = 0.2;
+    if (shapeID == 0 || shapeID == 1) {  // Normal interpolation for color
+        gl_FragColor = vec4(vCol.r, vCol.g, vCol.b, 1.0);
     }
-    else if (shapeID == 1) { // Make the bodies of the dudes
-        gl_FragColor = vec4(1, 1, 1, 1);
+    
+    if (shapeID == 0) { // Snowglobe discard
+        float dotProd = dot(viewVec, normalVec);
+        if (dotProd < -0.75) {
+            discard;
+        }
     }
-//    else { // Make the red, red eyeballs
-//        gl_FragColor = vec4(1, 0, 0, 1);
-//    }
+    
+    if (shapeID == 2) { // Make the red, red eyeball
+        gl_FragColor = vec4(1, 0, 0, 1);
+    }
 }
