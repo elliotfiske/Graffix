@@ -30,6 +30,7 @@ GLint aPos = 0;
 GLint aNor = 0;
 GLint uMV = 0;
 GLint uP = 0;
+GLint uShapeID = 0;
 
 int DEBUG = 0;
 int width = 1;
@@ -49,6 +50,7 @@ void initGL()
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     // Enable Z-buffer test
     glEnable(GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     // Send the position array to the GPU
     const vector<float> &posBuf = shapes[0].mesh.positions;
@@ -127,6 +129,7 @@ bool installShaders(const string &vShaderName, const string &fShaderName)
     aNor = GLSL::getAttribLocation(prog, "aNor");
     uMV = GLSL::getUniformLocation(prog, "MV");
     uP = GLSL::getUniformLocation(prog, "P");
+    uShapeID = GLSL::getUniformLocation(prog, "shapeID");
     
     assert(glGetError() == GL_NO_ERROR);
     return true;
@@ -355,7 +358,7 @@ void drawGL()
     float P[16];
     multMat(P, Pin, T);
     
-    glUniformMatrix4fv(uP, 1, GL_FALSE, P);
+    glUniformMatrix4fv(uP, 1, GL_FALSE, Pin);
     
     if (DEBUG) {
         float A[16], B[16], C[16];
@@ -369,58 +372,17 @@ void drawGL()
     
     float MV[16] = {0};
     
-    makeCube(MV, -1.584, 0, -4, 0, 0, 0, 0.127, 1.604, 0.407);
+    makeCube(MV, 0, 0, -3, 0, 0, 0, 0.1, 0.1, 0.1);
     glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, -1.332, 0, -4, 0, 0, 90, 0.127, 0.364, 0.407);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, -1.104, 0, -4, 0, 0, 0, 0.127, 1.604, 0.407);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, -0.71, -0.475, -4, 0, 0, 0, 0.127, 0.588, 0.407);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, -0.467, -0.141, -4, 0, 0, PI/2, 0.127, 0.588, 0.407);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, -0.467, -0.703, -4, 0, 0, PI/2, 0.127, 0.588, 0.407);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, -0.467, -0.445, -4, 0, 0, PI/2, 0.127, 0.588, 0.407);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, 0.179, 0, -4, 0, 0, 0, 0.127, 1.604, 0.407);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, 0.574, 0, -4, 0, 0, 0, 0.127, 1.604, 0.407);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, 1.304, 0.26, -4.515, -PI/1.8, 0, PI/2, 0.127, 0.694, 0.407);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, 1.15, -0.317, -3.558, -PI, -0.01, 6 * PI / 4, 0.127, 0.694, 0.407 );
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    makeCube(MV, 1, 0, -4, 0, 0, 0, 0.127, 0.694, 0.407);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glUniform1i(uShapeID, 0);
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
     
     
-    makeCube(MV, 1.342, 0, -4, 0, 0, 0, 0.127, 0.694, 0.407);
+    makeCube(MV, 0, 0, -2, 0, 0, 0, 0.03, 0.03, 0.03);
     glUniformMatrix4fv(uMV, 1, GL_FALSE, MV);
+    glUniform1i(uShapeID, 1);
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
     
     // Disable and unbind
     GLSL::disableVertexAttribArray(aPos);
@@ -455,7 +417,7 @@ int main(int argc, char **argv)
     
     
     // Open a window and create its OpenGL context
-    window = glfwCreateWindow( 1024, 768, "lab 5 - object", NULL, NULL);
+    window = glfwCreateWindow( 768, 768, "lab 5 - object", NULL, NULL);
     if( window == NULL ){
         fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
         glfwTerminate();
@@ -472,7 +434,7 @@ int main(int argc, char **argv)
     // Ensure we can capture the escape key being pressed below
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     
-    loadShapes("cube.obj");
+    loadShapes("dude.obj");
     initGL();
     installShaders("vert.glsl", "frag.glsl");
     
