@@ -162,6 +162,7 @@ void drawGL()
     // Bind index array for drawing
     int nIndices = (int)shapes[0].mesh.indices.size();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObj);
+    // lol
     
     // Compute and send the projection matrix - leave this as is
     glm::mat4 Projection = glm::perspective(80.0f, (float)g_width/g_height, 0.1f, 100.f);
