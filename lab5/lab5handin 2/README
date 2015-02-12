@@ -1,0 +1,18 @@
+****
+NOTE NOTE NOTE:
+****
+
+You have to put the 'dude.obj' file where the executable can find it to get this nonsense to work.
+
+‘dude.obj’ is a cool little guy I modeled in my ART-384 class and exported.
+
+****
+
+
+My 'snowglobe' is a giant see-through guy, with some copies of himself floating in the middle.
+It's very metaphorical, and I am very tired.
+
+Also there's scary red dots flying everywhere oooooo
+
+
+I don’t use GLM in my code, since I made a bunch of very pretty helper functions in the previous lab that I wanted to use.  The main function I keep calling is called drawDudeAtCoords(…)  which takes in the translation/rot/scale of a dude and then draws it.  Pretty neat.

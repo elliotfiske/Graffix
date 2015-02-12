@@ -24,7 +24,7 @@ double getMax(double a, double b, double c) {
 }
 
 Point::Point(double x, double y, double z): x(x), y(y), z(z) {
-    // good job boo you made a point.  hope you feel good about it.
+    // good job boo you mace a point.  hope you feel good about it.
 }
 
 /**

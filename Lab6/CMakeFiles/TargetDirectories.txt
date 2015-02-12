@@ -1,0 +1,4 @@
+/Users/elliotfiske/471/Lab6/CMakeFiles/ALL_BUILD.dir
+/Users/elliotfiske/471/Lab6/CMakeFiles/Lab6.dir
+/Users/elliotfiske/471/Lab6/CMakeFiles/ZERO_CHECK.dir
+/Users/elliotfiske/471/Lab6/dependencies/glfw/src/CMakeFiles/glfw.dir

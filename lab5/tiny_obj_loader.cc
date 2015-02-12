@@ -504,7 +504,7 @@ LoadObj(
 
   std::ifstream ifs(filename);
   if (!ifs) {
-    err << "Cannot open file [" << filename << "]" << std::endl;
+    err << "Cannot open file [" << filename << "]  Did you put the 'dude.obj' file where the executable can see it?" << std::endl;
     return err.str();
   }
 
