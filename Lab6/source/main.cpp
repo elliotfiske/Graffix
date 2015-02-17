@@ -32,8 +32,19 @@ GLint uP = 0;
 static float g_width, g_height;
 float theta;
 
-//declare a matrix stack
-RenderingHelper ModelTrans;
+// Here's the fun part of the robot!
+ObjectNode *bodyNode = new ObjectNode(0, 0, -5, 0, 0, 0, 1, 2, 1, 0, 0);
+
+ObjectNode *rightForeArm = new ObjectNode(  1, 0.75, 0,  0, 0, 0,      1, 0.25, 0.5,     -0.5, 0);
+ObjectNode *rightMainArm = new ObjectNode(  1, 0, 0,  0, 0, 0,      1, 0.25, 0.5,         -0.5, 0);
+
+ObjectNode *leftForeArm = new ObjectNode(-1, 0.75, 0, 0, 0, 0, 1, 0.25, 0.5, 0.5, 0);
+ObjectNode *leftMainArm = new ObjectNode(-1, 0, 0, 0, 0, 0, 1, 0.25, 0.5, 0.5, 0);
+
+ObjectNode *leftLeg = new ObjectNode(-0.25, -1.5, 0, 0, 0, 0, 0.25, 1, 1, 0, 0.5);
+ObjectNode *rightLeg = new ObjectNode(0.25, -1.5, 0, 0, 0, 0, 0.25, 1, 1, 0, 0.5);
+
+ObjectNode *head = new ObjectNode(0, 1.4, 0, 0, 0, 0, .75, .5, .5, 0, 0);
 
 void loadShapes(const string &objFile)
 {
@@ -45,6 +56,18 @@ void loadShapes(const string &objFile)
 
 void initGL()
 {
+    
+    leftForeArm->children.push_back(leftMainArm);
+    
+    rightForeArm->children.push_back(rightMainArm);
+    
+    bodyNode->children.push_back(leftForeArm);
+    bodyNode->children.push_back(rightForeArm);
+    bodyNode->children.push_back(head);
+    bodyNode->children.push_back(leftLeg);
+    bodyNode->children.push_back(rightLeg);
+    
+    
     // Set the background color
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     // Enable Z-buffer test
@@ -74,13 +97,9 @@ void initGL()
     GLSL::checkVersion();
     assert(glGetError() == GL_NO_ERROR);
     
-    //initialize the modeltrans matrix stack
-    ModelTrans.useModelViewMatrix();
-    ModelTrans.loadIdentity();
-    theta = 0.1;
     
-    // Initialize my sexy little object oriented nonsense
     
+    theta = 0;
 }
 
 bool installShaders(const string &vShaderName, const string &fShaderName)
@@ -143,6 +162,7 @@ bool installShaders(const string &vShaderName, const string &fShaderName)
 
 void drawGL()
 {
+    
     // Clear the screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -162,23 +182,74 @@ void drawGL()
     // Bind index array for drawing
     int nIndices = (int)shapes[0].mesh.indices.size();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObj);
-    // lol
     
     // Compute and send the projection matrix - leave this as is
     glm::mat4 Projection = glm::perspective(80.0f, (float)g_width/g_height, 0.1f, 100.f);
     glUniformMatrix4fv(uP, 1, GL_FALSE, glm::value_ptr(Projection));
     
-    //create the model transforms
-    ModelTrans.loadIdentity();
+    initHelper();
+    
+    float maxTheta = 315;
+    float minTheta = 40 + 360;
+    
+    float minBodyBob = -0.5;
+    float maxBodyBob = 0.5;
+    
+    float minBodyRot = 25;
+    float maxBodyRot = 65;
+    
+    float minLegRot = 15;
+    float maxLegRot = 55;
+    
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        theta += 0.1;
+    }
+    
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        theta -= 0.1;
+    }
+    
+    float armRot = (sin(theta) + 1.0) / 2;    // Value is now between 0 and 1
+    armRot *= (maxTheta - minTheta);                     // Value now has the correct range, but needs a little offset
+    armRot += minTheta;
+    
+    float bodyBob = (sin(theta * 2) + 1.0) / 2;    // Value is now between 0 and 1
+    bodyBob *= (minBodyBob - maxBodyBob);                     // Value now has the correct range, but needs a little offset
+    bodyBob += minBodyBob;
+    
+    
+    float bodyRot = (sin(theta) + 1.0) / 2;    // Value is now between 0 and 1
+    bodyRot *= (minBodyRot - maxBodyRot);                     // Value now has the correct range, but needs a little offset
+    bodyRot += minBodyRot;
+    
+    float legRot = (sin(theta * 6) + 1.0) / 2;    // Value is now between 0 and 1
+    legRot *= (minLegRot - maxLegRot);                     // Value now has the correct range, but needs a little offset
+    legRot += minLegRot;
+    
+
     
     
     
-    ModelTrans.translate(glm::vec3(0, 0, -2));
-    ModelTrans.rotate(tan(theta * 0.1) * 300, glm::vec3(0, 0, 1));
-    theta += 0.5;
-    ModelTrans.scale(2, 1, 1);
-    glUniformMatrix4fv(uMV, 1, GL_FALSE, glm::value_ptr(ModelTrans.modelViewMatrix));
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    rightForeArm->rotZ = armRot;
+    rightMainArm->rotZ = armRot;
+    
+    leftForeArm->rotZ = armRot;
+    leftMainArm->rotZ = armRot;
+    
+    leftForeArm->rotX = theta * .8;
+    rightForeArm->rotX = theta * .8;
+    
+    leftLeg->rotZ = legRot;
+    rightLeg->rotZ = -legRot;
+    
+    bodyNode->posY = bodyBob;
+    bodyNode->rotZ = bodyRot;
+    bodyNode->posX = -theta * .8;
+    
+    head->rotY = theta * 80;
+    
+    
+    bodyNode->draw(uMV, nIndices);
     
     // Disable and unbind
     GLSL::disableVertexAttribArray(aPos);
@@ -224,7 +295,7 @@ int main(int argc, char **argv)
     glfwMakeContextCurrent(window);
     
     // Ensure we can capture the escape key being pressed below
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+//    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     
     loadShapes("cube.obj");
     

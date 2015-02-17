@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>76C85B2F-33FB-4D2F-B616-803183EDB0F8</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Lab6</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F7170048538C0DC4CB4100BD2C1AC4C1FB3D6C33</key>
+		<string>github.com:elliotfiske/Graffix.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Lab7/Lab6.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F7170048538C0DC4CB4100BD2C1AC4C1FB3D6C33</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:elliotfiske/Graffix.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F7170048538C0DC4CB4100BD2C1AC4C1FB3D6C33</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F7170048538C0DC4CB4100BD2C1AC4C1FB3D6C33</string>
+			<key>IDESourceControlWCCName</key>
+			<string>471</string>
+		</dict>
+	</array>
+</dict>
+</plist>

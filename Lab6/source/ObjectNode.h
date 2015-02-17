@@ -19,16 +19,16 @@
 #include "GLSL.h"
 
 
+void initHelper();
+
 class ObjectNode {
-    ObjectNode(double posX, double posY, double posZ, double rotX, double rotY, double rotZ);
+public:
+    ObjectNode(double posX, double posY, double posZ, double rotX, double rotY, double rotZ, double sX, double sY, double sZ, double pivotX, double pivotY);
     
-    static RenderingHelper currHelper;
-    double posX, posY, posZ, rotX, rotY, rotZ;
-    std::vector<ObjectNode> children;
+    double posX, posY, posZ, rotX, rotY, rotZ, sX, sY, sZ, pivotX, pivotY;
+    std::vector<ObjectNode*> children;
     
     void draw(int mvID, int nVertices);
 };
-
-
 
 #endif /* defined(__Lab6__ObjectNode__) */

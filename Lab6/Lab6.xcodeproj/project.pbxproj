@@ -133,6 +133,10 @@
 		C91350EA1A8D428100B291FD /* vert.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vert.glsl; sourceTree = "<group>"; };
 		C91350EB1A8D47D200B291FD /* ObjectNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ObjectNode.cpp; path = source/ObjectNode.cpp; sourceTree = "<group>"; };
 		C91350EC1A8D47D200B291FD /* ObjectNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjectNode.h; path = source/ObjectNode.h; sourceTree = "<group>"; };
+		C99E23CB1A92C7D800651B12 /* cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
+		C99E23CC1A92C7D800651B12 /* frag.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = frag.glsl; sourceTree = "<group>"; };
+		C99E23CD1A92C7D800651B12 /* Lab6 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = Lab6; sourceTree = "<group>"; };
+		C99E23CE1A92C7D800651B12 /* vert.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vert.glsl; sourceTree = "<group>"; };
 		CA6FBFDAE31D4B5CA8156942 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		CB24B862D7CA42C184A4B181 /* posix_tls.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = posix_tls.c; path = dependencies/glfw/src/posix_tls.c; sourceTree = SOURCE_ROOT; };
 		D0A7AE2623084E85AEF36D0B /* nsgl_context.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = nsgl_context.m; path = dependencies/glfw/src/nsgl_context.m; sourceTree = SOURCE_ROOT; };
@@ -251,6 +255,7 @@
 		62E3336B6BF24B10B1A4638A = {
 			isa = PBXGroup;
 			children = (
+				C99E23CA1A92C7D800651B12 /* Debug */,
 				C91350E61A8D428100B291FD /* real products */,
 				0545E566D82244F6B56F60B3 /* Sources */,
 				7712B696E2014D918A5987BE /* Resources */,
@@ -310,6 +315,17 @@
 				C91350EA1A8D428100B291FD /* vert.glsl */,
 			);
 			name = "real products";
+			path = Debug;
+			sourceTree = "<group>";
+		};
+		C99E23CA1A92C7D800651B12 /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				C99E23CB1A92C7D800651B12 /* cube.obj */,
+				C99E23CC1A92C7D800651B12 /* frag.glsl */,
+				C99E23CD1A92C7D800651B12 /* Lab6 */,
+				C99E23CE1A92C7D800651B12 /* vert.glsl */,
+			);
 			path = Debug;
 			sourceTree = "<group>";
 		};
