@@ -32,6 +32,8 @@ GLint aPos = 0;
 GLint aNor = 0;
 GLint uMV = 0;
 GLint uP = 0;
+GLint uBakedShadows = 0;
+GLint uGurrad = 0;
 
 static float g_width, g_height;
 float theta;
@@ -50,7 +52,7 @@ void loadShapes(const string &objFile)
 void initGL()
 {
 	// Set the background color
-	glClearColor(0.0f, 0.0f, 0.7f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
 	// Enable Z-buffer test
 	glEnable(GL_DEPTH_TEST);
 	
@@ -136,6 +138,8 @@ bool installShaders(const string &vShaderName, const string &fShaderName)
 	aNor = GLSL::getAttribLocation(prog, "aNor");
 	uMV = GLSL::getUniformLocation(prog, "MV");
 	uP = GLSL::getUniformLocation(prog, "P");
+    uBakedShadows = GLSL::getUniformLocation(prog, "bakedShadows");
+    uGurrad = GLSL::getUniformLocation(prog, "gurrad");
 	
 	assert(glGetError() == GL_NO_ERROR);
 	return true;
@@ -174,6 +178,15 @@ void drawGL()
    ModelTrans.rotate(theta, glm::vec3(0, 1, 0));
     ModelTrans.rotate(90, glm::vec3(1, 1, 0));
 
+    int gurrad = 0;
+    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
+        gurrad = 1;
+    }
+    
+    glUniform1i(uGurrad, gurrad);
+    
+    
+    glUniform1i(uBakedShadows, 1);
 	glUniformMatrix4fv(uMV, 1, GL_FALSE, glm::value_ptr(ModelTrans.modelViewMatrix));
 	glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
 	
@@ -181,12 +194,13 @@ void drawGL()
     ModelTrans.loadIdentity();
     ModelTrans.translate(glm::vec3(2, 0, -4));
     ModelTrans.rotate(theta, glm::vec3(0, 1, 0));
-    ModelTrans.rotate(90, glm::vec3(1, 1, 0));
+//    ModelTrans.rotate(90, glm::vec3(1, 1, 0));
     
+    glUniform1i(uBakedShadows, 0);
     glUniformMatrix4fv(uMV, 1, GL_FALSE, glm::value_ptr(ModelTrans.modelViewMatrix));
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
     
-       theta += 0.5;
+       theta += 0.8;
     
    // Disable and unbind
 	GLSL::disableVertexAttribArray(aPos);
@@ -232,9 +246,9 @@ int main(int argc, char **argv)
     glfwMakeContextCurrent(window);
 
    // Ensure we can capture the escape key being pressed below
-   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+//   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	loadShapes("hand.txt");
+	loadShapes("sphere.obj");
 
    std::cout << " loaded the object " << endl;
 

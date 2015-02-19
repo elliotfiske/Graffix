@@ -1,6 +1,18 @@
-varying float lightDotProd;
+varying vec4 lightVec;
+varying vec4 interpNormal;
+varying float gurradLightDotProd;
+
+uniform int gurrad;
+
+uniform int bakedShadows;
 
 void main()
 {
-	gl_FragColor = vec4(lightDotProd, 1, 1, 1.0);
+    if (gurrad == 0) {
+        float lightDotProd = dot(normalize(lightVec), normalize(interpNormal));
+        gl_FragColor = lightDotProd * vec4(1, 0.3, 0, 1);
+    }
+    else {
+        gl_FragColor = gurradLightDotProd * vec4(1, 0.3, 0, 1);
+    }
 }
