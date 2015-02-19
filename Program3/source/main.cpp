@@ -171,6 +171,8 @@ void loadShapes(const string &objFile)
     resize_obj(shapes);
 }
 
+
+
 void initGL()
 {
     // Set the background color
@@ -205,17 +207,32 @@ void initGL()
         v2 = glm::vec3(shapes[0].mesh.positions[3*idx2 +0],shapes[0].mesh.positions[3*idx2 +1], shapes[0].mesh.positions[3*idx2 +2]);
         v3 = glm::vec3(shapes[0].mesh.positions[3*idx3 +0],shapes[0].mesh.positions[3*idx3 +1], shapes[0].mesh.positions[3*idx3 +2]);
         
+        // Using https://www.opengl.org/wiki/Calculating_a_Surface_Normal to find the normal of a triangle
+        glm::vec3 U = v2 - v1;
+        glm::vec3 V = v3 - v1;
+
+//        Set Normal.x to (multiply U.y by V.z) minus (multiply U.z by V.y)
+//        Set Normal.y to (multiply U.z by V.x) minus (multiply U.x by V.z)
+//        Set Normal.z to (multiply U.x by V.y) minus (multiply U.y by V.x)
+        
+        float normX = U.y * V.z - U.z * V.y;
+        float normY = U.z * V.x - U.x * V.z;
+        float normZ = U.x * V.y - U.y * V.x;
+        
+        glm::vec3 normal = glm::vec3(normX, normY, normZ);
+        normal = glm::normalize(normal);
+        
         //This is not correct, it sets the normal as the vertex value but
         //shows access pattern
-        norBuf[3*idx1+0] = v1.x;
-        norBuf[3*idx1+1] = v1.y;
-        norBuf[3*idx1+2] = v1.z;
-        norBuf[3*idx2+0] = v2.x;
-        norBuf[3*idx2+1] = v2.y;
-        norBuf[3*idx2+2] = v2.z;
-        norBuf[3*idx3+0] = v3.x;
-        norBuf[3*idx3+1] = v3.y;
-        norBuf[3*idx3+2] = v3.z;
+        norBuf[3*idx1+0] = normal.x;
+        norBuf[3*idx1+1] = normal.y;
+        norBuf[3*idx1+2] = normal.z;
+        norBuf[3*idx2+0] = normal.x;
+        norBuf[3*idx2+1] = normal.y;
+        norBuf[3*idx2+2] = normal.z;
+        norBuf[3*idx3+0] = normal.x;
+        norBuf[3*idx3+1] = normal.y;
+        norBuf[3*idx3+2] = normal.z;
     }
     glGenBuffers(1, &norBufObj);
     glBindBuffer(GL_ARRAY_BUFFER, norBufObj);

@@ -14,8 +14,23 @@ uniform int uShadeModel;
 
 varying vec3 vCol;
 
-void main()
-{
-	gl_Position = uProjMatrix * uModelMatrix * uViewMatrix * aPosition;
-	vCol = 0.5*(aNormal + 1.0);
+varying vec3 gouradColor;
+
+void main() {
+    vec3 normNorm = normalize(aNormal);
+    
+    
+	gl_Position = uProjMatrix * uViewMatrix * uModelMatrix * aPosition;
+	vCol = 0.5*(normNorm + 1.0);
+    
+    // Gourad shading
+    vec4 vertexWorldPos = uViewMatrix * uModelMatrix * aPosition;
+    vec3 lightVec = normalize((uLightPos - vertexWorldPos.xyz));
+    vec3 lightColor = vec3(1, 1, 1);
+    
+    vec3 halfAngle = normalize(lightVec + vertexWorldPos.xyz);
+    
+    gouradColor = lightColor *     dot(aNormal, lightVec)           * UdColor  +   // Diffuse
+                  lightColor * pow(dot(aNormal, halfAngle), Ushine) * UsColor  +   // Specular
+                                                                      UaColor;     // Ambient
 }

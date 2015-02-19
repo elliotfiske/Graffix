@@ -1,6 +1,8 @@
 varying vec3 vCol;
+varying vec3 gouradColor;
 
 void main()
 {
-	gl_FragColor = vec4(vCol.r, vCol.g, vCol.b, 1.0);
+    vec3 normVCol = normalize(vCol);
+	gl_FragColor = vec4(gouradColor.r, gouradColor.g, gouradColor.b, 1.0);
 }
