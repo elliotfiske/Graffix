@@ -23,13 +23,16 @@ vector<tinyobj::shape_t> shapes;
 vector<tinyobj::material_t> materials;
 
 int g_SM = 0;
+int g_NORM = 0;
 int g_width;
 int g_height;
 float g_Camtrans = -2.5;
 float g_angle = 0;
+float g_vert_angle = 0;
+float spinBunny = 0;
 int g_mat_id =0;
 glm::vec3 g_trans(0, 0, 0);
-glm::vec3 g_light(2, 6, 6);
+glm::vec3 g_light(0, 2, 0);
 
 GLuint ShadeProg;
 GLuint posBufObj = 0;
@@ -45,6 +48,8 @@ GLint h_uProjMatrix;
 GLint h_uLightPos;
 GLint h_uMatAmb, h_uMatDif, h_uMatSpec, h_uMatShine;
 GLint h_uShadeM;
+GLint h_uColorNorms;
+GLint h_uIsLight;
 
 /* helper function to make sure your matrix handle is correct */
 inline void safe_glUniformMatrix4fv(const GLint handle, const GLfloat data[]) {
@@ -75,6 +80,12 @@ void SetMaterial(int i) {
             glUniform3f(h_uMatSpec, 1.0, 0.913, 0.8);
             glUniform1f(h_uMatShine, 200.0);
             break;
+        case 3: //spooky material
+            glUniform3f(h_uMatAmb, 0.09, 0.07, 0.08);
+            glUniform3f(h_uMatDif, 0.2, 0.2, 0.2);
+            glUniform3f(h_uMatSpec, 1, .1, .1);
+            glUniform1f(h_uMatShine, 100.0);
+            break;
     }
 }
 
@@ -94,8 +105,25 @@ void SetView() {
 void SetModel() {
     glm::mat4 Trans = glm::translate( glm::mat4(1.0f), g_trans);
     glm::mat4 RotateY = glm::rotate( glm::mat4(1.0f), g_angle, glm::vec3(0.0f, 1, 0));
-    glm::mat4 com = Trans*RotateY;
+    glm::mat4 RotateX = glm::rotate( glm::mat4(1.0f), g_vert_angle, glm::vec3(1, 0, 0));
+    glm::mat4 com = Trans*RotateY*RotateX;
     safe_glUniformMatrix4fv(h_uModelMatrix, glm::value_ptr(com));
+}
+
+void SetLightModel() {
+    glm::mat4 Trans = glm::translate( glm::mat4(1.0f), g_light);
+    glm::mat4 Scale = glm::scale( glm::mat4(1.0f), glm::vec3(0.1, 0.1, 0.1));
+    glm::mat4 combined = Trans*Scale;
+    safe_glUniformMatrix4fv(h_uModelMatrix, glm::value_ptr(combined));
+}
+
+void SetBunnySpin() {
+    glm::mat4 Trans = glm::translate( glm::mat4(1.0f), glm::vec3(2, 0, -2));
+    glm::mat4 Rotate = glm::rotate( glm::mat4(1.0f), spinBunny, glm::vec3(0.5f, 1, 0.2f));
+    glm::mat4 com = Trans*Rotate;
+    safe_glUniformMatrix4fv(h_uModelMatrix, glm::value_ptr(com));
+    
+    spinBunny += 5;
 }
 
 //Given a vector of shapes which has already been read from an obj file
@@ -211,29 +239,21 @@ void initGL()
         glm::vec3 U = v2 - v1;
         glm::vec3 V = v3 - v1;
 
-//        Set Normal.x to (multiply U.y by V.z) minus (multiply U.z by V.y)
-//        Set Normal.y to (multiply U.z by V.x) minus (multiply U.x by V.z)
-//        Set Normal.z to (multiply U.x by V.y) minus (multiply U.y by V.x)
-        
-        float normX = U.y * V.z - U.z * V.y;
-        float normY = U.z * V.x - U.x * V.z;
-        float normZ = U.x * V.y - U.y * V.x;
-        
-        glm::vec3 normal = glm::vec3(normX, normY, normZ);
-        normal = glm::normalize(normal);
+        glm::vec3 normal = glm::cross(U, V);
         
         //This is not correct, it sets the normal as the vertex value but
         //shows access pattern
-        norBuf[3*idx1+0] = normal.x;
-        norBuf[3*idx1+1] = normal.y;
-        norBuf[3*idx1+2] = normal.z;
-        norBuf[3*idx2+0] = normal.x;
-        norBuf[3*idx2+1] = normal.y;
-        norBuf[3*idx2+2] = normal.z;
-        norBuf[3*idx3+0] = normal.x;
-        norBuf[3*idx3+1] = normal.y;
-        norBuf[3*idx3+2] = normal.z;
+        norBuf[3*idx1+0] += normal.x;
+        norBuf[3*idx1+1] += normal.y;
+        norBuf[3*idx1+2] += normal.z;
+        norBuf[3*idx2+0] += normal.x;
+        norBuf[3*idx2+1] += normal.y;
+        norBuf[3*idx2+2] += normal.z;
+        norBuf[3*idx3+0] += normal.x;
+        norBuf[3*idx3+1] += normal.y;
+        norBuf[3*idx3+2] += normal.z;
     }
+    
     glGenBuffers(1, &norBufObj);
     glBindBuffer(GL_ARRAY_BUFFER, norBufObj);
     glBufferData(GL_ARRAY_BUFFER, norBuf.size()*sizeof(float), &norBuf[0], GL_STATIC_DRAW);
@@ -312,6 +332,8 @@ bool installShaders(const string &vShaderName, const string &fShaderName)
     h_uMatSpec = GLSL::getUniformLocation(ShadeProg, "UsColor");
     h_uMatShine = GLSL::getUniformLocation(ShadeProg, "Ushine");
     h_uShadeM = GLSL::getUniformLocation(ShadeProg, "uShadeModel");
+    h_uColorNorms = GLSL::getUniformLocation(ShadeProg, "colorNormals");
+    h_uIsLight = GLSL::getUniformLocation(ShadeProg, "isLight");
     
     assert(glGetError() == GL_NO_ERROR);
     return true;
@@ -333,6 +355,7 @@ void drawGL()
     SetMaterial(g_mat_id);
     glUniform3f(h_uLightPos, g_light.x, g_light.y, g_light.z);
     glUniform1i(h_uShadeM, g_SM);
+    glUniform1i(h_uColorNorms, g_NORM);
     
     // Enable and bind position array for drawing
     GLSL::enableVertexAttribArray(h_aPosition);
@@ -348,7 +371,17 @@ void drawGL()
     int nIndices = (int)shapes[0].mesh.indices.size();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObj);
     
+    glUniform1i(h_uIsLight, 0);
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    SetBunnySpin();
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    
+    SetLightModel();
+    glUniform1i(h_uIsLight, 1);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
     
     GLSL::disableVertexAttribArray(h_aPosition);
     GLSL::disableVertexAttribArray(h_aNormal);
@@ -376,14 +409,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         g_angle += 10;
     if (key == GLFW_KEY_D && action == GLFW_PRESS)
         g_angle -= 10;
+    if (key == GLFW_KEY_W && action == GLFW_PRESS)
+        g_vert_angle += 10;
+    if (key == GLFW_KEY_S && action == GLFW_PRESS)
+        g_vert_angle -= 10;
     if (key == GLFW_KEY_X && action == GLFW_PRESS)
-        g_mat_id = (g_mat_id+1)%3;
+        g_mat_id = (g_mat_id+1)%4;
     if (key == GLFW_KEY_Z && action == GLFW_PRESS)
         g_SM = !g_SM;
     if (key == GLFW_KEY_Q && action == GLFW_PRESS)
         g_light.x += 0.25;
     if (key == GLFW_KEY_E && action == GLFW_PRESS)
         g_light.x -= 0.25;
+    if (key == GLFW_KEY_N && action == GLFW_PRESS)
+        g_NORM = !g_NORM;
 }
 
 int main(int argc, char **argv)
@@ -424,9 +463,9 @@ int main(int argc, char **argv)
     
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    loadShapes("bunny.obj");
-    //loadShapes("sphere.obj");
-    //loadShapes("cube.obj");
+    loadShapes("bunny.obj.txt");
+//    loadShapes("sphere.obj");
+//    loadShapes("cube.obj");
     initGL();
     installShaders("vert.glsl", "frag.glsl");
     

@@ -12,25 +12,34 @@ uniform vec3 UsColor;
 uniform float Ushine;
 uniform int uShadeModel;
 
-varying vec3 vCol;
+uniform int colorNornmals; // TRUE to visually see the values of normals as a color
+varying vec4 interpNormal;
+varying vec4 interpVertex;
 
 varying vec3 gouradColor;
 
+varying vec4 phongWorldCoord;
+
 void main() {
-    vec3 normNorm = normalize(aNormal);
-    
-    
 	gl_Position = uProjMatrix * uViewMatrix * uModelMatrix * aPosition;
-	vCol = 0.5*(normNorm + 1.0);
     
-    // Gourad shading
     vec4 vertexWorldPos = uViewMatrix * uModelMatrix * aPosition;
-    vec3 lightVec = normalize((uLightPos - vertexWorldPos.xyz));
-    vec3 lightColor = vec3(1, 1, 1);
+    vec4 worldNormal = uViewMatrix * uModelMatrix * vec4(normalize(aNormal), 0);
+    interpNormal = worldNormal;
+    interpVertex = vertexWorldPos;
     
-    vec3 halfAngle = normalize(lightVec + vertexWorldPos.xyz);
-    
-    gouradColor = lightColor *     dot(aNormal, lightVec)           * UdColor  +   // Diffuse
-                  lightColor * pow(dot(aNormal, halfAngle), Ushine) * UsColor  +   // Specular
-                                                                      UaColor;     // Ambient
+    if (uShadeModel == 0) {
+        // Gourad shading
+        vec3 lightVec = normalize((uLightPos - vertexWorldPos.xyz));
+        vec3 lightColor = vec3(1, 1, 1);
+        
+        vec3 halfAngle = normalize(lightVec - vertexWorldPos.xyz);
+        
+        gouradColor = lightColor *     dot(worldNormal.xyz, lightVec)           * UdColor  +   // Diffuse
+                      lightColor * pow(dot(worldNormal.xyz, halfAngle), Ushine) * UsColor  +   // Specular
+                                                                                  UaColor;     // Ambient
+    }
+    else {
+        phongWorldCoord = vertexWorldPos;
+    }
 }
