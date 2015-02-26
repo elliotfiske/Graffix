@@ -26,13 +26,16 @@ int g_SM = 0;
 int g_NORM = 0;
 int g_width;
 int g_height;
-float g_Camtrans = -2.5;
-float g_angle = 0;
-float g_vert_angle = 0;
+float cam_radius = 1;
+float cam_theta = 0;
+float cam_phi = 0;
 float spinBunny = 0;
 int g_mat_id =0;
-glm::vec3 g_trans(0, 0, 0);
 glm::vec3 g_light(0, 2, 0);
+glm::vec3 camLocation = glm::vec3(0.0f, 0, 0);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0);
+glm::vec3 lookPoint = glm::vec3(0.0f, 0, 0.0f);
+const float WALK_SPEED = 0.5;
 
 GLuint ShadeProg;
 GLuint posBufObj = 0;
@@ -91,21 +94,30 @@ void SetMaterial(int i) {
 
 /* helper function to set projection matrix - don't touch */
 void SetProjectionMatrix() {
-    glm::mat4 Projection = glm::perspective(90.0f, (float)g_width/g_height, 0.1f, 100.f);
+    glm::mat4 Projection = glm::perspective(75.0f, (float)g_width/g_height, 0.1f, 100.f);
     safe_glUniformMatrix4fv(h_uProjMatrix, glm::value_ptr(Projection));
 }
 
 /* camera controls - do not change beyond the current set up to rotate*/
 void SetView() {
-    glm::mat4 Trans = glm::translate( glm::mat4(1.0f), glm::vec3(0.0f, 0, g_Camtrans));
-    safe_glUniformMatrix4fv(h_uViewMatrix, glm::value_ptr(Trans));
+    
+    float lookX = cam_radius * cos(cam_phi) * cos(cam_theta); // change to THETA
+    float lookY = cam_radius * sin(cam_phi);
+    float lookZ = cam_radius * cos(cam_phi) * cos(90 - cam_theta);
+    
+    lookPoint = glm::vec3(lookX, lookY, lookZ);
+    
+    glm::mat4 CamProject = glm::lookAt(camLocation, camLocation + lookPoint, cameraUp);
+    
+    
+    safe_glUniformMatrix4fv(h_uViewMatrix, glm::value_ptr(CamProject));
 }
 
 /* model transforms */
-void SetModel() {
-    glm::mat4 Trans = glm::translate( glm::mat4(1.0f), g_trans);
-    glm::mat4 RotateY = glm::rotate( glm::mat4(1.0f), g_angle, glm::vec3(0.0f, 1, 0));
-    glm::mat4 RotateX = glm::rotate( glm::mat4(1.0f), g_vert_angle, glm::vec3(1, 0, 0));
+void SetModel(glm::vec3 bunnyPos) {
+    glm::mat4 Trans = glm::translate( glm::mat4(1.0f), bunnyPos);
+    glm::mat4 RotateY = glm::rotate( glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 1, 0));
+    glm::mat4 RotateX = glm::rotate( glm::mat4(1.0f), 0.0f, glm::vec3(1, 0, 0));
     glm::mat4 com = Trans*RotateY*RotateX;
     safe_glUniformMatrix4fv(h_uModelMatrix, glm::value_ptr(com));
 }
@@ -351,8 +363,6 @@ void drawGL()
     SetProjectionMatrix();
     SetView();
     
-    SetModel();
-    SetMaterial(g_mat_id);
     glUniform3f(h_uLightPos, g_light.x, g_light.y, g_light.z);
     glUniform1i(h_uShadeM, g_SM);
     glUniform1i(h_uColorNorms, g_NORM);
@@ -372,6 +382,24 @@ void drawGL()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObj);
     
     glUniform1i(h_uIsLight, 0);
+    
+    SetModel(glm::vec3(0, 0, -5));
+    SetMaterial(0);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    
+    SetModel(glm::vec3(0, 0, 5));
+    SetMaterial(1);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    
+    SetModel(glm::vec3(5, 0, 0));
+    SetMaterial(2);
+    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
+    
+    
+    SetModel(glm::vec3(-5, 0, 0));
+    SetMaterial(3);
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
     
     SetBunnySpin();
@@ -403,26 +431,44 @@ void window_size_callback(GLFWwindow* window, int w, int h){
     g_height = h;
 }
 
+float clip(float n, float lower, float upper) {
+    return std::max(lower, std::min(n, upper));
+}
+
+void scroll_callback(GLFWwindow* window, double xOffset, double yOffset) {
+    cam_theta += xOffset / 5;
+    
+    cam_phi   += yOffset / 5;
+    cam_phi = clip(cam_phi, - M_PI_2 + 0.6, M_PI_2 - 0.6);
+}
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_A && action == GLFW_PRESS)
-        g_angle += 10;
-    if (key == GLFW_KEY_D && action == GLFW_PRESS)
-        g_angle -= 10;
+    glm::vec3 translation = glm::vec3(0, 0, 0);
+    glm::vec3 strafe = glm::normalize(glm::cross(lookPoint, cameraUp));
+    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+        translation =  strafe * WALK_SPEED;
+    }
+    if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+        translation = -strafe * WALK_SPEED;
+    }
     if (key == GLFW_KEY_W && action == GLFW_PRESS)
-        g_vert_angle += 10;
+        translation = glm::normalize(lookPoint) * WALK_SPEED;
     if (key == GLFW_KEY_S && action == GLFW_PRESS)
-        g_vert_angle -= 10;
+        translation = -glm::normalize(lookPoint) * WALK_SPEED;
     if (key == GLFW_KEY_X && action == GLFW_PRESS)
         g_mat_id = (g_mat_id+1)%4;
     if (key == GLFW_KEY_Z && action == GLFW_PRESS)
-        g_SM = !g_SM;
+//        g_SM = !g_SM;
     if (key == GLFW_KEY_Q && action == GLFW_PRESS)
-        g_light.x += 0.25;
+//        g_light.x += 0.25;
     if (key == GLFW_KEY_E && action == GLFW_PRESS)
-        g_light.x -= 0.25;
+//        g_light.x -= 0.25;
     if (key == GLFW_KEY_N && action == GLFW_PRESS)
-        g_NORM = !g_NORM;
+//        g_NORM = !g_NORM;
+    
+    camLocation += translation;
+//    lookPoint   += translation;
 }
 
 int main(int argc, char **argv)
@@ -452,6 +498,7 @@ int main(int argc, char **argv)
     glfwMakeContextCurrent(window);
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
+    glfwSetScrollCallback(window, scroll_callback);
     // Initialize GLEW
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
