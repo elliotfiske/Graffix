@@ -39,6 +39,9 @@ const float WALK_SPEED = 0.5;
 
 GLuint ShadeProg;
 GLuint posBufObj = 0;
+GLuint posBufObj_Ground = 0;
+GLuint norBufObj_Ground = 0;
+GLuint planeBufObj = 0;
 GLuint norBufObj = 0;
 GLuint indBufObj = 0;
 
@@ -49,10 +52,12 @@ GLint h_uModelMatrix;
 GLint h_uViewMatrix;
 GLint h_uProjMatrix;
 GLint h_uLightPos;
+GLint h_uCameraPos;
 GLint h_uMatAmb, h_uMatDif, h_uMatSpec, h_uMatShine;
 GLint h_uShadeM;
 GLint h_uColorNorms;
 GLint h_uIsLight;
+GLint h_uIsPlane;
 
 /* helper function to make sure your matrix handle is correct */
 inline void safe_glUniformMatrix4fv(const GLint handle, const GLfloat data[]) {
@@ -211,6 +216,37 @@ void loadShapes(const string &objFile)
     resize_obj(shapes);
 }
 
+void initGround() {
+    
+    float G_edge = 20;
+    GLfloat g_backgnd_data[] = {
+        -G_edge, -1.0f, -G_edge,
+        -G_edge,  -1.0f, G_edge,
+        G_edge, -1.0f, -G_edge,
+        -G_edge,  -1.0f, G_edge,
+        G_edge, -1.0f, -G_edge,
+        G_edge, -1.0f, G_edge,
+    };
+    
+    
+    GLfloat nor_Buf_G[] = {
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+    };
+    
+    glGenBuffers(1, &posBufObj_Ground);
+    glBindBuffer(GL_ARRAY_BUFFER, posBufObj_Ground);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_backgnd_data), g_backgnd_data, GL_STATIC_DRAW);
+    
+    glGenBuffers(1, &norBufObj_Ground);
+    glBindBuffer(GL_ARRAY_BUFFER, norBufObj_Ground);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(nor_Buf_G), nor_Buf_G, GL_STATIC_DRAW);
+    
+}
 
 
 void initGL()
@@ -226,6 +262,16 @@ void initGL()
     glGenBuffers(1, &posBufObj);
     glBindBuffer(GL_ARRAY_BUFFER, posBufObj);
     glBufferData(GL_ARRAY_BUFFER, posBuf.size()*sizeof(float), &posBuf[0], GL_STATIC_DRAW);
+    
+    static const GLfloat planeData[] = {
+          0, 0,      0,
+          0, 0,   -100,
+        100, 0,      0,
+    };
+    
+    glGenBuffers(1, &planeBufObj);
+    glBindBuffer(GL_ARRAY_BUFFER, planeBufObj);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(planeData), planeData, GL_STATIC_DRAW);
     
     // TODO compute the normals per vertex - you must fill this in
     vector<float> norBuf;
@@ -282,6 +328,7 @@ void initGL()
     GLSL::checkVersion();
     assert(glGetError() == GL_NO_ERROR);
     
+    initGround();
 }
 
 bool installShaders(const string &vShaderName, const string &fShaderName)
@@ -326,6 +373,11 @@ bool installShaders(const string &vShaderName, const string &fShaderName)
     
 	   GLSL::printError();
 	   glGetProgramiv(ShadeProg, GL_LINK_STATUS, &rc);
+    
+        int shaderCompiled = GL_FALSE;
+        glGetShaderiv(ShadeProg, GL_COMPILE_STATUS, &shaderCompiled);
+    
+    printf("%d\n", shaderCompiled);
 	   GLSL::printProgramInfoLog(ShadeProg);
 	   if(!rc) {
            printf("Error linking shaders %s and %s\n", vShaderName.c_str(), fShaderName.c_str());
@@ -339,13 +391,14 @@ bool installShaders(const string &vShaderName, const string &fShaderName)
     h_uViewMatrix = GLSL::getUniformLocation(ShadeProg, "uViewMatrix");
     h_uModelMatrix = GLSL::getUniformLocation(ShadeProg, "uModelMatrix");
     h_uLightPos = GLSL::getUniformLocation(ShadeProg, "uLightPos");
+    h_uCameraPos = GLSL::getUniformLocation(ShadeProg, "uCameraPos");
     h_uMatAmb = GLSL::getUniformLocation(ShadeProg, "UaColor");
     h_uMatDif = GLSL::getUniformLocation(ShadeProg, "UdColor");
     h_uMatSpec = GLSL::getUniformLocation(ShadeProg, "UsColor");
     h_uMatShine = GLSL::getUniformLocation(ShadeProg, "Ushine");
-    h_uShadeM = GLSL::getUniformLocation(ShadeProg, "uShadeModel");
     h_uColorNorms = GLSL::getUniformLocation(ShadeProg, "colorNormals");
     h_uIsLight = GLSL::getUniformLocation(ShadeProg, "isLight");
+    h_uIsPlane = GLSL::getUniformLocation(ShadeProg, "isPlane");
     
     assert(glGetError() == GL_NO_ERROR);
     return true;
@@ -363,25 +416,31 @@ void drawGL()
     SetProjectionMatrix();
     SetView();
     
-    glUniform3f(h_uLightPos, g_light.x, g_light.y, g_light.z);
+    glm::vec3 transLight = camLocation + g_light;
+    glUniform3f(h_uLightPos, transLight.x, transLight.y, transLight.z);
+    glUniform3f(h_uCameraPos, camLocation.x, camLocation.y, camLocation.z);
     glUniform1i(h_uShadeM, g_SM);
     glUniform1i(h_uColorNorms, g_NORM);
+    
+    glUniform1i(h_uIsPlane, 0);
+    
+    glUniform1i(h_uIsLight, 0);
+    
     
     // Enable and bind position array for drawing
     GLSL::enableVertexAttribArray(h_aPosition);
     glBindBuffer(GL_ARRAY_BUFFER, posBufObj);
     glVertexAttribPointer(h_aPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
     
-    // Enable and bind normal array for drawing
-    GLSL::enableVertexAttribArray(h_aNormal);
-    glBindBuffer(GL_ARRAY_BUFFER, norBufObj);
-    glVertexAttribPointer(h_aNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
     
     // Bind index array for drawing
     int nIndices = (int)shapes[0].mesh.indices.size();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObj);
     
-    glUniform1i(h_uIsLight, 0);
+    GLSL::enableVertexAttribArray(h_aNormal);
+    glBindBuffer(GL_ARRAY_BUFFER, norBufObj);
+    glVertexAttribPointer(h_aNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    
     
     SetModel(glm::vec3(0, 0, -5));
     SetMaterial(0);
@@ -410,18 +469,39 @@ void drawGL()
     glUniform1i(h_uIsLight, 1);
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
     
+
+    
     
     GLSL::disableVertexAttribArray(h_aPosition);
     GLSL::disableVertexAttribArray(h_aNormal);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
-    // Disable and unbind
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glUseProgram(0);
-    assert(glGetError() == GL_NO_ERROR);
     
+    /******* DRAW PLANE ********/
+    glUniform1i(h_uIsLight, 0);
+    GLSL::enableVertexAttribArray(h_aPosition);
+    glBindBuffer(GL_ARRAY_BUFFER, posBufObj_Ground);
+    glVertexAttribPointer( h_aPosition, 3,  GL_FLOAT, GL_FALSE, 0, (void*)0);
+    GLSL::enableVertexAttribArray(h_aNormal);
+    glBindBuffer(GL_ARRAY_BUFFER, norBufObj_Ground);
+    glVertexAttribPointer(h_aNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    
+    GLSL::disableVertexAttribArray(h_aPosition);
+    GLSL::disableVertexAttribArray(h_aNormal);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
+    /********* DONE DRAWING PLANE ********/
+    
+    glUseProgram(0);
+    
+    int error = glGetError();
+    if (error != GL_NO_ERROR) {
+        printf("Error is: %s\n", gluErrorString(error));
+//        assert(false);
+    }
 }
 
 
@@ -447,10 +527,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     glm::vec3 translation = glm::vec3(0, 0, 0);
     glm::vec3 strafe = glm::normalize(glm::cross(lookPoint, cameraUp));
     if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-        translation =  strafe * WALK_SPEED;
+        translation = -strafe * WALK_SPEED;
     }
     if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-        translation = -strafe * WALK_SPEED;
+        translation =  strafe * WALK_SPEED;
     }
     if (key == GLFW_KEY_W && action == GLFW_PRESS)
         translation = glm::normalize(lookPoint) * WALK_SPEED;
@@ -458,14 +538,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         translation = -glm::normalize(lookPoint) * WALK_SPEED;
     if (key == GLFW_KEY_X && action == GLFW_PRESS)
         g_mat_id = (g_mat_id+1)%4;
-    if (key == GLFW_KEY_Z && action == GLFW_PRESS)
-//        g_SM = !g_SM;
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS)
-//        g_light.x += 0.25;
-    if (key == GLFW_KEY_E && action == GLFW_PRESS)
-//        g_light.x -= 0.25;
-    if (key == GLFW_KEY_N && action == GLFW_PRESS)
-//        g_NORM = !g_NORM;
     
     camLocation += translation;
 //    lookPoint   += translation;
