@@ -21,7 +21,7 @@ using namespace glm;
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
 
-int main( void )
+int main( int wut, char** who )
 {
 	// Initialise GLFW
 	if( !glfwInit() )
@@ -94,6 +94,11 @@ int main( void )
 	std::vector<glm::vec3> indexed_vertices;
 	std::vector<glm::vec2> indexed_uvs;
 	std::vector<glm::vec3> indexed_normals;
+    
+    for (int i = 0; i < vertices.size(); i++) {
+        vertices[i] *= 5;
+    }
+    
 	indexVBO(vertices, uvs, normals, indices, indexed_vertices, indexed_uvs, indexed_normals);
 
 	// Load it into a VBO
@@ -145,7 +150,8 @@ int main( void )
 		// Use our shader
 		glUseProgram(programID);
 
-		// Compute the MVP matrix from keyboard and mouse input
+        // Compute the MVP matrix from keyboard and mouse input
+        glfwSetCursorPos(window, 1024/2, 768/2);
 		computeMatricesFromInputs();
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
 		glm::mat4 ViewMatrix = getViewMatrix();

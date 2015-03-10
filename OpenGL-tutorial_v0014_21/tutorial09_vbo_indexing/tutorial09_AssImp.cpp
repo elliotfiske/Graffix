@@ -23,6 +23,7 @@ using namespace glm;
 
 int main( void )
 {
+    printf(d);
 	// Initialise GLFW
 	if( !glfwInit() )
 	{
