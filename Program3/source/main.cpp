@@ -1,551 +1,33 @@
-// Base code for program 3 - does not compile as is, needs other files
-//and shaders but has skeleton for much of the data transfer for shading
-//and traversal of the mesh for computing normals - you must compute normals
-
+// Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+// Include GLEW
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-#include <cassert>
-#include <cmath>
-#include <stdio.h>
-#include "GLSL.h"
-#include "tiny_obj_loader.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp" //perspective, trans etc
-#include "glm/gtc/type_ptr.hpp" //value_ptr
 
+// Include GLFW
+#include <glfw3.h>
 GLFWwindow* window;
-using namespace std;
 
-vector<tinyobj::shape_t> shapes;
-vector<tinyobj::material_t> materials;
+// Include GLM
+#include "glm/glm.hpp"
+using namespace glm;
 
-int g_SM = 0;
-int g_NORM = 0;
-int g_width;
-int g_height;
-float cam_radius = 1;
-float cam_theta = 0;
-float cam_phi = 0;
-float spinBunny = 0;
-int g_mat_id =0;
-glm::vec3 g_light(0, 2, 0);
-glm::vec3 camLocation = glm::vec3(0.0f, 0, 0);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0);
-glm::vec3 lookPoint = glm::vec3(0.0f, 0, 0.0f);
-const float WALK_SPEED = 0.5;
+#include <common/shader.hpp>
 
-GLuint ShadeProg;
-GLuint posBufObj = 0;
-GLuint posBufObj_Ground = 0;
-GLuint norBufObj_Ground = 0;
-GLuint planeBufObj = 0;
-GLuint norBufObj = 0;
-GLuint indBufObj = 0;
+int width, height;
+#define NUM_POINTS 40
 
-//Handles to the shader data
-GLint h_aPosition;
-GLint h_aNormal;
-GLint h_uModelMatrix;
-GLint h_uViewMatrix;
-GLint h_uProjMatrix;
-GLint h_uLightPos;
-GLint h_uCameraPos;
-GLint h_uMatAmb, h_uMatDif, h_uMatSpec, h_uMatShine;
-GLint h_uShadeM;
-GLint h_uColorNorms;
-GLint h_uIsLight;
-GLint h_uIsPlane;
-
-/* helper function to make sure your matrix handle is correct */
-inline void safe_glUniformMatrix4fv(const GLint handle, const GLfloat data[]) {
-    if (handle >= 0)
-        glUniformMatrix4fv(handle, 1, GL_FALSE, data);
+void window_resized(GLFWwindow* window, int width_, int height_) {
+    printf("Width: %d, Height: %d\n", width, height);
+    width = width_;
+    height = height_;
+    glViewport(0, 0, width, height);
 }
 
-/* helper function to send materials to the shader - you must create your own */
-void SetMaterial(int i) {
-    
-    glUseProgram(ShadeProg);
-    switch (i) {
-        case 0: //shiny blue plastic
-            glUniform3f(h_uMatAmb, 0.02, 0.02, 0.1);
-            glUniform3f(h_uMatDif, 0.0, 0.08, 0.5);
-            glUniform3f(h_uMatSpec, 0.14, 0.14, 0.4);
-            glUniform1f(h_uMatShine, 120.0);
-            break;
-        case 1: // flat grey
-            glUniform3f(h_uMatAmb, 0.13, 0.13, 0.14);
-            glUniform3f(h_uMatDif, 0.3, 0.3, 0.4);
-            glUniform3f(h_uMatSpec, 0.3, 0.3, 0.4);
-            glUniform1f(h_uMatShine, 4.0);
-            break;
-        case 2: //gold
-            glUniform3f(h_uMatAmb, 0.09, 0.07, 0.08);
-            glUniform3f(h_uMatDif, 0.91, 0.782, 0.82);
-            glUniform3f(h_uMatSpec, 1.0, 0.913, 0.8);
-            glUniform1f(h_uMatShine, 200.0);
-            break;
-        case 3: //spooky material
-            glUniform3f(h_uMatAmb, 0.09, 0.07, 0.08);
-            glUniform3f(h_uMatDif, 0.2, 0.2, 0.2);
-            glUniform3f(h_uMatSpec, 1, .1, .1);
-            glUniform1f(h_uMatShine, 100.0);
-            break;
-    }
-}
-
-/* helper function to set projection matrix - don't touch */
-void SetProjectionMatrix() {
-    glm::mat4 Projection = glm::perspective(75.0f, (float)g_width/g_height, 0.1f, 100.f);
-    safe_glUniformMatrix4fv(h_uProjMatrix, glm::value_ptr(Projection));
-}
-
-/* camera controls - do not change beyond the current set up to rotate*/
-void SetView() {
-    
-    float lookX = cam_radius * cos(cam_phi) * cos(cam_theta); // change to THETA
-    float lookY = cam_radius * sin(cam_phi);
-    float lookZ = cam_radius * cos(cam_phi) * cos(90 - cam_theta);
-    
-    lookPoint = glm::vec3(lookX, lookY, lookZ);
-    
-    glm::mat4 CamProject = glm::lookAt(camLocation, camLocation + lookPoint, cameraUp);
-    
-    
-    safe_glUniformMatrix4fv(h_uViewMatrix, glm::value_ptr(CamProject));
-}
-
-/* model transforms */
-void SetModel(glm::vec3 bunnyPos) {
-    glm::mat4 Trans = glm::translate( glm::mat4(1.0f), bunnyPos);
-    glm::mat4 RotateY = glm::rotate( glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 1, 0));
-    glm::mat4 RotateX = glm::rotate( glm::mat4(1.0f), 0.0f, glm::vec3(1, 0, 0));
-    glm::mat4 com = Trans*RotateY*RotateX;
-    safe_glUniformMatrix4fv(h_uModelMatrix, glm::value_ptr(com));
-}
-
-void SetLightModel() {
-    glm::mat4 Trans = glm::translate( glm::mat4(1.0f), g_light);
-    glm::mat4 Scale = glm::scale( glm::mat4(1.0f), glm::vec3(0.1, 0.1, 0.1));
-    glm::mat4 combined = Trans*Scale;
-    safe_glUniformMatrix4fv(h_uModelMatrix, glm::value_ptr(combined));
-}
-
-void SetBunnySpin() {
-    glm::mat4 Trans = glm::translate( glm::mat4(1.0f), glm::vec3(2, 0, -2));
-    glm::mat4 Rotate = glm::rotate( glm::mat4(1.0f), spinBunny, glm::vec3(0.5f, 1, 0.2f));
-    glm::mat4 com = Trans*Rotate;
-    safe_glUniformMatrix4fv(h_uModelMatrix, glm::value_ptr(com));
-    
-    spinBunny += 5;
-}
-
-//Given a vector of shapes which has already been read from an obj file
-// resize all vertices to the range [-1, 1]
-void resize_obj(std::vector<tinyobj::shape_t> &shapes){
-    float minX, minY, minZ;
-    float maxX, maxY, maxZ;
-    float scaleX, scaleY, scaleZ;
-    float shiftX, shiftY, shiftZ;
-    float epsilon = 0.001;
-    
-    minX = minY = minZ = 1.1754E+38F;
-    maxX = maxY = maxZ = -1.1754E+38F;
-    
-    //Go through all vertices to determine min and max of each dimension
-    for (size_t i = 0; i < shapes.size(); i++) {
-        for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
-            if(shapes[i].mesh.positions[3*v+0] < minX) minX = shapes[i].mesh.positions[3*v+0];
-            if(shapes[i].mesh.positions[3*v+0] > maxX) maxX = shapes[i].mesh.positions[3*v+0];
-            
-            if(shapes[i].mesh.positions[3*v+1] < minY) minY = shapes[i].mesh.positions[3*v+1];
-            if(shapes[i].mesh.positions[3*v+1] > maxY) maxY = shapes[i].mesh.positions[3*v+1];
-            
-            if(shapes[i].mesh.positions[3*v+2] < minZ) minZ = shapes[i].mesh.positions[3*v+2];
-            if(shapes[i].mesh.positions[3*v+2] > maxZ) maxZ = shapes[i].mesh.positions[3*v+2];
-        }
-    }
-    //From min and max compute necessary scale and shift for each dimension
-    float maxExtent, xExtent, yExtent, zExtent;
-    xExtent = maxX-minX;
-    yExtent = maxY-minY;
-    zExtent = maxZ-minZ;
-    if (xExtent >= yExtent && xExtent >= zExtent) {
-        maxExtent = xExtent;
-    }
-    if (yExtent >= xExtent && yExtent >= zExtent) {
-        maxExtent = yExtent;
-    }
-    if (zExtent >= xExtent && zExtent >= yExtent) {
-        maxExtent = zExtent;
-    }
-    scaleX = 2.0 /maxExtent;
-    shiftX = minX + (xExtent/ 2.0);
-    scaleY = 2.0 / maxExtent;
-    shiftY = minY + (yExtent / 2.0);
-    scaleZ = 2.0/ maxExtent;
-    shiftZ = minZ + (zExtent)/2.0;
-    
-    //Go through all verticies shift and scale them
-    for (size_t i = 0; i < shapes.size(); i++) {
-        for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
-            shapes[i].mesh.positions[3*v+0] = (shapes[i].mesh.positions[3*v+0] - shiftX) * scaleX;
-            assert(shapes[i].mesh.positions[3*v+0] >= -1.0 - epsilon);
-            assert(shapes[i].mesh.positions[3*v+0] <= 1.0 + epsilon);
-            shapes[i].mesh.positions[3*v+1] = (shapes[i].mesh.positions[3*v+1] - shiftY) * scaleY;
-            assert(shapes[i].mesh.positions[3*v+1] >= -1.0 - epsilon);
-            assert(shapes[i].mesh.positions[3*v+1] <= 1.0 + epsilon);
-            shapes[i].mesh.positions[3*v+2] = (shapes[i].mesh.positions[3*v+2] - shiftZ) * scaleZ;
-            assert(shapes[i].mesh.positions[3*v+2] >= -1.0 - epsilon);
-            assert(shapes[i].mesh.positions[3*v+2] <= 1.0 + epsilon);
-        }
-    }
-}
-
-
-
-void loadShapes(const string &objFile)
+int main( void )
 {
-    string err = tinyobj::LoadObj(shapes, materials, objFile.c_str());
-    if(!err.empty()) {
-        cerr << err << endl;
-    }
-    resize_obj(shapes);
-}
-
-void initGround() {
-    
-    float G_edge = 20;
-    GLfloat g_backgnd_data[] = {
-        -G_edge, -1.0f, -G_edge,
-        -G_edge,  -1.0f, G_edge,
-        G_edge, -1.0f, -G_edge,
-        -G_edge,  -1.0f, G_edge,
-        G_edge, -1.0f, -G_edge,
-        G_edge, -1.0f, G_edge,
-    };
-    
-    
-    GLfloat nor_Buf_G[] = {
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-    };
-    
-    glGenBuffers(1, &posBufObj_Ground);
-    glBindBuffer(GL_ARRAY_BUFFER, posBufObj_Ground);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_backgnd_data), g_backgnd_data, GL_STATIC_DRAW);
-    
-    glGenBuffers(1, &norBufObj_Ground);
-    glBindBuffer(GL_ARRAY_BUFFER, norBufObj_Ground);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(nor_Buf_G), nor_Buf_G, GL_STATIC_DRAW);
-    
-}
-
-
-void initGL()
-{
-    // Set the background color
-    glClearColor(0.6f, 0.6f, 0.8f, 1.0f);
-    // Enable Z-buffer test
-    glEnable(GL_DEPTH_TEST);
-    glPointSize(18);
-    
-    // Send the position array to the GPU
-    const vector<float> &posBuf = shapes[0].mesh.positions;
-    glGenBuffers(1, &posBufObj);
-    glBindBuffer(GL_ARRAY_BUFFER, posBufObj);
-    glBufferData(GL_ARRAY_BUFFER, posBuf.size()*sizeof(float), &posBuf[0], GL_STATIC_DRAW);
-    
-    static const GLfloat planeData[] = {
-          0, 0,      0,
-          0, 0,   -100,
-        100, 0,      0,
-    };
-    
-    glGenBuffers(1, &planeBufObj);
-    glBindBuffer(GL_ARRAY_BUFFER, planeBufObj);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(planeData), planeData, GL_STATIC_DRAW);
-    
-    // TODO compute the normals per vertex - you must fill this in
-    vector<float> norBuf;
-    int idx1, idx2, idx3;
-    glm::vec3 v1, v2, v3;
-    //for every vertex initialize a normal to 0
-    for (int j = 0; j < shapes[0].mesh.positions.size()/3; j++) {
-        norBuf.push_back(0);
-        norBuf.push_back(0);
-        norBuf.push_back(0);
-    }
-    // DO work here to compute the normals for every face
-    //then add its normal to its associated vertex
-    for (int i = 0; i < shapes[0].mesh.indices.size()/3; i++) {
-        idx1 = shapes[0].mesh.indices[3*i+0];
-        idx2 = shapes[0].mesh.indices[3*i+1];
-        idx3 = shapes[0].mesh.indices[3*i+2];
-        v1 = glm::vec3(shapes[0].mesh.positions[3*idx1 +0],shapes[0].mesh.positions[3*idx1 +1], shapes[0].mesh.positions[3*idx1 +2]);
-        v2 = glm::vec3(shapes[0].mesh.positions[3*idx2 +0],shapes[0].mesh.positions[3*idx2 +1], shapes[0].mesh.positions[3*idx2 +2]);
-        v3 = glm::vec3(shapes[0].mesh.positions[3*idx3 +0],shapes[0].mesh.positions[3*idx3 +1], shapes[0].mesh.positions[3*idx3 +2]);
-        
-        // Using https://www.opengl.org/wiki/Calculating_a_Surface_Normal to find the normal of a triangle
-        glm::vec3 U = v2 - v1;
-        glm::vec3 V = v3 - v1;
-
-        glm::vec3 normal = glm::cross(U, V);
-        
-        //This is not correct, it sets the normal as the vertex value but
-        //shows access pattern
-        norBuf[3*idx1+0] += normal.x;
-        norBuf[3*idx1+1] += normal.y;
-        norBuf[3*idx1+2] += normal.z;
-        norBuf[3*idx2+0] += normal.x;
-        norBuf[3*idx2+1] += normal.y;
-        norBuf[3*idx2+2] += normal.z;
-        norBuf[3*idx3+0] += normal.x;
-        norBuf[3*idx3+1] += normal.y;
-        norBuf[3*idx3+2] += normal.z;
-    }
-    
-    glGenBuffers(1, &norBufObj);
-    glBindBuffer(GL_ARRAY_BUFFER, norBufObj);
-    glBufferData(GL_ARRAY_BUFFER, norBuf.size()*sizeof(float), &norBuf[0], GL_STATIC_DRAW);
-    
-    // Send the index array to the GPU
-    const vector<unsigned int> &indBuf = shapes[0].mesh.indices;
-    glGenBuffers(1, &indBufObj);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObj);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indBuf.size()*sizeof(unsigned int), &indBuf[0], GL_STATIC_DRAW);
-    
-    // Unbind the arrays
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    GLSL::checkVersion();
-    assert(glGetError() == GL_NO_ERROR);
-    
-    initGround();
-}
-
-bool installShaders(const string &vShaderName, const string &fShaderName)
-{
-    GLint rc;
-    
-    // Create shader handles
-    GLuint VS = glCreateShader(GL_VERTEX_SHADER);
-    GLuint FS = glCreateShader(GL_FRAGMENT_SHADER);
-    
-    // Read shader sources
-    const char *vshader = GLSL::textFileRead(vShaderName.c_str());
-    const char *fshader = GLSL::textFileRead(fShaderName.c_str());
-    glShaderSource(VS, 1, &vshader, NULL);
-    glShaderSource(FS, 1, &fshader, NULL);
-    
-    // Compile vertex shader
-    glCompileShader(VS);
-    GLSL::printError();
-    glGetShaderiv(VS, GL_COMPILE_STATUS, &rc);
-    GLSL::printShaderInfoLog(VS);
-    if(!rc) {
-        printf("Error compiling vertex shader %s\n", vShaderName.c_str());
-        return false;
-    }
-    
-    // Compile fragment shader
-    glCompileShader(FS);
-    GLSL::printError();
-    glGetShaderiv(FS, GL_COMPILE_STATUS, &rc);
-    GLSL::printShaderInfoLog(FS);
-    if(!rc) {
-        printf("Error compiling fragment shader %s\n", fShaderName.c_str());
-        return false;
-    }
-    
-    // Create the program and link
-	   ShadeProg = glCreateProgram();
-	   glAttachShader(ShadeProg, VS);
-	   glAttachShader(ShadeProg, FS);
-	   glLinkProgram(ShadeProg);
-    
-	   GLSL::printError();
-	   glGetProgramiv(ShadeProg, GL_LINK_STATUS, &rc);
-    
-        int shaderCompiled = GL_FALSE;
-        glGetShaderiv(ShadeProg, GL_COMPILE_STATUS, &shaderCompiled);
-    
-    printf("%d\n", shaderCompiled);
-	   GLSL::printProgramInfoLog(ShadeProg);
-	   if(!rc) {
-           printf("Error linking shaders %s and %s\n", vShaderName.c_str(), fShaderName.c_str());
-           return false;
-       }
-    
-    /* get handles to attribute data */
-    h_aPosition = GLSL::getAttribLocation(ShadeProg, "aPosition");
-    h_aNormal = GLSL::getAttribLocation(ShadeProg, "aNormal");
-    h_uProjMatrix = GLSL::getUniformLocation(ShadeProg, "uProjMatrix");
-    h_uViewMatrix = GLSL::getUniformLocation(ShadeProg, "uViewMatrix");
-    h_uModelMatrix = GLSL::getUniformLocation(ShadeProg, "uModelMatrix");
-    h_uLightPos = GLSL::getUniformLocation(ShadeProg, "uLightPos");
-    h_uCameraPos = GLSL::getUniformLocation(ShadeProg, "uCameraPos");
-    h_uMatAmb = GLSL::getUniformLocation(ShadeProg, "UaColor");
-    h_uMatDif = GLSL::getUniformLocation(ShadeProg, "UdColor");
-    h_uMatSpec = GLSL::getUniformLocation(ShadeProg, "UsColor");
-    h_uMatShine = GLSL::getUniformLocation(ShadeProg, "Ushine");
-    h_uColorNorms = GLSL::getUniformLocation(ShadeProg, "colorNormals");
-    h_uIsLight = GLSL::getUniformLocation(ShadeProg, "isLight");
-    h_uIsPlane = GLSL::getUniformLocation(ShadeProg, "isPlane");
-    
-    assert(glGetError() == GL_NO_ERROR);
-    return true;
-}
-
-
-void drawGL()
-{
-    // Clear the screen
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    // Use our GLSL program
-    glUseProgram(ShadeProg);
-    
-    SetProjectionMatrix();
-    SetView();
-    
-    glm::vec3 transLight = camLocation + g_light;
-    glUniform3f(h_uLightPos, transLight.x, transLight.y, transLight.z);
-    glUniform3f(h_uCameraPos, camLocation.x, camLocation.y, camLocation.z);
-    glUniform1i(h_uShadeM, g_SM);
-    glUniform1i(h_uColorNorms, g_NORM);
-    
-    glUniform1i(h_uIsPlane, 0);
-    
-    glUniform1i(h_uIsLight, 0);
-    
-    
-    // Enable and bind position array for drawing
-    GLSL::enableVertexAttribArray(h_aPosition);
-    glBindBuffer(GL_ARRAY_BUFFER, posBufObj);
-    glVertexAttribPointer(h_aPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    
-    
-    // Bind index array for drawing
-    int nIndices = (int)shapes[0].mesh.indices.size();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObj);
-    
-    GLSL::enableVertexAttribArray(h_aNormal);
-    glBindBuffer(GL_ARRAY_BUFFER, norBufObj);
-    glVertexAttribPointer(h_aNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    
-    
-    SetModel(glm::vec3(0, 0, -5));
-    SetMaterial(0);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    
-    SetModel(glm::vec3(0, 0, 5));
-    SetMaterial(1);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    
-    SetModel(glm::vec3(5, 0, 0));
-    SetMaterial(2);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    
-    SetModel(glm::vec3(-5, 0, 0));
-    SetMaterial(3);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    SetBunnySpin();
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-    
-    SetLightModel();
-    glUniform1i(h_uIsLight, 1);
-    glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
-    
-
-    
-    
-    GLSL::disableVertexAttribArray(h_aPosition);
-    GLSL::disableVertexAttribArray(h_aNormal);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    
-    
-    /******* DRAW PLANE ********/
-    glUniform1i(h_uIsLight, 0);
-    GLSL::enableVertexAttribArray(h_aPosition);
-    glBindBuffer(GL_ARRAY_BUFFER, posBufObj_Ground);
-    glVertexAttribPointer( h_aPosition, 3,  GL_FLOAT, GL_FALSE, 0, (void*)0);
-    GLSL::enableVertexAttribArray(h_aNormal);
-    glBindBuffer(GL_ARRAY_BUFFER, norBufObj_Ground);
-    glVertexAttribPointer(h_aNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    
-    GLSL::disableVertexAttribArray(h_aPosition);
-    GLSL::disableVertexAttribArray(h_aNormal);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-    /********* DONE DRAWING PLANE ********/
-    
-    glUseProgram(0);
-    
-    int error = glGetError();
-    if (error != GL_NO_ERROR) {
-        printf("Error is: %s\n", gluErrorString(error));
-//        assert(false);
-    }
-}
-
-
-void window_size_callback(GLFWwindow* window, int w, int h){
-    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-    g_width = w;
-    g_height = h;
-}
-
-float clip(float n, float lower, float upper) {
-    return std::max(lower, std::min(n, upper));
-}
-
-void scroll_callback(GLFWwindow* window, double xOffset, double yOffset) {
-    cam_theta += xOffset / 5;
-    
-    cam_phi   += yOffset / 5;
-    cam_phi = clip(cam_phi, - M_PI_2 + 0.6, M_PI_2 - 0.6);
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    glm::vec3 translation = glm::vec3(0, 0, 0);
-    glm::vec3 strafe = glm::normalize(glm::cross(lookPoint, cameraUp));
-    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-        translation = -strafe * WALK_SPEED;
-    }
-    if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-        translation =  strafe * WALK_SPEED;
-    }
-    if (key == GLFW_KEY_W && action == GLFW_PRESS)
-        translation = glm::normalize(lookPoint) * WALK_SPEED;
-    if (key == GLFW_KEY_S && action == GLFW_PRESS)
-        translation = -glm::normalize(lookPoint) * WALK_SPEED;
-    if (key == GLFW_KEY_X && action == GLFW_PRESS)
-        g_mat_id = (g_mat_id+1)%4;
-    
-    camLocation += translation;
-//    lookPoint   += translation;
-}
-
-int main(int argc, char **argv)
-{
-    
     // Initialise GLFW
     if( !glfwInit() )
     {
@@ -554,23 +36,21 @@ int main(int argc, char **argv)
     }
     
     glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     
+    
     // Open a window and create its OpenGL context
-    g_width = 1024;
-    g_height = 768;
-    window = glfwCreateWindow( g_width, g_height, "P3 - shading", NULL, NULL);
+    width = 800;
+    height = 800;
+    window = glfwCreateWindow( width, height, "Program 2A - fun with points", NULL, NULL);
     if( window == NULL ){
         fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetWindowSizeCallback(window, window_size_callback);
-    glfwSetScrollCallback(window, scroll_callback);
+    
     // Initialize GLEW
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
@@ -580,19 +60,145 @@ int main(int argc, char **argv)
     // Ensure we can capture the escape key being pressed below
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     
-    glEnable (GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    loadShapes("bunny.obj.txt");
-//    loadShapes("sphere.obj");
-//    loadShapes("cube.obj");
-    initGL();
-    installShaders("vert.glsl", "frag.glsl");
+    glfwSetWindowSizeCallback(window, window_resized);
     
-    glClearColor(0.6f, 0.6f, 0.8f, 1.0f);
+    // Dark blue background
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
+    // Create and compile our GLSL program from the shaders
+    GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
+    
+    // Get a handle for our buffers
+    GLuint vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
+    GLuint vertexColorID = glGetAttribLocation(programID, "vertexColor");
+    GLuint winScaleID = glGetUniformLocation(programID, "uWinScale");
+    GLuint winCenterID = glGetUniformLocation(programID, "uWinCenter");
+    GLuint timeID = glGetUniformLocation(programID, "uTime");
+    GLuint targetDistID = glGetUniformLocation(programID, "uTargetDist");
+    GLuint circleScaleID = glGetUniformLocation(programID, "uCircleScale");
+    
+    static GLfloat g_point_buffer_data[NUM_POINTS * 2 + 18];
+    
+    srand((unsigned int)time(NULL));
+    g_point_buffer_data[0] = -0.0f;
+    g_point_buffer_data[1] = -0.0f;
+    
+    g_point_buffer_data[2] = -0.2f;
+    g_point_buffer_data[3] = -0.2f;
+    
+    g_point_buffer_data[4] =  0.0f;
+    g_point_buffer_data[5] = -0.2f;
+    
+    g_point_buffer_data[6] =  0.2f;
+    g_point_buffer_data[7] = -0.2f;
+    
+    g_point_buffer_data[8] =  0.2f;
+    g_point_buffer_data[9] =  0.0f;
+    
+    g_point_buffer_data[10] =  0.2f;
+    g_point_buffer_data[11] =  0.2f;
+    
+    g_point_buffer_data[12] =  0.0f;
+    g_point_buffer_data[13] =  0.2f;
+    
+    g_point_buffer_data[14] = -0.2f;
+    g_point_buffer_data[15] =  0.2f;
+    
+    g_point_buffer_data[16] = -0.2f;
+    g_point_buffer_data[17] =  0.0f;
+    
+    for (int i = 18; i < NUM_POINTS * 2 + 18; i++) {
+        float newPointCoord = (float)rand()/(float)(RAND_MAX/2.0) - 1;
+        g_point_buffer_data[i] = newPointCoord;
+    }
+    
+    static const GLfloat g_color_buffer_data[] = {
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+    };
+    
+    GLuint vertexbuffer;
+    glGenBuffers(1, &vertexbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_point_buffer_data), g_point_buffer_data, GL_STATIC_DRAW);
+    
+    GLuint colorbuffer;
+    glGenBuffers(1, &colorbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+    
+    /** WHAT TIIIIME IS IT? */
+    float l_time = 0;
+    /** How many seconds until the points reach their destination */
+    const float targetTime = 2;
     
     do{
-        drawGL();
+        
+        // Clear the screen
+        glClear( GL_COLOR_BUFFER_BIT );
+        
+        // Use our shader
+        glUseProgram(programID);
+        
+        // Tell the shader how to scale the vertices to account for the window size
+        if (width > height) {
+            glUniform2f(winScaleID, height / (float) width, 1);
+        }
+        else {
+            glUniform2f(winScaleID, 1, width / (float) height);
+        }
+        glUniform2f(winCenterID, (float) width/2, (float) height/2);
+        glUniform1f(targetDistID, 0.3f);
+        glUniform1f(circleScaleID, fminf(width, height));
+        
+        // Tell the shader what time it is
+        glUniform1f(timeID, l_time / targetTime);
+        if (l_time + 0.01 < targetTime) {
+            l_time += 0.01;
+        }
+        else {
+            l_time = targetTime;
+        }
+        
+        // 1st attribute buffer : vertices
+        glEnableVertexAttribArray(vertexPosition_modelspaceID);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glVertexAttribPointer(
+                              vertexPosition_modelspaceID, // The attribute we want to configure
+                              2,                  // size
+                              GL_FLOAT,           // type
+                              GL_FALSE,           // normalized?
+                              0,                  // stride
+                              (void*)0            // array buffer offset
+                              );
+        
+        // 2nd attribute buffer : colors
+        glEnableVertexAttribArray(vertexColorID);
+        glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+        glVertexAttribPointer(
+                              vertexColorID,               // The attribute we want to configure
+                              3,                           // size
+                              GL_FLOAT,                    // type
+                              GL_FALSE,                    // normalized?
+                              0,                           // stride
+                              (void*)0                     // array buffer offset
+                              );
+        
+        // Draw the point !
+        glDrawArrays(GL_POINTS, 0, NUM_POINTS * 2);
+        
+        glDisableVertexAttribArray(vertexPosition_modelspaceID);
+        
         // Swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -601,8 +207,14 @@ int main(int argc, char **argv)
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
           glfwWindowShouldClose(window) == 0 );
     
+    
+    // Cleanup VBO
+    glDeleteBuffers(1, &vertexbuffer);
+    glDeleteProgram(programID);
+    
     // Close OpenGL window and terminate GLFW
     glfwTerminate();
     
     return 0;
 }
+

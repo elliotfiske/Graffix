@@ -410,6 +410,8 @@
 		C9703D201A7847A700521E4A /* prog2A.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C93C0A821A71B1EA0094D85A /* prog2A.cpp */; };
 		C9AC1652D16646038C47AA38 /* UnrealLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191266CB8B8941CFB5535D21 /* UnrealLoader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		C9C268621BAD4868BC754234 /* controls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDB4FD35B4D5419BA9315B21 /* controls.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		C9FFAE291AB232FD00524782 /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = C9FFAE271AB232FD00524782 /* tiny_obj_loader.cc */; };
+		C9FFAE2A1AB232FD00524782 /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = C9FFAE271AB232FD00524782 /* tiny_obj_loader.cc */; };
 		CA8B7E7370A64B3AB5A5DF83 /* ACLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AEAF19063A843779CC4DE27 /* ACLoader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		CBBD5A8990C5487BB05A2C26 /* vboindexer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 21A2BEB58B6E45CE9644360A /* vboindexer.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		CC091B765D7B4FD0ACA01E1B /* objloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F21FFB807E424CB28157E7CA /* objloader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -1484,7 +1486,7 @@
 
 /* Begin PBXFileReference section */
 		000E65DAAD1544D9A937F137 /* material.inl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = material.inl; path = "external/assimp-3.0.1270/include/assimp/material.inl"; sourceTree = SOURCE_ROOT; };
-		000EEC93F14A4B6480E4080B /* WobblyTexture.fragmentshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = WobblyTexture.fragmentshader; path = tutorial14_render_to_texture/WobblyTexture.fragmentshader; sourceTree = SOURCE_ROOT; };
+		000EEC93F14A4B6480E4080B /* WobblyTexture.fragmentshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = WobblyTexture.fragmentshader; path = tutorial14_render_to_texture/WobblyTexture.fragmentshader; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		002177E379C64A6F92A5D592 /* btEmptyCollisionAlgorithm.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = btEmptyCollisionAlgorithm.cpp; path = "external/bullet-2.81-rev2613/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.cpp"; sourceTree = SOURCE_ROOT; };
 		00263B24F4674AB285F6A0F1 /* cocoa_time.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = cocoa_time.c; path = "external/glfw-3.0.3/src/cocoa_time.c"; sourceTree = SOURCE_ROOT; };
 		006DED840DCB4D5D920FC32A /* btConvexHullShape.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = btConvexHullShape.h; path = "external/bullet-2.81-rev2613/src/BulletCollision/CollisionShapes/btConvexHullShape.h"; sourceTree = SOURCE_ROOT; };
@@ -1554,7 +1556,7 @@
 		0FF53892BD5541BF8F27D1A0 /* controls.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = controls.cpp; path = common/controls.cpp; sourceTree = SOURCE_ROOT; };
 		100ED56DAAE44FC892889B77 /* MDCLoader.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = MDCLoader.cpp; path = "external/assimp-3.0.1270/code/MDCLoader.cpp"; sourceTree = SOURCE_ROOT; };
 		102E47EEBB9641CFA8D9065B /* vboindexer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = vboindexer.cpp; path = common/vboindexer.cpp; sourceTree = SOURCE_ROOT; };
-		105E1F25C3F9433891E2D26E /* StandardShading.fragmentshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = StandardShading.fragmentshader; path = misc05_picking/StandardShading.fragmentshader; sourceTree = SOURCE_ROOT; };
+		105E1F25C3F9433891E2D26E /* StandardShading.fragmentshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = StandardShading.fragmentshader; path = misc05_picking/StandardShading.fragmentshader; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		108244A6597D4FF4BA1CF2DA /* DepthRTT.vertexshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = DepthRTT.vertexshader; path = tutorial16_shadowmaps/DepthRTT.vertexshader; sourceTree = SOURCE_ROOT; };
 		10BA07728213487B86BABA0B /* btGImpactBvh.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = btGImpactBvh.h; path = "external/bullet-2.81-rev2613/src/BulletCollision/Gimpact/btGImpactBvh.h"; sourceTree = SOURCE_ROOT; };
 		116BEF172D9E46729D23EF0F /* LWOAnimation.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = LWOAnimation.cpp; path = "external/assimp-3.0.1270/code/LWOAnimation.cpp"; sourceTree = SOURCE_ROOT; };
@@ -1617,7 +1619,7 @@
 		1D3A74D1A9CD4F33A5A50BC1 /* gim_clip_polygon.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gim_clip_polygon.h; path = "external/bullet-2.81-rev2613/src/BulletCollision/Gimpact/gim_clip_polygon.h"; sourceTree = SOURCE_ROOT; };
 		1D4E9C7EC7034DC387C89476 /* btConvexTriangleMeshShape.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = btConvexTriangleMeshShape.h; path = "external/bullet-2.81-rev2613/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h"; sourceTree = SOURCE_ROOT; };
 		1D60612C450D4D62B4E363F1 /* StandardShading.vertexshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = StandardShading.vertexshader; path = tutorial10_transparency/StandardShading.vertexshader; sourceTree = SOURCE_ROOT; };
-		1D68BA79FFC34E32B6EA8305 /* StandardShading.fragmentshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = StandardShading.fragmentshader; path = misc05_picking/StandardShading.fragmentshader; sourceTree = SOURCE_ROOT; };
+		1D68BA79FFC34E32B6EA8305 /* StandardShading.fragmentshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = StandardShading.fragmentshader; path = misc05_picking/StandardShading.fragmentshader; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		1D6FACC269A54D9DB379A8B5 /* tutorial14.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = tutorial14.cpp; path = tutorial14_render_to_texture/tutorial14.cpp; sourceTree = SOURCE_ROOT; };
 		1D938200093349D98E63DAF4 /* resource.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = resource.h; path = "external/AntTweakBar-1.16/src/resource.h"; sourceTree = SOURCE_ROOT; };
 		1DFEA869176040598F595F12 /* MaterialSystem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = MaterialSystem.cpp; path = "external/assimp-3.0.1270/code/MaterialSystem.cpp"; sourceTree = SOURCE_ROOT; };
@@ -1761,7 +1763,7 @@
 		40538F56A29846C6A0B71D80 /* deflate.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = deflate.c; path = "external/assimp-3.0.1270/contrib/zlib/deflate.c"; sourceTree = SOURCE_ROOT; };
 		40685325D035464DA20DF593 /* LoadOGL.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = LoadOGL.h; path = "external/AntTweakBar-1.16/src/LoadOGL.h"; sourceTree = SOURCE_ROOT; };
 		40D37970EEF0420A96363F7A /* tutorial16_shadowmaps_simple */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = tutorial16_shadowmaps_simple; sourceTree = BUILT_PRODUCTS_DIR; };
-		40E2CF4D27FD48A9ADD5B854 /* StandardShading.fragmentshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = StandardShading.fragmentshader; path = misc05_picking/StandardShading.fragmentshader; sourceTree = SOURCE_ROOT; };
+		40E2CF4D27FD48A9ADD5B854 /* StandardShading.fragmentshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = StandardShading.fragmentshader; path = misc05_picking/StandardShading.fragmentshader; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		40E7B4081F0E4EFFBAA89AB7 /* btConvex2dShape.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = btConvex2dShape.cpp; path = "external/bullet-2.81-rev2613/src/BulletCollision/CollisionShapes/btConvex2dShape.cpp"; sourceTree = SOURCE_ROOT; };
 		410764810DEB4F82BF6B7AB3 /* BaseImporter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = BaseImporter.h; path = "external/assimp-3.0.1270/code/BaseImporter.h"; sourceTree = SOURCE_ROOT; };
 		414650827BBC4DE28BDE52A9 /* LWSLoader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = LWSLoader.h; path = "external/assimp-3.0.1270/code/LWSLoader.h"; sourceTree = SOURCE_ROOT; };
@@ -2335,6 +2337,8 @@
 		C9BB40D2DCD14003A3457328 /* btConeTwistConstraint.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = btConeTwistConstraint.cpp; path = "external/bullet-2.81-rev2613/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.cpp"; sourceTree = SOURCE_ROOT; };
 		C9C69A3A7D924E3897BFEBBD /* HMPLoader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = HMPLoader.h; path = "external/assimp-3.0.1270/code/HMPLoader.h"; sourceTree = SOURCE_ROOT; };
 		C9DD35785DB04357B0671213 /* objloader.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = objloader.cpp; path = common/objloader.cpp; sourceTree = SOURCE_ROOT; };
+		C9FFAE271AB232FD00524782 /* tiny_obj_loader.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tiny_obj_loader.cc; path = common/tiny_obj_loader.cc; sourceTree = "<group>"; };
+		C9FFAE281AB232FD00524782 /* tiny_obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiny_obj_loader.h; path = common/tiny_obj_loader.h; sourceTree = "<group>"; };
 		CA0776D2697C457DB39D1DDE /* shader.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = shader.hpp; path = common/shader.hpp; sourceTree = SOURCE_ROOT; };
 		CA0F0C8314064725BE949DFB /* MD5Loader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MD5Loader.h; path = "external/assimp-3.0.1270/code/MD5Loader.h"; sourceTree = SOURCE_ROOT; };
 		CA45729FA9FD4EB295F7FBCD /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
@@ -2516,12 +2520,12 @@
 		F3709F5D4E854C1EBE1C6DE2 /* ioapi.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ioapi.h; path = "external/assimp-3.0.1270/contrib/unzip/ioapi.h"; sourceTree = SOURCE_ROOT; };
 		F3C7830D91C04483A7F27DA7 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = external/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		F3E33AD3FF364F789617B4C6 /* text2D.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = text2D.cpp; path = common/text2D.cpp; sourceTree = SOURCE_ROOT; };
-		F3E3F880D83A4118A96C2240 /* Passthrough.vertexshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = Passthrough.vertexshader; path = tutorial14_render_to_texture/Passthrough.vertexshader; sourceTree = SOURCE_ROOT; };
+		F3E3F880D83A4118A96C2240 /* Passthrough.vertexshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = Passthrough.vertexshader; path = tutorial14_render_to_texture/Passthrough.vertexshader; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		F416F6EBC91C476B80FCDCF6 /* ObjTools.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ObjTools.h; path = "external/assimp-3.0.1270/code/ObjTools.h"; sourceTree = SOURCE_ROOT; };
 		F4D13FBF1D994F339A50FD33 /* ObjExporter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ObjExporter.h; path = "external/assimp-3.0.1270/code/ObjExporter.h"; sourceTree = SOURCE_ROOT; };
 		F4D4B4F538574946B1710FD7 /* misc05_picking_BulletPhysics */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = misc05_picking_BulletPhysics; sourceTree = BUILT_PRODUCTS_DIR; };
 		F512493800574B56B8115E16 /* MS3DLoader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MS3DLoader.h; path = "external/assimp-3.0.1270/code/MS3DLoader.h"; sourceTree = SOURCE_ROOT; };
-		F51C011BF05345B28E093B7E /* StandardShadingRTT.vertexshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = StandardShadingRTT.vertexshader; path = tutorial14_render_to_texture/StandardShadingRTT.vertexshader; sourceTree = SOURCE_ROOT; };
+		F51C011BF05345B28E093B7E /* StandardShadingRTT.vertexshader */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = StandardShadingRTT.vertexshader; path = tutorial14_render_to_texture/StandardShadingRTT.vertexshader; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		F55A58D17CBE49A489C5DCFE /* SmoothingGroups.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = SmoothingGroups.h; path = "external/assimp-3.0.1270/code/SmoothingGroups.h"; sourceTree = SOURCE_ROOT; };
 		F577C35E429442AF86AC53E0 /* SplitByBoneCountProcess.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = SplitByBoneCountProcess.h; path = "external/assimp-3.0.1270/code/SplitByBoneCountProcess.h"; sourceTree = SOURCE_ROOT; };
 		F57869BC266C4A8F94B3623D /* tutorial10.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = tutorial10.cpp; path = tutorial10_transparency/tutorial10.cpp; sourceTree = SOURCE_ROOT; };
@@ -4609,6 +4613,8 @@
 		C7EFB741C454455EA38E7EE2 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				C9FFAE271AB232FD00524782 /* tiny_obj_loader.cc */,
+				C9FFAE281AB232FD00524782 /* tiny_obj_loader.h */,
 				9BAB57E0E0724AD6BCF526BB /* controls.cpp */,
 				41923B707DFE4FE68CCC8709 /* controls.hpp */,
 				84F82A2891FC4D8798021529 /* objloader.cpp */,
@@ -6381,6 +6387,7 @@
 			files = (
 				DBADB35BCB754FD584EFCA98 /* shader.cpp in Sources */,
 				C93C0A841A71B1EA0094D85A /* prog2A.cpp in Sources */,
+				C9FFAE291AB232FD00524782 /* tiny_obj_loader.cc in Sources */,
 				7DEC761E579D487495ABFD98 /* texture.cpp in Sources */,
 				46C8DC3003154B40AD7A4F90 /* tutorial05.cpp in Sources */,
 			);
@@ -6470,6 +6477,7 @@
 			files = (
 				9B342ADBE64149F29331ACDF /* controls.cpp in Sources */,
 				A472E2565B1240A9A336A13C /* objloader.cpp in Sources */,
+				C9FFAE2A1AB232FD00524782 /* tiny_obj_loader.cc in Sources */,
 				C48AA80FC04E4C9DB2BE9ED4 /* shader.cpp in Sources */,
 				D1E133E7C175408196D57D4F /* text2D.cpp in Sources */,
 				0E00B1DFE7014633A0BF5D8B /* texture.cpp in Sources */,
@@ -7723,6 +7731,7 @@
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/assimp-3.0.1270/include",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/bullet-2.81-rev2613/src",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/.",
+					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -8504,6 +8513,7 @@
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/assimp-3.0.1270/include",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/bullet-2.81-rev2613/src",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/.",
+					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -14031,6 +14041,7 @@
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/assimp-3.0.1270/include",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/bullet-2.81-rev2613/src",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/.",
+					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -14141,6 +14152,7 @@
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/assimp-3.0.1270/include",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/bullet-2.81-rev2613/src",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/.",
+					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";

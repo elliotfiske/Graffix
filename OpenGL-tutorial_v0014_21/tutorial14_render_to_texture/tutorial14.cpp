@@ -14,12 +14,44 @@ GLFWwindow* window;
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
+using namespace std;
 
 #include <common/shader.hpp>
 #include <common/texture.hpp>
 #include <common/controls.hpp>
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
+
+#include "tiny_obj_loader.h"
+
+
+
+vector<tinyobj::material_t> materials;
+
+void loadShapes(const string &objFile, std::vector<tinyobj::shape_t>& shapes, GLuint *posBufID, GLuint *norBufID, GLuint *indBufID) {
+    string err = tinyobj::LoadObj(shapes, materials, objFile.c_str());
+    if(!err.empty()) {
+        printf("OBJ error: %s\n", err.c_str());
+    }
+    
+    // Send the position array to the GPU
+    const vector<float> &posBuf = shapes[0].mesh.positions;
+    glGenBuffers(1, posBufID);
+    glBindBuffer(GL_ARRAY_BUFFER, *posBufID);
+    glBufferData(GL_ARRAY_BUFFER, posBuf.size()*sizeof(float), &posBuf[0], GL_STATIC_DRAW);
+    
+    // Send the normal array to the GPU
+    const vector<float> &norBuf = shapes[0].mesh.normals;
+    glGenBuffers(1, norBufID);
+    glBindBuffer(GL_ARRAY_BUFFER, *norBufID);
+    glBufferData(GL_ARRAY_BUFFER, norBuf.size()*sizeof(float), &norBuf[0], GL_STATIC_DRAW);
+    
+    // Send the index array to the GPU
+    const vector<unsigned int> &indBuf = shapes[0].mesh.indices;
+    glGenBuffers(1, indBufID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *indBufID);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indBuf.size()*sizeof(unsigned int), &indBuf[0], GL_STATIC_DRAW);
+}
 
 int main( void )
 {
@@ -87,7 +119,7 @@ int main( void )
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
-	bool res = loadOBJ("suzanne.obj", vertices, uvs, normals);
+	bool res = loadOBJ("shadow.obj", vertices, uvs, normals);
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
@@ -95,33 +127,9 @@ int main( void )
 	std::vector<glm::vec3> indexed_normals;
 	indexVBO(vertices, uvs, normals, indices, indexed_vertices, indexed_uvs, indexed_normals);
 
-	// Load it into a VBO
-
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, indexed_vertices.size() * sizeof(glm::vec3), &indexed_vertices[0], GL_STATIC_DRAW);
-
-	GLuint uvbuffer;
-	glGenBuffers(1, &uvbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, indexed_uvs.size() * sizeof(glm::vec2), &indexed_uvs[0], GL_STATIC_DRAW);
-
-	GLuint normalbuffer;
-	glGenBuffers(1, &normalbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, indexed_normals.size() * sizeof(glm::vec3), &indexed_normals[0], GL_STATIC_DRAW);
-
-	// Generate a buffer for the indices as well
-	GLuint elementbuffer;
-	glGenBuffers(1, &elementbuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
-
 	// Get a handle for our "LightPosition" uniform
 	glUseProgram(programID);
 	GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
-
 
 	// ---------------------------------------------
 	// Render to Texture - specific code begins here
@@ -170,7 +178,25 @@ int main( void )
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
 
+    vector<tinyobj::shape_t> slenderFace;
+    GLuint pos_slender, nor_slender, ind_slender;
+    
+    vector<tinyobj::shape_t> shadowMan;
+    GLuint pos_shadow, nor_shadow, ind_shadow;
+    
+    vector<tinyobj::shape_t> sheets;
+    GLuint pos_sheets, nor_sheets, ind_sheets;
+    
+    vector<tinyobj::shape_t> room;
+    GLuint pos_room, nor_room, ind_room;
 
+    
+    loadShapes("slender.obj", slenderFace, &pos_slender, &nor_slender, &ind_slender);
+    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
+    loadShapes("sheets.obj", sheets,       &pos_sheets,  &nor_sheets,  &ind_sheets);
+    loadShapes("room.obj", room,           &pos_room,    &nor_room,    &ind_room);
+    
+    
 	// Set "renderedTexture" as our colour attachement #0
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
 
@@ -201,7 +227,6 @@ int main( void )
 	GLuint quad_vertexPosition_modelspace = glGetAttribLocation(quad_programID, "vertexPosition_modelspace");
 	GLuint texID = glGetUniformLocation(quad_programID, "renderedTexture");
 	GLuint timeID = glGetUniformLocation(quad_programID, "time");
-
 
 	
 	do{

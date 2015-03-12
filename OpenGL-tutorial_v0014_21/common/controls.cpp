@@ -32,6 +32,13 @@ float initialFoV = 45.0f;
 float speed = 3.0f; // 3 units / second
 float mouseSpeed = 0.005f;
 
+double totalScrolling = 0;
+float FoV = initialFoV;
+
+void handle_scroll(GLFWwindow* window, double xOffset, double yOffset) {
+    horizontalAngle += xOffset * mouseSpeed;
+    verticalAngle   += yOffset * mouseSpeed;
+}
 
 
 void computeMatricesFromInputs(){
@@ -49,10 +56,10 @@ void computeMatricesFromInputs(){
 
 	// Reset mouse position for next frame
 	glfwSetCursorPos(window, 1024/2, 768/2);
-
-	// Compute new orientation
-	horizontalAngle += mouseSpeed * float(1024/2 - xpos );
-	verticalAngle   += mouseSpeed * float( 768/2 - ypos );
+    
+	// Compute new orientation  (not working for my comp for some reason)
+//	horizontalAngle += mouseSpeed * float(1024/2 - xpos );
+//	verticalAngle   += mouseSpeed * float( 768/2 - ypos );
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
 	glm::vec3 direction(
@@ -74,7 +81,7 @@ void computeMatricesFromInputs(){
 	// Move forward
 	if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS){
 		position += direction * deltaTime * speed;
-	}
+	} 
 	// Move backward
 	if (glfwGetKey( window, GLFW_KEY_DOWN ) == GLFW_PRESS){
 		position -= direction * deltaTime * speed;
@@ -88,7 +95,7 @@ void computeMatricesFromInputs(){
 		position -= right * deltaTime * speed;
 	}
 
-	float FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
+    glfwSetScrollCallback(window, handle_scroll);
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	ProjectionMatrix = glm::perspective(FoV, 4.0f / 3.0f, 0.1f, 100.0f);

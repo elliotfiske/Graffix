@@ -692,10 +692,12 @@ void drawGL()
     drawBunny(5.0, 0.0, 5.0, 38, 0, 1);
     drawBunny(-10.0, 0.0, 9.0, 0, 90, 0.5);
     drawBunny(5.0, 3.0, 5.0, 19, 0, 1);
+    SetMaterial(3);
     drawBunny(-15.0, 0.0, 5.0, 0, 90, 1);
     drawBunny(-5.0, 0.0, 15.0, 0, 90, 1);
     drawBunny(5.0, 0.0, -8.0, 0, 0, 2);
     drawBunny(25.0, 5.0, 5.0, 270, 90, 3);
+    SetMaterial(4);
     drawBunny(-8.0, 0.0, 5.0, 0, 0, 1);
     drawBunny(5.0, 0.0, -5.0, 180, 0, 1);
     drawBunny(5.0, 0.0, -15.0, 270, 0, 1);
@@ -727,11 +729,11 @@ void drawGL()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	
 	glUseProgram(0);
-//    int error = glGetError();
-//    if (error != GL_NO_ERROR) {
-//        printf("Error is: %s\n", gluErrorString(error));
-        //        assert(false);
-//    }
+    int error = glGetError();
+    if (error != GL_NO_ERROR) {
+        printf("Error is: %s\n", gluErrorString(error));
+//                assert(false);
+    }
 }
 
 void window_size_callback(GLFWwindow* window, int w, int h){
@@ -793,7 +795,7 @@ int main(int argc, char **argv)
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
     glfwSetScrollCallback(window, scroll_callback);
-// Initialize GLEW
+    // Initialize GLEW
    if (glewInit() != GLEW_OK) {
       fprintf(stderr, "Failed to initialize GLEW\n");
       return -1;
