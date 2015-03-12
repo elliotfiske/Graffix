@@ -24,7 +24,8 @@ using namespace std;
 
 #include "tiny_obj_loader.h"
 
-
+int vertexPosition_modelspaceID;
+int vertexNormal_modelspaceID;
 
 vector<tinyobj::material_t> materials;
 
@@ -51,6 +52,64 @@ void loadShapes(const string &objFile, std::vector<tinyobj::shape_t>& shapes, GL
     glGenBuffers(1, indBufID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *indBufID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indBuf.size()*sizeof(unsigned int), &indBuf[0], GL_STATIC_DRAW);
+    
+    // Unbind the arrays
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    assert(glGetError() == GL_NO_ERROR);
+}
+
+void drawShapes(std::vector<tinyobj::shape_t> shape, int vertexBuffer, int normalBuffer, int numVertices) {
+    // 1rst attribute buffer : vertices
+    glEnableVertexAttribArray(vertexPosition_modelspaceID);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glVertexAttribPointer(
+                          vertexPosition_modelspaceID,  // The attribute we want to configure
+                          3,                            // size
+                          GL_FLOAT,                     // type
+                          GL_FALSE,                     // normalized?
+                          0,                            // stride
+                          (void*)0                      // array buffer offset
+                          );
+    
+    // 2nd attribute buffer : UVs
+    //		glEnableVertexAttribArray(vertexUVID);
+    //		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+    //		glVertexAttribPointer(
+    //			vertexUVID,                   // The attribute we want to configure
+    //			2,                            // size : U+V => 2
+    //			GL_FLOAT,                     // type
+    //			GL_FALSE,                     // normalized?
+    //			0,                            // stride
+    //			(void*)0                      // array buffer offset
+    //		);
+    
+    // 3rd attribute buffer : normals
+    glEnableVertexAttribArray(vertexNormal_modelspaceID);
+    glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+    glVertexAttribPointer(
+                          vertexNormal_modelspaceID,    // The attribute we want to configure
+                          3,                            // size
+                          GL_FLOAT,                     // type
+                          GL_FALSE,                     // normalized?
+                          0,                            // stride
+                          (void*)0                      // array buffer offset
+                          );
+    
+    // Index buffer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+    
+    // Draw the triangles !
+    glDrawElements(
+                   GL_TRIANGLES,      // mode
+                   indices.size(),    // count
+                   GL_UNSIGNED_SHORT, // type
+                   (void*)0           // element array buffer offset
+                   );
+    
+    glDisableVertexAttribArray(vertexPosition_modelspaceID);
+    glDisableVertexAttribArray(vertexUVID);
+    glDisableVertexAttribArray(vertexNormal_modelspaceID);
 }
 
 int main( void )
@@ -105,9 +164,9 @@ int main( void )
 	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
 
 	// Get a handle for our buffers
-	GLuint vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
+	vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
 	GLuint vertexUVID = glGetAttribLocation(programID, "vertexUV");
-	GLuint vertexNormal_modelspaceID = glGetAttribLocation(programID, "vertexNormal_modelspace");
+	vertexNormal_modelspaceID = glGetAttribLocation(programID, "vertexNormal_modelspace");
 
 	// Load the texture
 	GLuint Texture = loadDDS("uvmap.DDS");
@@ -263,56 +322,7 @@ int main( void )
 		// Set our "myTextureSampler" sampler to user Texture Unit 0
 		glUniform1i(TextureID, 0);
 
-		// 1rst attribute buffer : vertices
-		glEnableVertexAttribArray(vertexPosition_modelspaceID);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribPointer(
-			vertexPosition_modelspaceID,  // The attribute we want to configure
-			3,                            // size
-			GL_FLOAT,                     // type
-			GL_FALSE,                     // normalized?
-			0,                            // stride
-			(void*)0                      // array buffer offset
-		);
-
-		// 2nd attribute buffer : UVs
-		glEnableVertexAttribArray(vertexUVID);
-		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-		glVertexAttribPointer(
-			vertexUVID,                   // The attribute we want to configure
-			2,                            // size : U+V => 2
-			GL_FLOAT,                     // type
-			GL_FALSE,                     // normalized?
-			0,                            // stride
-			(void*)0                      // array buffer offset
-		);
-
-		// 3rd attribute buffer : normals
-		glEnableVertexAttribArray(vertexNormal_modelspaceID);
-		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-		glVertexAttribPointer(
-			vertexNormal_modelspaceID,    // The attribute we want to configure
-			3,                            // size
-			GL_FLOAT,                     // type
-			GL_FALSE,                     // normalized?
-			0,                            // stride
-			(void*)0                      // array buffer offset
-		);
-
-		// Index buffer
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
-
-		// Draw the triangles !
-		glDrawElements(
-			GL_TRIANGLES,      // mode
-			indices.size(),    // count
-			GL_UNSIGNED_SHORT, // type
-			(void*)0           // element array buffer offset
-		);
-
-		glDisableVertexAttribArray(vertexPosition_modelspaceID);
-		glDisableVertexAttribArray(vertexUVID);
-		glDisableVertexAttribArray(vertexNormal_modelspaceID);
+		
 
 
 
