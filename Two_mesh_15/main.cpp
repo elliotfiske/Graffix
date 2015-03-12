@@ -795,7 +795,7 @@ int main(int argc, char **argv)
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
     glfwSetScrollCallback(window, scroll_callback);
-// Initialize GLEW
+    // Initialize GLEW
    if (glewInit() != GLEW_OK) {
       fprintf(stderr, "Failed to initialize GLEW\n");
       return -1;

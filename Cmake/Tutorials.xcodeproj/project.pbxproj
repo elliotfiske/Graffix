@@ -410,6 +410,8 @@
 		C9703D201A7847A700521E4A /* prog2A.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C93C0A821A71B1EA0094D85A /* prog2A.cpp */; };
 		C9AC1652D16646038C47AA38 /* UnrealLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191266CB8B8941CFB5535D21 /* UnrealLoader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		C9C268621BAD4868BC754234 /* controls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDB4FD35B4D5419BA9315B21 /* controls.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		C9FFAE291AB232FD00524782 /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = C9FFAE271AB232FD00524782 /* tiny_obj_loader.cc */; };
+		C9FFAE2A1AB232FD00524782 /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = C9FFAE271AB232FD00524782 /* tiny_obj_loader.cc */; };
 		CA8B7E7370A64B3AB5A5DF83 /* ACLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AEAF19063A843779CC4DE27 /* ACLoader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		CBBD5A8990C5487BB05A2C26 /* vboindexer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 21A2BEB58B6E45CE9644360A /* vboindexer.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		CC091B765D7B4FD0ACA01E1B /* objloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F21FFB807E424CB28157E7CA /* objloader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -2335,6 +2337,8 @@
 		C9BB40D2DCD14003A3457328 /* btConeTwistConstraint.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = btConeTwistConstraint.cpp; path = "external/bullet-2.81-rev2613/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.cpp"; sourceTree = SOURCE_ROOT; };
 		C9C69A3A7D924E3897BFEBBD /* HMPLoader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = HMPLoader.h; path = "external/assimp-3.0.1270/code/HMPLoader.h"; sourceTree = SOURCE_ROOT; };
 		C9DD35785DB04357B0671213 /* objloader.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = objloader.cpp; path = common/objloader.cpp; sourceTree = SOURCE_ROOT; };
+		C9FFAE271AB232FD00524782 /* tiny_obj_loader.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tiny_obj_loader.cc; path = common/tiny_obj_loader.cc; sourceTree = "<group>"; };
+		C9FFAE281AB232FD00524782 /* tiny_obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiny_obj_loader.h; path = common/tiny_obj_loader.h; sourceTree = "<group>"; };
 		CA0776D2697C457DB39D1DDE /* shader.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = shader.hpp; path = common/shader.hpp; sourceTree = SOURCE_ROOT; };
 		CA0F0C8314064725BE949DFB /* MD5Loader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MD5Loader.h; path = "external/assimp-3.0.1270/code/MD5Loader.h"; sourceTree = SOURCE_ROOT; };
 		CA45729FA9FD4EB295F7FBCD /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
@@ -4609,6 +4613,8 @@
 		C7EFB741C454455EA38E7EE2 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				C9FFAE271AB232FD00524782 /* tiny_obj_loader.cc */,
+				C9FFAE281AB232FD00524782 /* tiny_obj_loader.h */,
 				9BAB57E0E0724AD6BCF526BB /* controls.cpp */,
 				41923B707DFE4FE68CCC8709 /* controls.hpp */,
 				84F82A2891FC4D8798021529 /* objloader.cpp */,
@@ -6381,6 +6387,7 @@
 			files = (
 				DBADB35BCB754FD584EFCA98 /* shader.cpp in Sources */,
 				C93C0A841A71B1EA0094D85A /* prog2A.cpp in Sources */,
+				C9FFAE291AB232FD00524782 /* tiny_obj_loader.cc in Sources */,
 				7DEC761E579D487495ABFD98 /* texture.cpp in Sources */,
 				46C8DC3003154B40AD7A4F90 /* tutorial05.cpp in Sources */,
 			);
@@ -6470,6 +6477,7 @@
 			files = (
 				9B342ADBE64149F29331ACDF /* controls.cpp in Sources */,
 				A472E2565B1240A9A336A13C /* objloader.cpp in Sources */,
+				C9FFAE2A1AB232FD00524782 /* tiny_obj_loader.cc in Sources */,
 				C48AA80FC04E4C9DB2BE9ED4 /* shader.cpp in Sources */,
 				D1E133E7C175408196D57D4F /* text2D.cpp in Sources */,
 				0E00B1DFE7014633A0BF5D8B /* texture.cpp in Sources */,
@@ -7723,6 +7731,7 @@
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/assimp-3.0.1270/include",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/bullet-2.81-rev2613/src",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/.",
+					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -8504,6 +8513,7 @@
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/assimp-3.0.1270/include",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/bullet-2.81-rev2613/src",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/.",
+					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -14031,6 +14041,7 @@
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/assimp-3.0.1270/include",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/bullet-2.81-rev2613/src",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/.",
+					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -14141,6 +14152,7 @@
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/assimp-3.0.1270/include",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/external/bullet-2.81-rev2613/src",
 					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/.",
+					"/Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
