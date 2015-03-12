@@ -56,8 +56,6 @@ void computeMatricesFromInputs(){
 
 	// Reset mouse position for next frame
 	glfwSetCursorPos(window, 1024/2, 768/2);
-
-    printf("%f, %f .. ", xpos, ypos);
     
 	// Compute new orientation  (not working for my comp for some reason)
 //	horizontalAngle += mouseSpeed * float(1024/2 - xpos );

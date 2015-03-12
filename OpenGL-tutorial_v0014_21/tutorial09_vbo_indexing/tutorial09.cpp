@@ -83,6 +83,12 @@ int main( int wut, char** who )
 	
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
+    
+    // Set up the Frame Buffer
+    GLuint frameBufferID;
+    glGenFramebuffers(1, &frameBufferID);
+    glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+    
 
 	// Read our .obj file
 	std::vector<glm::vec3> vertices;
@@ -239,6 +245,8 @@ int main( int wut, char** who )
 	glDeleteBuffers(1, &elementbuffer);
 	glDeleteProgram(programID);
 	glDeleteTextures(1, &Texture);
+    
+    glDeleteFramebuffers(1, &frameBufferID);
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
