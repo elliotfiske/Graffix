@@ -68,4 +68,5 @@ dependencies: \
   /Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common/texture.hpp \
   /Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common/controls.hpp \
   /Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common/objloader.hpp \
-  /Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common/vboindexer.hpp
+  /Users/elliotfiske/471/OpenGL-tutorial_v0014_21/common/vboindexer.hpp \
+  /Users/elliotfiske/471/OpenGL-tutorial_v0014_21/tiny_obj_loader.h

@@ -49,5 +49,6 @@ void main(){
     t = clamp( t ,0.0,1.0); //0 <= t <= 1
     
     //Blend the original color with the averaged pixels
-    gl_FragColor = mix( color, sum, t );
+//    gl_FragColor = mix( color, sum, t );
+    gl_FragColor = color;
 }

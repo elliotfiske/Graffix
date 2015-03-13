@@ -59,7 +59,7 @@ void loadShapes(const string &objFile, std::vector<tinyobj::shape_t>& shapes, GL
     assert(glGetError() == GL_NO_ERROR);
 }
 
-void drawShapes(std::vector<tinyobj::shape_t> shape, int vertexBuffer, int normalBuffer, int numVertices) {
+void drawShapes(std::vector<tinyobj::shape_t> shape, int vertexBuffer, int normalBuffer, int indexBuffer, int numVertices) {
     // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(vertexPosition_modelspaceID);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -97,18 +97,18 @@ void drawShapes(std::vector<tinyobj::shape_t> shape, int vertexBuffer, int norma
                           );
     
     // Index buffer
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     
     // Draw the triangles !
     glDrawElements(
                    GL_TRIANGLES,      // mode
-                   indices.size(),    // count
+                   numVertices,    // count
                    GL_UNSIGNED_SHORT, // type
                    (void*)0           // element array buffer offset
                    );
     
     glDisableVertexAttribArray(vertexPosition_modelspaceID);
-    glDisableVertexAttribArray(vertexUVID);
+//    glDisableVertexAttribArray(vertexUVID);
     glDisableVertexAttribArray(vertexNormal_modelspaceID);
 }
 
@@ -153,7 +153,7 @@ int main( void )
 	glDepthFunc(GL_LESS); 
 
 	// Cull triangles which normal is not towards the camera
-	glEnable(GL_CULL_FACE);
+//	glEnable(GL_CULL_FACE);
 
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "StandardShadingRTT.vertexshader", "StandardShadingRTT.fragmentshader" );
@@ -173,18 +173,6 @@ int main( void )
 	
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
-
-	// Read our .obj file
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals;
-	bool res = loadOBJ("shadow.obj", vertices, uvs, normals);
-
-	std::vector<unsigned short> indices;
-	std::vector<glm::vec3> indexed_vertices;
-	std::vector<glm::vec2> indexed_uvs;
-	std::vector<glm::vec3> indexed_normals;
-	indexVBO(vertices, uvs, normals, indices, indexed_vertices, indexed_uvs, indexed_normals);
 
 	// Get a handle for our "LightPosition" uniform
 	glUseProgram(programID);
@@ -250,10 +238,10 @@ int main( void )
     GLuint pos_room, nor_room, ind_room;
 
     
-    loadShapes("slender.obj", slenderFace, &pos_slender, &nor_slender, &ind_slender);
-    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
-    loadShapes("sheets.obj", sheets,       &pos_sheets,  &nor_sheets,  &ind_sheets);
-    loadShapes("room.obj", room,           &pos_room,    &nor_room,    &ind_room);
+    loadShapes("slenderFace.obj", slenderFace, &pos_slender, &nor_slender, &ind_slender);
+//    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
+//    loadShapes("sheets.obj", sheets,       &pos_sheets,  &nor_sheets,  &ind_sheets);
+//    loadShapes("room.obj", room,           &pos_room,    &nor_room,    &ind_room);
     
     
 	// Set "renderedTexture" as our colour attachement #0
@@ -322,9 +310,8 @@ int main( void )
 		// Set our "myTextureSampler" sampler to user Texture Unit 0
 		glUniform1i(TextureID, 0);
 
-		
-
-
+        drawShapes(slenderFace, pos_slender, nor_slender, ind_slender, slenderFace[0].mesh.indices.size());
+        
 
 		// Render to the screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -371,12 +358,12 @@ int main( void )
 		   glfwWindowShouldClose(window) == 0 );
 
 	// Cleanup VBO and shader
-	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &uvbuffer);
-	glDeleteBuffers(1, &normalbuffer);
-	glDeleteBuffers(1, &elementbuffer);
-	glDeleteProgram(programID);
-	glDeleteTextures(1, &TextureID);
+//	glDeleteBuffers(1, &vertexbuffer);
+//	glDeleteBuffers(1, &uvbuffer);
+//	glDeleteBuffers(1, &normalbuffer);
+//	glDeleteBuffers(1, &elementbuffer);  TODO: damned if u dont
+//	glDeleteProgram(programID);
+//	glDeleteTextures(1, &TextureID);
 
 	glDeleteFramebuffers(1, &FramebufferName);
 	glDeleteTextures(1, &renderedTexture);
