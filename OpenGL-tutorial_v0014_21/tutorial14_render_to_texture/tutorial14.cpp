@@ -102,7 +102,7 @@ void drawShapes(std::vector<tinyobj::shape_t> shape, int vertexBuffer, int norma
     // Draw the triangles !
     glDrawElements(
                    GL_TRIANGLES,      // mode
-                   numVertices,    // count
+                   numVertices*3,    // count
                    GL_UNSIGNED_SHORT, // type
                    (void*)0           // element array buffer offset
                    );

@@ -266,7 +266,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tutorial14_render_to_texture/tutorial14.cpp"
-            timestampString = "447890049.859323"
+            timestampString = "448239908.099556"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "227"
@@ -282,7 +282,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tutorial14_render_to_texture/tutorial14.cpp"
-            timestampString = "447890049.859323"
+            timestampString = "448239908.099556"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "327"
@@ -298,7 +298,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tutorial14_render_to_texture/tutorial14.cpp"
-            timestampString = "447890049.859323"
+            timestampString = "448239908.099556"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "331"
@@ -314,7 +314,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tutorial14_render_to_texture/tutorial14.cpp"
-            timestampString = "447890049.859323"
+            timestampString = "448239908.099556"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "335"
@@ -330,11 +330,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tutorial14_render_to_texture/tutorial14.cpp"
-            timestampString = "447890049.859323"
+            timestampString = "448239908.099556"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "323"
             endingLineNumber = "323"
+            landmarkName = "main( void )"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tutorial14_render_to_texture/tutorial14.cpp"
+            timestampString = "448239908.099556"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "313"
+            endingLineNumber = "313"
             landmarkName = "main( void )"
             landmarkType = "7">
          </BreakpointContent>
