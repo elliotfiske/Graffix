@@ -109,18 +109,6 @@ void drawShapes(std::vector<tinyobj::shape_t> shape, GLuint vertexBuffer, GLuint
                           (void*)0                      // array buffer offset
                           );
     
-    // 2nd attribute buffer : UVs
-    //		glEnableVertexAttribArray(vertexUVID);
-    //		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-    //		glVertexAttribPointer(
-    //			vertexUVID,                   // The attribute we want to configure
-    //			2,                            // size : U+V => 2
-    //			GL_FLOAT,                     // type
-    //			GL_FALSE,                     // normalized?
-    //			0,                            // stride
-    //			(void*)0                      // array buffer offset
-    //		);
-    
     // 3rd attribute buffer : normals
     glEnableVertexAttribArray(vertexNormal_modelspaceID);
     glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
@@ -145,7 +133,6 @@ void drawShapes(std::vector<tinyobj::shape_t> shape, GLuint vertexBuffer, GLuint
                    );
     
     glDisableVertexAttribArray(vertexPosition_modelspaceID);
-//    glDisableVertexAttribArray(vertexUVID);
     glDisableVertexAttribArray(vertexNormal_modelspaceID);
 }
 
@@ -187,10 +174,7 @@ int main( void )
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS); 
-
-	// Cull triangles which normal is not towards the camera
-//	glEnable(GL_CULL_FACE);
+	glDepthFunc(GL_LESS);
 
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "StandardShadingRTT.vertexshader", "StandardShadingRTT.fragmentshader" );
@@ -205,7 +189,6 @@ int main( void )
 
 	// Get a handle for our buffers
 	vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
-//	GLuint vertexUVID = glGetAttribLocation(programID, "vertexUV");
 	vertexNormal_modelspaceID = glGetAttribLocation(programID, "vertexNormal_modelspace");
 
 	// Load the texture
@@ -276,12 +259,20 @@ int main( void )
     
     vector<tinyobj::shape_t> room;
     GLuint pos_room, nor_room, ind_room;
-
+    
+    vector<tinyobj::shape_t> door;
+    GLuint pos_door, nor_door, ind_door;
+    
+    vector<tinyobj::shape_t> clockBase;
+    GLuint pos_clockB, nor_clockB, ind_clockB;
+    
     
     loadShapes("slenderFace.obj", slenderFace, &pos_slender, &nor_slender, &ind_slender);
 //    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
     loadShapes("sheets.obj", sheets,       &pos_sheets,  &nor_sheets,  &ind_sheets);
     loadShapes("room.obj", room,           &pos_room,    &nor_room,    &ind_room);
+    loadShapes("door.obj", door,           &pos_door,    &nor_door,    &ind_door);
+    loadShapes("clockBody.obj", clockBase, &pos_clockB,  &nor_clockB,  &ind_clockB);
     
     
 	// Set "renderedTexture" as our colour attachement #0
@@ -297,7 +288,7 @@ int main( void )
 
 	static const GLfloat g_quad_vertex_buffer_data[] = { 
 		-1.0f, -1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f, 
+		 1.0f, -1.0f, 0.0f,
 		-1.0f,  1.0f, 0.0f,
 		-1.0f,  1.0f, 0.0f,
 		 1.0f, -1.0f, 0.0f,
@@ -326,6 +317,10 @@ int main( void )
                            0, 0, 0  };
     
     ModelPos sheetModel = {0, 0.3, 0, 0, 0, 0};
+    ModelPos doorModel = {0, 0, -46, 0, 0, 0};
+    ModelPos shadowModel = {20, 0, -20, 0, 0, 0};
+    ModelPos clockModel = {12, -4, 0, 0, 90, 0};
+    
     
     // Set up scroll wheel and key callbacks in control.cpp
     setUpCallbacks();
@@ -338,8 +333,8 @@ int main( void )
         // see if we should twitch slendy
         if (timeTicks > timeToNextTwitch) {
             if (twitching) {
-                slenderModel.rx = baseSlenderModel.rx + (rand() % 40) - 20;
-                slenderModel.ry = baseSlenderModel.ry + (rand() % 40) - 20;
+                slenderModel.rx = baseSlenderModel.rx + (rand() % 50) - 25;
+                slenderModel.ry = baseSlenderModel.ry + (rand() % 50) - 25;
                 timeToNextTwitch = timeTicks + rand() % 20 + 2;
                 twitching = false;
             }
@@ -349,6 +344,10 @@ int main( void )
                 twitching = true;
             }
         }
+        
+        slenderModel.x += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
+        slenderModel.y += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
+        slenderModel.z += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
         
 		// Render to our framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
@@ -378,6 +377,14 @@ int main( void )
         drawShapes(room,        pos_room,    nor_room,    ind_room,    room[0].mesh.indices.size(), roomModel);
         setMaterial(0.292, 0.149, 0.149, 0.1, 0.4);
         drawShapes(sheets,      pos_sheets,  nor_sheets,  ind_sheets,  sheets[0].mesh.indices.size(), sheetModel);
+        setMaterial(0.25, 0.13, 0.1, 0.1, 0.4);
+        drawShapes(door, pos_door, nor_door, ind_door, door[0].mesh.indices.size(), doorModel);
+        setMaterial(0.110, 0.047, 0.02, 0.1, 0.4);
+        drawShapes(clockBase, pos_clockB, nor_clockB, ind_clockB, clockBase[0].mesh.indices.size(), clockModel);
+        
+//        setMaterial(0, 0, 0, 0, 0);
+//        drawShapes(shadowMan, pos_shadow, nor_shadow, ind_shadow, shadowMan[0].mesh.indices.size(), shadowModel);
+        
 
 		// Render to the screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -418,6 +425,14 @@ int main( void )
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+        
+        
+        
+        
+        slenderModel.x = baseSlenderModel.x;
+        slenderModel.y = baseSlenderModel.y;
+        slenderModel.z = baseSlenderModel.z;
 
 	} // Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&

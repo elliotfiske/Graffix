@@ -69,8 +69,17 @@ void blur(bool horizontal) {
     gl_FragColor = mix( color, sum, t );
 }
 
+float tunnelVision() {
+    float darkening = length(0.5 - UV);
+    float darkFactor = sin(time/3) * 0.5 + 1.5;
+    return pow(darkening, darkFactor);
+}
+
 void main(){
-    blur(false);
+//    blur(false);
 //    bulge();
-//    gl_FragColor = texture2D(tex, UV); // No effect
+    
+    gl_FragColor = texture2D(tex, UV); // No effect
+    
+    gl_FragColor = mix(gl_FragColor, vec4(0, 0, 0, 1), tunnelVision());
 }
