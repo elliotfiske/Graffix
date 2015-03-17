@@ -70,12 +70,13 @@ void handle_scroll(GLFWwindow* window, double xOffset, double yOffset) {
     
     horizontalAngle += horizChange;
     verticalAngle   += vertChange;
+
 }
 
 /** User collected a sanity bubble.  Restore some FOV over a bit. */
 double targetFOV = initialFoV;
 void relaxFOV() {
-    targetFOV += 1.8;
+    targetFOV += 10.8;
 }
 
 bool didCollectLight(double minH, double maxH, double minV, double maxV) {
@@ -84,6 +85,39 @@ bool didCollectLight(double minH, double maxH, double minV, double maxV) {
         return true;
     }
     return false;
+}
+
+bool checkAngle(double minH, double maxH, double minV, double maxV) {
+    if (horizontalAngle > minH && horizontalAngle < maxH && verticalAngle > minV && verticalAngle < maxV) {
+        return true;
+    }
+    return false;
+}
+
+// Draw the camera towards a particular h/v
+void suggestAngle(double h, double v) {
+    targetFOV = initialFoV; // See the whole face :3 wouldn't want to miss anything
+    
+    // See how far we are from the target
+    double dist = sqrt(pow((h - horizontalAngle), 2) + pow((v - verticalAngle), 2));
+    
+    // Max we can move you by per frame is 0.1
+    double pull = dist * 3.3 + 1;
+    pull *= pull;
+    printf("Pull: %f\n", pull);
+    if (pull > 12.4) {
+        pull = 12.4;
+    }
+    
+    if (pull < 4) {
+        pull = 4;
+    }
+    
+    double diffH = h - horizontalAngle;
+    double diffV = v - verticalAngle;
+    
+    verticalAngle += diffV / pull;
+    horizontalAngle += diffH / pull;
 }
 
 
@@ -135,21 +169,21 @@ void computeMatricesFromInputs(){
 	glm::vec3 up = glm::cross( right, direction );
 
 	// Move forward
-	if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS){
-		position += direction * deltaTime * speed;
-	} 
-	// Move backward
-	if (glfwGetKey( window, GLFW_KEY_DOWN ) == GLFW_PRESS){
-		position -= direction * deltaTime * speed;
-	}
-	// Strafe right
-	if (glfwGetKey( window, GLFW_KEY_RIGHT ) == GLFW_PRESS){
-		position += right * deltaTime * speed;
-	}
-	// Strafe left
-	if (glfwGetKey( window, GLFW_KEY_LEFT ) == GLFW_PRESS){
-		position -= right * deltaTime * speed;
-	}
+//	if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS){
+//		position += direction * deltaTime * speed;
+//	} 
+//	// Move backward
+//	if (glfwGetKey( window, GLFW_KEY_DOWN ) == GLFW_PRESS){
+//		position -= direction * deltaTime * speed;
+//	}
+//	// Strafe right
+//	if (glfwGetKey( window, GLFW_KEY_RIGHT ) == GLFW_PRESS){
+//		position += right * deltaTime * speed;
+//	}
+//	// Strafe left
+//	if (glfwGetKey( window, GLFW_KEY_LEFT ) == GLFW_PRESS){
+//		position -= right * deltaTime * speed;
+//	}
 
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units

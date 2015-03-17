@@ -29,6 +29,12 @@ GLuint shininessID;
 GLuint ambientID;
 GLuint collectibleID;
 
+// Stress factors
+GLuint currEffectID;
+GLuint bulginessID;
+GLuint darkFactorID;
+GLuint dyingID;
+
 /** Defines everything we need to make the model matrix */
 typedef struct model_pos {
     float x, y, z;
@@ -188,7 +194,7 @@ int main( void )
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Tutorial 14 - Render To Texture", NULL, NULL);
+	window = glfwCreateWindow( 1024, 768, "SLUMBER", NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window.\n" );
 		glfwTerminate();
@@ -282,6 +288,9 @@ int main( void )
     vector<tinyobj::shape_t> slenderFace;
     GLuint pos_slender, nor_slender, ind_slender;
     
+    vector<tinyobj::shape_t> slenderBody;
+    GLuint pos_slenderB, nor_slenderB, ind_slenderB;
+    
     vector<tinyobj::shape_t> shadowMan;
     GLuint pos_shadow, nor_shadow, ind_shadow;
     
@@ -309,7 +318,8 @@ int main( void )
     GLuint pos_collectible;
     
     loadShapes("slenderFace.obj", slenderFace, &pos_slender, &nor_slender, &ind_slender);
-//    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
+    loadShapes("slenderBod.obj", slenderBody, &pos_slenderB, &nor_slenderB, &ind_slenderB);
+    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
     loadShapes("sheets.obj", sheets,       &pos_sheets,  &nor_sheets,  &ind_sheets);
     loadShapes("room.obj", room,           &pos_room,    &nor_room,    &ind_room);
     loadShapes("door.obj", door,           &pos_door,    &nor_door,    &ind_door);
@@ -351,21 +361,29 @@ int main( void )
 	GLuint quad_programID = LoadShaders( "Passthrough.vertexshader", "WobblyTexture.fragmentshader" );
 	GLuint quad_vertexPosition_modelspace = glGetAttribLocation(quad_programID, "vertexPosition_modelspace");
 	GLuint texID = glGetUniformLocation(quad_programID, "renderedTexture");
-	GLuint timeID = glGetUniformLocation(quad_programID, "time");
+    GLuint timeID = glGetUniformLocation(quad_programID, "time");
+    currEffectID = glGetUniformLocation(quad_programID, "effect");
+    bulginessID = glGetUniformLocation(quad_programID, "bulginess");
+    darkFactorID = glGetUniformLocation(quad_programID, "darkFactor");
+    dyingID = glGetUniformLocation(quad_programID, "dying");
 
 
-    ModelPos baseSlenderModel = { -3, 1.8, -2,
-        0, -45, -13  };
-    ModelPos slenderModel = baseSlenderModel;
-    bool twitching = false;
     
+    ModelPos baseSlenderFaceModel = { 4, 12, -20, 0, 90, 0 }; // Standing menacingly
+    ModelPos slenderFaceModel = baseSlenderFaceModel;
+    bool twitching = false;
+
+    ModelPos closeSlenderFaceModel = { -3, 1.8, -2, 0, -45, -13  }; // UP IN YO GRILL
+    
+    ModelPos baseSlenderBodyModel = {4, 0, -20, 0, -90, 0 };
+    ModelPos closeSlenderBodyModel = { -4, -12, -3, 0, -45, -13  }; // UP IN YO GRILL
     
     ModelPos roomModel = { 0, 0, 0,
                            0, 0, 0  };
     
     ModelPos sheetModel = {0, 0.3, 0, 0, 0, 0};
     ModelPos doorModel = {0, 0, -46, 0, 0, 0};
-    ModelPos shadowModel = {20, 0, -20, 0, 0, 0};
+    ModelPos shadowModel = {-10, -4, -20, 0, 30, 0};
     ModelPos clockModel = {12, -4, 0, 0, 0, 0};
     ModelPos clockFaceModel = {10.1, 6.7, 0, 0, -90, 0};
     ModelPos hourHandModel = {9.9,   6.7, 0, -15, 0, 0};
@@ -377,28 +395,58 @@ int main( void )
     setUpCallbacks();
 	
     int timeToNextTwitch = timeTicks;
+    int stress = 0;
+    int dyingness = 0;
 
-    const double minH[3] = {3.123, 2.34,  0};
-    const double maxH[3] = {3.159, 2.36,  0};
-    const double minV[3] = {0.363, 0.393, 0};
-    const double maxV[3] = {0.397, 0.409, 0};
+    const double minH[3] = {3.123, 3.49, 2.34 };
+    const double maxH[3] = {3.159, 3.53, 2.36 };
+    const double minV[3] = {0.363, 0.257, 0.393};
+    const double maxV[3] = {0.397, 0.295, 0.409};
     
-    glm::vec3 firstLight = glm::vec3(0, 2, -5); // show it off
-    glm::vec3 secondLight = glm::vec3(10, 6, -10); // alleviate stress
-    glm::vec3 thirdLight = glm::vec3(-10, 1, -10); // the 'out' from slenderbro -> finished?
+    glm::vec3 firstLight = glm::vec3(0, 2, -5); // initial
+    glm::vec3 secondLight = glm::vec3(-4, 3, -10); // right before shadow
+    glm::vec3 thirdLight = glm::vec3(10, 6, -10); // right before slender
     
-    const glm::vec3 lol[3] = {firstLight, secondLight, thirdLight};
-    const int times[3] = { 300, 500, 10000 };
+    const glm::vec3 lightPosns[3] = {firstLight, secondLight, thirdLight};
+    const int times[3] = { 60 * 20, 60 * 40, 60 * 65 };
     int lightNdx = -1;
     
     lightModel.x = 100000000;
-    lightModel.y = lol[0].y;
-    lightModel.z = lol[0].z;
+    lightModel.y = lightPosns[0].y;
+    lightModel.z = lightPosns[0].z;
     
     bool showingLight = false;
+    bool slendyRendered = false;
+    int shadowTime = 60 * 48; // when does shadow dude appear
+    bool showingShadow = false;
+    bool shadowGone = false;
+    float bulginess = 1;
+    
+    
+    int slenderTime = 60 * 70; // Howl ong till slendy shows up
+    
+    int timeForBOO = INT_MAX; // Slight delay from see slendy -> be slendified
+    bool slendyRush = false;
+    bool dontResetTimeDingus = false;
     
 	do{
         timeTicks++;
+        stress++;
+        
+        
+        // Use secondary shader - everything here belongs to it
+        glUseProgram(quad_programID);
+        
+        if (stress < 9000) {
+            glUniform1f(darkFactorID, (float) stress / 2000.0);
+        }
+        
+        // Create stress effects
+        if (stress > 32 * 60) {
+            glUniform1i(currEffectID, 1);
+        }
+        
+        
         // 60 fps, should take 180 seconds to go 360 degrees
         // 360 degrees / 180 seconds * 1 second / 60 frames = 1/30 = 0.0333
         minuteHandModel.rx += 0.0333;
@@ -406,26 +454,109 @@ int main( void )
         // 15 degrees / 180 seconds * 1 second / 60 frames = 0.0014
         hourHandModel.rx += 0.0014;
 
+        if (timeTicks > shadowTime && !showingShadow && !shadowGone && checkAngle(3.07, 4.09, -10, 10)) {
+            showingShadow = true;
+        }
+        
+        if (showingShadow && checkAngle(3.07, 4.09, -10, 10)) {
+            glUniform1i(currEffectID, 3);
+            glUniform1f(bulginessID, bulginess);
+            bulginess += 0.004;
+            stress += 2;
+        }
+        
+        if (showingShadow && !checkAngle(3.07, 4.09, -10, 10) && !shadowGone) {
+            shadowGone = true;
+            showingShadow = false;
+            glUniform1i(currEffectID, 1);
+        }
+        
+        // See if we should spawn slendy
+        if (timeTicks > slenderTime && !slendyRendered && !checkAngle(2.323, 5, -5, 5)) {
+            slendyRendered = true;
+        }
+        
+        if (!dontResetTimeDingus && slendyRendered && checkAngle(2.8, 3.8, -5, 5)) {
+            timeForBOO = timeTicks + 30;
+            dontResetTimeDingus = true;
+        }
+        
+        if (timeTicks >= timeForBOO) {
+            slendyRush = true;
+        }
+        
+        if (slendyRush) {
+            double diffX = closeSlenderFaceModel.x - baseSlenderFaceModel.x;
+            double diffY = closeSlenderFaceModel.y - baseSlenderFaceModel.y;
+            double diffZ = closeSlenderFaceModel.z - baseSlenderFaceModel.z;
+            
+            double diffRX = closeSlenderFaceModel.rx - baseSlenderFaceModel.rx;
+            double diffRY = closeSlenderFaceModel.ry - baseSlenderFaceModel.ry;
+            double diffRZ = closeSlenderFaceModel.rz - baseSlenderFaceModel.rz;
+            
+            baseSlenderFaceModel.x += diffX / 8;
+            baseSlenderFaceModel.y += diffY / 8;
+            baseSlenderFaceModel.z += diffZ / 8;
+            
+            baseSlenderFaceModel.rx += diffRX / 8;
+            baseSlenderFaceModel.ry += diffRY / 8;
+            baseSlenderFaceModel.rz += diffRZ / 8;
+            
+            double bDiffX = closeSlenderBodyModel.x - baseSlenderBodyModel.x;
+            double bDiffY = closeSlenderBodyModel.y - baseSlenderBodyModel.y;
+            double bDiffZ = closeSlenderBodyModel.z - baseSlenderBodyModel.z;
+            
+            double bDiffRX = closeSlenderBodyModel.rx - baseSlenderBodyModel.rx;
+            double bDiffRY = closeSlenderBodyModel.ry - baseSlenderBodyModel.ry;
+            double bDiffRZ = closeSlenderBodyModel.rz - baseSlenderBodyModel.rz;
+            
+            baseSlenderBodyModel.x += bDiffX / 8;
+            baseSlenderBodyModel.y += bDiffY / 8;
+            baseSlenderBodyModel.z += bDiffZ / 8;
+            
+            baseSlenderBodyModel.rx += bDiffRX / 8;
+            baseSlenderBodyModel.ry += bDiffRY / 8;
+            baseSlenderBodyModel.rz += bDiffRZ / 8;
+            
+            // Pull camera towards slenderbro
+            suggestAngle(3.792, 0.08);
+            
+            stress = 999999999;
+            
+            glUniform1i(currEffectID, 2);
+            glUniform1i(dyingID, 1);
+            
+            showingShadow = true;
+            
+            // Check 'death zone'
+            if (checkAngle(3.5, 6, -5, 5)) {
+                dyingness++;
+                glUniform1f(darkFactorID, (float) dyingness / 80.0);
+            }
+        }
+        
         // see if we should twitch slendy
         if (timeTicks > timeToNextTwitch) {
             if (twitching) {
-                slenderModel.rx = baseSlenderModel.rx + (rand() % 50) - 25;
-                slenderModel.ry = baseSlenderModel.ry + (rand() % 50) - 25;
+                slenderFaceModel.rx = baseSlenderFaceModel.rx + (rand() % 80) - 40;
+                slenderFaceModel.ry = baseSlenderFaceModel.ry + (rand() % 80) - 40;
                 timeToNextTwitch = timeTicks + rand() % 20 + 2;
                 twitching = false;
             }
             else {
-                slenderModel = baseSlenderModel;
-                timeToNextTwitch = timeTicks + rand() % 40 + 10;
+                slenderFaceModel = baseSlenderFaceModel;
+                timeToNextTwitch = timeTicks + rand() % 20 + 10;
                 twitching = true;
             }
         }
         
-        slenderModel.x += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
-        slenderModel.y += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
-        slenderModel.z += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
+        slenderFaceModel.x += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
+        slenderFaceModel.y += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
+        slenderFaceModel.z += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
         
         
+        // Use our shader
+        glUseProgram(programID);
         
 		// Render to our framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
@@ -433,9 +564,6 @@ int main( void )
 
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// Use our shader
-		glUseProgram(programID);
 
 		// Compute the MVP matrix from keyboard and mouse input
 		computeMatricesFromInputs();
@@ -451,8 +579,17 @@ int main( void )
 
         
         
-        setMaterial(1, 1, 1, 1, 0.1);
-        drawShapes(slenderFace, pos_slender, nor_slender, ind_slender, slenderFace[0].mesh.indices.size(), slenderModel);
+        if (slendyRendered) {
+            setMaterial(0, 0, 0, 0, 0);
+            drawShapes(slenderBody, pos_slenderB, nor_slenderB, ind_slenderB, slenderBody[0].mesh.indices.size(), baseSlenderBodyModel);
+            setMaterial(1, 1, 1, 1, 0.1);
+            drawShapes(slenderFace, pos_slender, nor_slender, ind_slender, slenderFace[0].mesh.indices.size(), slenderFaceModel);
+        }
+        
+        if (showingShadow) {
+            setMaterial(0, 0, 0, 0, 0);
+            drawShapes(shadowMan, pos_shadow, nor_shadow, ind_shadow, shadowMan[0].mesh.indices.size(), shadowModel);
+        }
         setMaterial(0.191, 0.211, 0.125, 0.6, 0.7);
         drawShapes(room,        pos_room,    nor_room,    ind_room,    room[0].mesh.indices.size(), roomModel);
         setMaterial(0.292, 0.149, 0.149, 0.1, 0.4);
@@ -466,8 +603,7 @@ int main( void )
         setMaterial(0, 0, 0, 0, 0);
         drawShapes(clockHand, pos_clockH, nor_clockH, ind_clockH, clockHand[0].mesh.indices.size(), hourHandModel);
         drawShapes(clockHand, pos_clockH, nor_clockH, ind_clockH, clockHand[0].mesh.indices.size(), minuteHandModel);
-        //        setMaterial(0, 0, 0, 0, 0);
-        //        drawShapes(shadowMan, pos_shadow, nor_shadow, ind_shadow, shadowMan[0].mesh.indices.size(), shadowModel);
+
         
         glUniform1i(collectibleID, 1);
         drawShapes(light, pos_light, nor_light, ind_light, light[0].mesh.indices.size(), lightModel);
@@ -476,9 +612,9 @@ int main( void )
         // Check if we should spawn new light
         if (timeTicks > times[lightNdx + 1]) {
             lightNdx++;
-            lightModel.x = lol[lightNdx].x;
-            lightModel.y = lol[lightNdx].y;
-            lightModel.z = lol[lightNdx].z;
+            lightModel.x = lightPosns[lightNdx].x;
+            lightModel.y = lightPosns[lightNdx].y;
+            lightModel.z = lightPosns[lightNdx].z;
             showingLight = true;
         }
         
@@ -487,6 +623,7 @@ int main( void )
             printf("yey we did it\n");
             lightModel.x = 10000; // hide light till next time
             showingLight = false;
+            stress -= 300;
         }
         
         
@@ -535,9 +672,9 @@ int main( void )
         
         
         
-        slenderModel.x = baseSlenderModel.x;
-        slenderModel.y = baseSlenderModel.y;
-        slenderModel.z = baseSlenderModel.z;
+        slenderFaceModel.x = baseSlenderFaceModel.x;
+        slenderFaceModel.y = baseSlenderFaceModel.y;
+        slenderFaceModel.z = baseSlenderFaceModel.z;
 
 	} // Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&

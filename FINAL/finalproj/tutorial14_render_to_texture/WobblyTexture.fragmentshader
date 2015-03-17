@@ -7,12 +7,14 @@ uniform float time;
 
 // some const, tweak for best look
 //const float sampleDist = 0.5;
-const float sampleStrength = 4.2;
+const float sampleStrength = 8.2;
 
+uniform int effect;  // 0 = nothing, 1 = horizontal blur, 2 = radial blur, 3 = bulge
+uniform float bulginess;
+uniform float darkFactor;
+uniform int dying;
 
 void bulge() {
-    float bulginess = 0.5 * sin(time/3) + 1.5;
-    
     float r = sqrt( pow((UV.x - 0.5),2.0) + pow((UV.y - 0.5), 2));
     float a = atan( UV.y - 0.5, UV.x - 0.5 );
     float rn = pow(r, bulginess) / 0.5;
@@ -23,7 +25,7 @@ void bulge() {
 }
 
 void blur(bool horizontal) {
-    float sampleDist = 1.49 * sin(time/0.5) + 1.09;
+    float sampleDist = 1.49 * sin(time/0.5) + 1.49;
     
     // some sample positions
     float samples[10] =
@@ -37,6 +39,7 @@ void blur(bool horizontal) {
     if (horizontal) {
         dir = vec2(0.5, 0);
         samples = float[](-0.05, -0.04, -0.03, -0.02, -0.01, 0.01, 0.02, 0.03, 0.04, 0.05);
+        sampleDist = 0.1 * sin(time / 6) + 0.11;
     }
     
     // calculate the distance to the center of the screen
@@ -70,16 +73,27 @@ void blur(bool horizontal) {
 }
 
 float tunnelVision() {
-    float darkening = length(0.5 - UV);
-    float darkFactor = sin(time/3) * 0.5 + 1.5;
-    return pow(darkening, darkFactor);
+    float darkening = length(0.5 - UV) * darkFactor;
+    return darkening;
 }
 
 void main(){
-//    blur(false);
-//    bulge();
-    
-    gl_FragColor = texture2D(tex, UV); // No effect
+    if (effect == 0) {
+        gl_FragColor = texture2D(tex, UV); // No effect
+    }
+    else if (effect == 1) {
+        blur(true);
+    }
+    else if (effect == 2) {
+        blur(false);
+    }
+    else if (effect == 3) {
+        bulge();
+    }
     
     gl_FragColor = mix(gl_FragColor, vec4(0, 0, 0, 1), tunnelVision());
+    
+    if (dying == 1) { // Make screen red, DANGA ZOOOONE
+        gl_FragColor = mix(gl_FragColor, vec4(1, 0, 0, 1), tunnelVision());
+    }
 }
