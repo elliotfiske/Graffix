@@ -29,6 +29,7 @@ int vertexNormal_modelspaceID;
 GLuint diffuseMatID;
 GLuint shininessID;
 GLuint ambientID;
+GLuint collectibleID;
 
 /** Defines everything we need to make the model matrix */
 typedef struct model_pos {
@@ -136,6 +137,22 @@ void drawShapes(std::vector<tinyobj::shape_t> shape, GLuint vertexBuffer, GLuint
     glDisableVertexAttribArray(vertexNormal_modelspaceID);
 }
 
+void drawPoint(glm::vec3 point) {
+    glm::mat4 ProjectionMatrix = getProjectionMatrix();
+    glm::mat4 ViewMatrix = getViewMatrix();
+    glm::mat4 ModelMatrix = glm::mat4(1.0);
+    glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+    
+    // Send our transformation to the currently bound shader,
+    // in the "MVP" uniform
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+    glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+    glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+    static GLfloat g_point_buffer_data[3] = { 0, 0, 0 };
+    
+}
+
 int main( void )
 {
 	// Initialise GLFW
@@ -168,13 +185,15 @@ int main( void )
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetCursorPos(window, 1024/2, 768/2);
 
-	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	// Black background
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS);
+
 
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "StandardShadingRTT.vertexshader", "StandardShadingRTT.fragmentshader" );
@@ -186,6 +205,7 @@ int main( void )
     diffuseMatID = glGetUniformLocation(programID, "diffuse_color");
     shininessID = glGetUniformLocation(programID, "shininess");
     ambientID = glGetUniformLocation(programID, "ambient");
+    collectibleID = glGetUniformLocation(programID, "collectible");
 
 	// Get a handle for our buffers
 	vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
@@ -237,17 +257,6 @@ int main( void )
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
-	//// Alternative : Depth texture. Slower, but you can sample it later in your shader
-	//GLuint depthTexture;
-	//glGenTextures(1, &depthTexture);
-	//glBindTexture(GL_TEXTURE_2D, depthTexture);
-	//glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT24, 1024, 768, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
-
     vector<tinyobj::shape_t> slenderFace;
     GLuint pos_slender, nor_slender, ind_slender;
     
@@ -269,6 +278,9 @@ int main( void )
     vector<tinyobj::shape_t> clockFace;
     GLuint pos_clockF, nor_clockF, ind_clockF;
     
+    vector<tinyobj::shape_t> clockHand;
+    GLuint pos_clockH, nor_clockH, ind_clockH;
+    
     loadShapes("slenderFace.obj", slenderFace, &pos_slender, &nor_slender, &ind_slender);
 //    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
     loadShapes("sheets.obj", sheets,       &pos_sheets,  &nor_sheets,  &ind_sheets);
@@ -276,6 +288,7 @@ int main( void )
     loadShapes("door.obj", door,           &pos_door,    &nor_door,    &ind_door);
     loadShapes("clockBody.obj", clockBase, &pos_clockB,  &nor_clockB,  &ind_clockB);
     loadShapes("clockFace.obj", clockFace, &pos_clockF,  &nor_clockF,  &ind_clockF);
+    loadShapes("clockHand.obj", clockHand, &pos_clockH,  &nor_clockH,  &ind_clockH);
     
     
 	// Set "renderedTexture" as our colour attachement #0
@@ -324,7 +337,11 @@ int main( void )
     ModelPos shadowModel = {20, 0, -20, 0, 0, 0};
     ModelPos clockModel = {12, -4, 0, 0, 0, 0};
     ModelPos clockFaceModel = {10.1, 6.7, 0, 0, -90, 0};
+    ModelPos hourHandModel = {9.9,   6.7, 0, -15, 0, 0};
+    ModelPos minuteHandModel = {9.9,   6.7, 0, 0, 0, 0};
     
+    
+    glm::vec3 currLight = glm::vec3(0, 2, -10);
     
     // Set up scroll wheel and key callbacks in control.cpp
     setUpCallbacks();
@@ -333,6 +350,12 @@ int main( void )
     
 	do{
         timeTicks++;
+        // 60 fps, should take 180 seconds to go 360 degrees
+        // 360 degrees / 180 seconds * 1 second / 60 frames = 1/30 = 0.0333
+        minuteHandModel.rx += 0.0333;
+        
+        // 15 degrees / 180 seconds * 1 second / 60 frames = 0.0014
+        hourHandModel.rx += 0.0014;
 
         // see if we should twitch slendy
         if (timeTicks > timeToNextTwitch) {
@@ -375,6 +398,8 @@ int main( void )
 		// Set our "myTextureSampler" sampler to user Texture Unit 0
 		glUniform1i(TextureID, 0);
 
+        
+        
         setMaterial(1, 1, 1, 1, 0.1);
         drawShapes(slenderFace, pos_slender, nor_slender, ind_slender, slenderFace[0].mesh.indices.size(), slenderModel);
         setMaterial(0.191, 0.211, 0.125, 0.6, 0.7);
@@ -387,7 +412,11 @@ int main( void )
         drawShapes(clockBase, pos_clockB, nor_clockB, ind_clockB, clockBase[0].mesh.indices.size(), clockModel);
         setMaterial(0.8, 0.8, 0.8, 0, 0.7);
         drawShapes(clockFace, pos_clockF, nor_clockF, ind_clockF, clockFace[0].mesh.indices.size(), clockFaceModel);
+        setMaterial(0, 0, 0, 0, 0);
+        drawShapes(clockHand, pos_clockH, nor_clockH, ind_clockH, clockHand[0].mesh.indices.size(), hourHandModel);
+        drawShapes(clockHand, pos_clockH, nor_clockH, ind_clockH, clockHand[0].mesh.indices.size(), minuteHandModel);
         
+        drawPoint(currLight);
 //        setMaterial(0, 0, 0, 0, 0);
 //        drawShapes(shadowMan, pos_shadow, nor_shadow, ind_shadow, shadowMan[0].mesh.indices.size(), shadowModel);
         
