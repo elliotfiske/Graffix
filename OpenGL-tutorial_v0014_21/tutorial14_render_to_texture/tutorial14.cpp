@@ -45,6 +45,19 @@ int timeTicks = 0;
 
 vector<tinyobj::material_t> materials;
 
+void loadPoints(GLuint *posBufID) {
+    // Send the position array to the GPU
+    static GLfloat g_point_buffer_data[3] = {0.1, 0.2, -0.3};
+    glGenBuffers(1, posBufID);
+    glBindBuffer(GL_ARRAY_BUFFER, *posBufID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_point_buffer_data), g_point_buffer_data, GL_STATIC_DRAW);
+    
+    // Unbind the arrays
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    assert(glGetError() == GL_NO_ERROR);
+}
+
 void loadShapes(const string &objFile, std::vector<tinyobj::shape_t>& shapes, GLuint *posBufID, GLuint *norBufID, GLuint *indBufID) {
     string err = tinyobj::LoadObj(shapes, materials, objFile.c_str());
     if(!err.empty()) {
@@ -68,11 +81,6 @@ void loadShapes(const string &objFile, std::vector<tinyobj::shape_t>& shapes, GL
     glGenBuffers(1, indBufID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *indBufID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indBuf.size()*sizeof(unsigned int), &indBuf[0], GL_STATIC_DRAW);
-    
-    // Unbind the arrays
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    assert(glGetError() == GL_NO_ERROR);
 }
 
 void setMaterial(float r, float g, float b, float shininess, float ambient) {
@@ -137,20 +145,35 @@ void drawShapes(std::vector<tinyobj::shape_t> shape, GLuint vertexBuffer, GLuint
     glDisableVertexAttribArray(vertexNormal_modelspaceID);
 }
 
-void drawPoint(glm::vec3 point) {
+void drawPoint(glm::vec3 point, GLuint posBufID) {
     glm::mat4 ProjectionMatrix = getProjectionMatrix();
     glm::mat4 ViewMatrix = getViewMatrix();
-    glm::mat4 ModelMatrix = glm::mat4(1.0);
+    glm::mat4 ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 2, -5));
     glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
+    // Tell shader we're drawing points now
+    glUniform1i(collectibleID, 1);
     
     // Send our transformation to the currently bound shader,
     // in the "MVP" uniform
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
     glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
     glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
-    static GLfloat g_point_buffer_data[3] = { 0, 0, 0 };
     
+    glEnableVertexAttribArray(vertexPosition_modelspaceID);
+    glBindBuffer(GL_ARRAY_BUFFER, posBufID);
+    glVertexAttribPointer(
+                          vertexPosition_modelspaceID, // The attribute we want to configure
+                          3,                  // size
+                          GL_FLOAT,           // type
+                          GL_FALSE,           // normalized?
+                          0,                  // stride
+                          (void*)0            // array buffer offset
+                          );
+    glDrawArrays(GL_POINTS, 0, 1);
+    
+    // Tell shader we're done drawing points
+    glUniform1i(collectibleID, 0);
 }
 
 int main( void )
@@ -205,7 +228,7 @@ int main( void )
     diffuseMatID = glGetUniformLocation(programID, "diffuse_color");
     shininessID = glGetUniformLocation(programID, "shininess");
     ambientID = glGetUniformLocation(programID, "ambient");
-    collectibleID = glGetUniformLocation(programID, "collectible");
+    collectibleID = glGetUniformLocation(programID, "isCollectible");
 
 	// Get a handle for our buffers
 	vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
@@ -281,6 +304,8 @@ int main( void )
     vector<tinyobj::shape_t> clockHand;
     GLuint pos_clockH, nor_clockH, ind_clockH;
     
+    GLuint pos_collectible;
+    
     loadShapes("slenderFace.obj", slenderFace, &pos_slender, &nor_slender, &ind_slender);
 //    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
     loadShapes("sheets.obj", sheets,       &pos_sheets,  &nor_sheets,  &ind_sheets);
@@ -289,6 +314,9 @@ int main( void )
     loadShapes("clockBody.obj", clockBase, &pos_clockB,  &nor_clockB,  &ind_clockB);
     loadShapes("clockFace.obj", clockFace, &pos_clockF,  &nor_clockF,  &ind_clockF);
     loadShapes("clockHand.obj", clockHand, &pos_clockH,  &nor_clockH,  &ind_clockH);
+    
+    
+    loadPoints(&pos_collectible);
     
     
 	// Set "renderedTexture" as our colour attachement #0
@@ -416,7 +444,7 @@ int main( void )
         drawShapes(clockHand, pos_clockH, nor_clockH, ind_clockH, clockHand[0].mesh.indices.size(), hourHandModel);
         drawShapes(clockHand, pos_clockH, nor_clockH, ind_clockH, clockHand[0].mesh.indices.size(), minuteHandModel);
         
-        drawPoint(currLight);
+        drawPoint(currLight, pos_collectible);
 //        setMaterial(0, 0, 0, 0, 0);
 //        drawShapes(shadowMan, pos_shadow, nor_shadow, ind_shadow, shadowMan[0].mesh.indices.size(), shadowModel);
         
