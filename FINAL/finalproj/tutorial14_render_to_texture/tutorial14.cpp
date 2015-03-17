@@ -188,7 +188,7 @@ int main( void )
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Tutorial 14 - Render To Texture", NULL, NULL);
+	window = glfwCreateWindow( 1024, 768, "SLUMBER", NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window.\n" );
 		glfwTerminate();
@@ -282,6 +282,9 @@ int main( void )
     vector<tinyobj::shape_t> slenderFace;
     GLuint pos_slender, nor_slender, ind_slender;
     
+    vector<tinyobj::shape_t> slenderBody;
+    GLuint pos_slenderB, nor_slenderB, ind_slenderB;
+    
     vector<tinyobj::shape_t> shadowMan;
     GLuint pos_shadow, nor_shadow, ind_shadow;
     
@@ -309,6 +312,7 @@ int main( void )
     GLuint pos_collectible;
     
     loadShapes("slenderFace.obj", slenderFace, &pos_slender, &nor_slender, &ind_slender);
+    loadShapes("slenderBod.obj", slenderBody, &pos_slenderB, &nor_slenderB, &ind_slenderB);
 //    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
     loadShapes("sheets.obj", sheets,       &pos_sheets,  &nor_sheets,  &ind_sheets);
     loadShapes("room.obj", room,           &pos_room,    &nor_room,    &ind_room);
@@ -354,10 +358,14 @@ int main( void )
 	GLuint timeID = glGetUniformLocation(quad_programID, "time");
 
 
-    ModelPos baseSlenderModel = { -3, 1.8, -2,
-        0, -45, -13  };
-    ModelPos slenderModel = baseSlenderModel;
+    
+    ModelPos baseSlenderFaceModel = { 4, 12, -20, 0, 90, 0 }; // Standing menacingly
+    ModelPos slenderFaceModel = baseSlenderFaceModel;
     bool twitching = false;
+
+    ModelPos closeSlenderFaceModel = { -3, 1.8, -2, 0, -45, -13  }; // UP IN YO GRILL
+    
+    ModelPos baseSlenderBodyModel = {4, 0, -20, 0, -90, 0 };
     
     
     ModelPos roomModel = { 0, 0, 0,
@@ -409,21 +417,21 @@ int main( void )
         // see if we should twitch slendy
         if (timeTicks > timeToNextTwitch) {
             if (twitching) {
-                slenderModel.rx = baseSlenderModel.rx + (rand() % 50) - 25;
-                slenderModel.ry = baseSlenderModel.ry + (rand() % 50) - 25;
+                slenderFaceModel.rx = baseSlenderFaceModel.rx + (rand() % 50) - 25;
+                slenderFaceModel.ry = baseSlenderFaceModel.ry + (rand() % 50) - 25;
                 timeToNextTwitch = timeTicks + rand() % 20 + 2;
                 twitching = false;
             }
             else {
-                slenderModel = baseSlenderModel;
+                slenderFaceModel = baseSlenderFaceModel;
                 timeToNextTwitch = timeTicks + rand() % 40 + 10;
                 twitching = true;
             }
         }
         
-        slenderModel.x += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
-        slenderModel.y += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
-        slenderModel.z += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
+        slenderFaceModel.x += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
+        slenderFaceModel.y += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
+        slenderFaceModel.z += (float) (rand() % 10 / 10.0 * (rand() % 10) / 10.0) / 5.0 - 1.0;
         
         
         
@@ -451,8 +459,10 @@ int main( void )
 
         
         
+        setMaterial(0, 0, 0, 0, 0);
+        drawShapes(slenderBody, pos_slenderB, nor_slenderB, ind_slenderB, slenderBody[0].mesh.indices.size(), baseSlenderBodyModel);
         setMaterial(1, 1, 1, 1, 0.1);
-        drawShapes(slenderFace, pos_slender, nor_slender, ind_slender, slenderFace[0].mesh.indices.size(), slenderModel);
+        drawShapes(slenderFace, pos_slender, nor_slender, ind_slender, slenderFace[0].mesh.indices.size(), slenderFaceModel);
         setMaterial(0.191, 0.211, 0.125, 0.6, 0.7);
         drawShapes(room,        pos_room,    nor_room,    ind_room,    room[0].mesh.indices.size(), roomModel);
         setMaterial(0.292, 0.149, 0.149, 0.1, 0.4);
@@ -535,9 +545,9 @@ int main( void )
         
         
         
-        slenderModel.x = baseSlenderModel.x;
-        slenderModel.y = baseSlenderModel.y;
-        slenderModel.z = baseSlenderModel.z;
+        slenderFaceModel.x = baseSlenderFaceModel.x;
+        slenderFaceModel.y = baseSlenderFaceModel.y;
+        slenderFaceModel.z = baseSlenderFaceModel.z;
 
 	} // Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
