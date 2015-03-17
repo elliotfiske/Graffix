@@ -1,0 +1,2 @@
+#!/bin/sh
+make -C /Users/elliotfiske/471/FINAL\ PROJECT\ cmade -f /Users/elliotfiske/471/FINAL\ PROJECT\ cmade/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all

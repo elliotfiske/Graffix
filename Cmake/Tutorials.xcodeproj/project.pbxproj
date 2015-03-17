@@ -14055,6 +14055,7 @@
 					"-framework",
 					OpenGL,
 					"/Users/elliotfiske/471/Cmake/external/glfw-3.0.3/src/Debug/libglfw3.a",
+					/usr/local/Cellar/glew/1.11.0/include,
 					/Users/elliotfiske/471/Cmake/external/Debug/libGLEW_190.a,
 					"-framework",
 					AGL,
