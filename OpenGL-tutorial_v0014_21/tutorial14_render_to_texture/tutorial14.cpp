@@ -26,6 +26,21 @@ using namespace std;
 
 int vertexPosition_modelspaceID;
 int vertexNormal_modelspaceID;
+GLuint diffuseMatID;
+GLuint shininessID;
+GLuint ambientID;
+
+/** Defines everything we need to make the model matrix */
+typedef struct model_pos {
+    float x, y, z;
+    float rx, ry, rz;
+} ModelPos;
+
+// Matrices
+GLuint MatrixID;
+GLuint ModelMatrixID;
+GLuint ViewMatrixID;
+int timeTicks = 0;
 
 vector<tinyobj::material_t> materials;
 
@@ -59,8 +74,30 @@ void loadShapes(const string &objFile, std::vector<tinyobj::shape_t>& shapes, GL
     assert(glGetError() == GL_NO_ERROR);
 }
 
-void drawShapes(std::vector<tinyobj::shape_t> shape, int vertexBuffer, int normalBuffer, int indexBuffer, int numVertices) {
-    // 1rst attribute buffer : vertices
+void setMaterial(float r, float g, float b, float shininess, float ambient) {
+    glUniform3f(diffuseMatID, r, g, b);
+    glUniform1f(shininessID, shininess);
+    glUniform1f(ambientID, ambient);
+}
+
+void drawShapes(std::vector<tinyobj::shape_t> shape, GLuint vertexBuffer, GLuint normalBuffer, GLuint indexBuffer, GLuint numVertices, ModelPos modelPosition) {
+    glm::mat4 TransMatrix = glm::translate(glm::mat4(1.0), glm::vec3(modelPosition.x, modelPosition.y, modelPosition.z));
+    glm::mat4 XRotMatrix  = glm::rotate(glm::mat4(1.0), modelPosition.rx, glm::vec3(1.0, 0.0, 0.0));
+    glm::mat4 YRotMatrix  = glm::rotate(glm::mat4(1.0), modelPosition.ry, glm::vec3(0.0, 1.0, 0.0));
+    glm::mat4 ZRotMatrix  = glm::rotate(glm::mat4(1.0), modelPosition.rz, glm::vec3(0.0, 0.0, 1.0));
+    
+    glm::mat4 ProjectionMatrix = getProjectionMatrix();
+    glm::mat4 ViewMatrix = getViewMatrix();
+    glm::mat4 ModelMatrix = TransMatrix * XRotMatrix * YRotMatrix * ZRotMatrix;
+    glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+    
+    // Send our transformation to the currently bound shader,
+    // in the "MVP" uniform
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+    glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+    glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+    
+    // 1rst attribute buffer : vertices`1
     glEnableVertexAttribArray(vertexPosition_modelspaceID);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glVertexAttribPointer(
@@ -103,7 +140,7 @@ void drawShapes(std::vector<tinyobj::shape_t> shape, int vertexBuffer, int norma
     glDrawElements(
                    GL_TRIANGLES,      // mode
                    numVertices*3,    // count
-                   GL_UNSIGNED_SHORT, // type
+                   GL_UNSIGNED_INT, // type
                    (void*)0           // element array buffer offset
                    );
     
@@ -159,13 +196,16 @@ int main( void )
 	GLuint programID = LoadShaders( "StandardShadingRTT.vertexshader", "StandardShadingRTT.fragmentshader" );
 
 	// Get a handle for our "MVP" uniform
-	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-	GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
-	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
+	MatrixID = glGetUniformLocation(programID, "MVP");
+	ViewMatrixID = glGetUniformLocation(programID, "V");
+	ModelMatrixID = glGetUniformLocation(programID, "M");
+    diffuseMatID = glGetUniformLocation(programID, "diffuse_color");
+    shininessID = glGetUniformLocation(programID, "shininess");
+    ambientID = glGetUniformLocation(programID, "ambient");
 
 	// Get a handle for our buffers
 	vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
-	GLuint vertexUVID = glGetAttribLocation(programID, "vertexUV");
+//	GLuint vertexUVID = glGetAttribLocation(programID, "vertexUV");
 	vertexNormal_modelspaceID = glGetAttribLocation(programID, "vertexNormal_modelspace");
 
 	// Load the texture
@@ -240,8 +280,8 @@ int main( void )
     
     loadShapes("slenderFace.obj", slenderFace, &pos_slender, &nor_slender, &ind_slender);
 //    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
-//    loadShapes("sheets.obj", sheets,       &pos_sheets,  &nor_sheets,  &ind_sheets);
-//    loadShapes("room.obj", room,           &pos_room,    &nor_room,    &ind_room);
+    loadShapes("sheets.obj", sheets,       &pos_sheets,  &nor_sheets,  &ind_sheets);
+    loadShapes("room.obj", room,           &pos_room,    &nor_room,    &ind_room);
     
     
 	// Set "renderedTexture" as our colour attachement #0
@@ -257,7 +297,7 @@ int main( void )
 
 	static const GLfloat g_quad_vertex_buffer_data[] = { 
 		-1.0f, -1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
+		 1.0f, -1.0f, 0.0f, 
 		-1.0f,  1.0f, 0.0f,
 		-1.0f,  1.0f, 0.0f,
 		 1.0f, -1.0f, 0.0f,
@@ -275,9 +315,41 @@ int main( void )
 	GLuint texID = glGetUniformLocation(quad_programID, "renderedTexture");
 	GLuint timeID = glGetUniformLocation(quad_programID, "time");
 
-	
-	do{
 
+    ModelPos baseSlenderModel = { -3, 1.8, -2,
+        0, -45, -13  };
+    ModelPos slenderModel = baseSlenderModel;
+    bool twitching = false;
+    
+    
+    ModelPos roomModel = { 0, 0, 0,
+                           0, 0, 0  };
+    
+    ModelPos sheetModel = {0, 0.3, 0, 0, 0, 0};
+    
+    // Set up scroll wheel and key callbacks in control.cpp
+    setUpCallbacks();
+	
+    int timeToNextTwitch = timeTicks;
+    
+	do{
+        timeTicks++;
+
+        // see if we should twitch slendy
+        if (timeTicks > timeToNextTwitch) {
+            if (twitching) {
+                slenderModel.rx = baseSlenderModel.rx + (rand() % 40) - 20;
+                slenderModel.ry = baseSlenderModel.ry + (rand() % 40) - 20;
+                timeToNextTwitch = timeTicks + rand() % 20 + 2;
+                twitching = false;
+            }
+            else {
+                slenderModel = baseSlenderModel;
+                timeToNextTwitch = timeTicks + rand() % 40 + 10;
+                twitching = true;
+            }
+        }
+        
 		// Render to our framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 		glViewport(0,0,1024,768); // Render on the whole framebuffer, complete from the lower left corner to the upper right
@@ -290,18 +362,8 @@ int main( void )
 
 		// Compute the MVP matrix from keyboard and mouse input
 		computeMatricesFromInputs();
-		glm::mat4 ProjectionMatrix = getProjectionMatrix();
-		glm::mat4 ViewMatrix = getViewMatrix();
-		glm::mat4 ModelMatrix = glm::mat4(1.0);
-		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
-		// Send our transformation to the currently bound shader, 
-		// in the "MVP" uniform
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
-		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
-
-		glm::vec3 lightPos = glm::vec3(4,4,4);
+		glm::vec3 lightPos = glm::vec3(0,0,-14);
 		glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
 
 		// Bind our texture in Texture Unit 0
@@ -310,8 +372,12 @@ int main( void )
 		// Set our "myTextureSampler" sampler to user Texture Unit 0
 		glUniform1i(TextureID, 0);
 
-        drawShapes(slenderFace, pos_slender, nor_slender, ind_slender, slenderFace[0].mesh.indices.size());
-        
+        setMaterial(1, 1, 1, 1, 0.1);
+        drawShapes(slenderFace, pos_slender, nor_slender, ind_slender, slenderFace[0].mesh.indices.size(), slenderModel);
+        setMaterial(0.191, 0.211, 0.125, 0.6, 0.7);
+        drawShapes(room,        pos_room,    nor_room,    ind_room,    room[0].mesh.indices.size(), roomModel);
+        setMaterial(0.292, 0.149, 0.149, 0.1, 0.4);
+        drawShapes(sheets,      pos_sheets,  nor_sheets,  ind_sheets,  sheets[0].mesh.indices.size(), sheetModel);
 
 		// Render to the screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

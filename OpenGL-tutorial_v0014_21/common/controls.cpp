@@ -21,7 +21,7 @@ glm::mat4 getProjectionMatrix(){
 
 
 // Initial position : on +Z
-glm::vec3 position = glm::vec3( 0, 0, 5 ); 
+glm::vec3 position = glm::vec3( 0, 0, 0 );
 // Initial horizontal angle : toward -Z
 float horizontalAngle = 3.14f;
 // Initial vertical angle : none
@@ -35,14 +35,59 @@ float mouseSpeed = 0.005f;
 double totalScrolling = 0;
 float FoV = initialFoV;
 
+double maxH = 4.62, minH = 1.64;
+double maxV = 1.24, minV = -0.44;
+
 void handle_scroll(GLFWwindow* window, double xOffset, double yOffset) {
-    horizontalAngle += xOffset * mouseSpeed;
-    verticalAngle   += yOffset * mouseSpeed;
+    double horizChange = xOffset * mouseSpeed;
+    double vertChange  = yOffset * mouseSpeed;
+    
+    if (horizChange > 0) {
+        double diff = maxH - horizontalAngle;
+        if (diff < 0.2) {
+            horizChange *= diff;
+        }
+    }
+    else {
+        double diff = horizontalAngle - minH;
+        if (diff < 0.2) {
+            horizChange *= diff;
+        }
+    }
+    
+    if (vertChange > 0) {
+        double diff = maxV - verticalAngle;
+        if (diff < 0.2) {
+            vertChange *= diff;
+        }
+    }
+    else {
+        double diff = verticalAngle - minV;
+        if (diff < 0.2) {
+            vertChange *= diff;
+        }
+    }
+    
+    horizontalAngle += horizChange;
+    verticalAngle   += vertChange;
 }
 
+/** User collected a sanity bubble.  Restore some FOV over a bit. */
+double targetFOV = initialFoV;
+void relaxFOV() {
+    targetFOV += 1;
+}
+
+void setUpCallbacks() {
+    glfwSetScrollCallback(window, handle_scroll);
+}
 
 void computeMatricesFromInputs(){
-
+    // Slooowly tighten FOV over time
+    targetFOV -= 0.001;
+    double diff = targetFOV - FoV;
+    FoV += diff / 4;
+    
 	// glfwGetTime is called only once, the first time this function is called
 	static double lastTime = glfwGetTime();
 
@@ -95,7 +140,6 @@ void computeMatricesFromInputs(){
 		position -= right * deltaTime * speed;
 	}
 
-    glfwSetScrollCallback(window, handle_scroll);
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	ProjectionMatrix = glm::perspective(FoV, 4.0f / 3.0f, 0.1f, 100.0f);
