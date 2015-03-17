@@ -75,7 +75,7 @@ void handle_scroll(GLFWwindow* window, double xOffset, double yOffset) {
 /** User collected a sanity bubble.  Restore some FOV over a bit. */
 double targetFOV = initialFoV;
 void relaxFOV() {
-    targetFOV += 1;
+    targetFOV += 1.8;
 }
 
 void setUpCallbacks() {
@@ -84,7 +84,7 @@ void setUpCallbacks() {
 
 void computeMatricesFromInputs(){
     // Slooowly tighten FOV over time
-    targetFOV -= 0.001;
+    targetFOV -= 0.004;
     double diff = targetFOV - FoV;
     FoV += diff / 4;
     
