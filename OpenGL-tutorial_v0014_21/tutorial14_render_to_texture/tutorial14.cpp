@@ -266,6 +266,8 @@ int main( void )
     vector<tinyobj::shape_t> clockBase;
     GLuint pos_clockB, nor_clockB, ind_clockB;
     
+    vector<tinyobj::shape_t> clockFace;
+    GLuint pos_clockF, nor_clockF, ind_clockF;
     
     loadShapes("slenderFace.obj", slenderFace, &pos_slender, &nor_slender, &ind_slender);
 //    loadShapes("shadow.obj", shadowMan,    &pos_shadow,  &nor_shadow,  &ind_shadow);
@@ -273,6 +275,7 @@ int main( void )
     loadShapes("room.obj", room,           &pos_room,    &nor_room,    &ind_room);
     loadShapes("door.obj", door,           &pos_door,    &nor_door,    &ind_door);
     loadShapes("clockBody.obj", clockBase, &pos_clockB,  &nor_clockB,  &ind_clockB);
+    loadShapes("clockFace.obj", clockFace, &pos_clockF,  &nor_clockF,  &ind_clockF);
     
     
 	// Set "renderedTexture" as our colour attachement #0
@@ -319,7 +322,8 @@ int main( void )
     ModelPos sheetModel = {0, 0.3, 0, 0, 0, 0};
     ModelPos doorModel = {0, 0, -46, 0, 0, 0};
     ModelPos shadowModel = {20, 0, -20, 0, 0, 0};
-    ModelPos clockModel = {12, -4, 0, 0, 90, 0};
+    ModelPos clockModel = {12, -4, 0, 0, 0, 0};
+    ModelPos clockFaceModel = {10.1, 6.7, 0, 0, -90, 0};
     
     
     // Set up scroll wheel and key callbacks in control.cpp
@@ -381,6 +385,8 @@ int main( void )
         drawShapes(door, pos_door, nor_door, ind_door, door[0].mesh.indices.size(), doorModel);
         setMaterial(0.110, 0.047, 0.02, 0.1, 0.4);
         drawShapes(clockBase, pos_clockB, nor_clockB, ind_clockB, clockBase[0].mesh.indices.size(), clockModel);
+        setMaterial(0.8, 0.8, 0.8, 0, 0.7);
+        drawShapes(clockFace, pos_clockF, nor_clockF, ind_clockF, clockFace[0].mesh.indices.size(), clockFaceModel);
         
 //        setMaterial(0, 0, 0, 0, 0);
 //        drawShapes(shadowMan, pos_shadow, nor_shadow, ind_shadow, shadowMan[0].mesh.indices.size(), shadowModel);
