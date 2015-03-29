@@ -423,7 +423,7 @@ int main( void )
     float bulginess = 1;
     
     
-    int slenderTime = 60 * 70; // Howl ong till slendy shows up
+    int slenderTime = 60 * 2; // Howl ong till slendy shows up
     
     int timeForBOO = INT_MAX; // Slight delay from see slendy -> be slendified
     bool slendyRush = false;
@@ -629,7 +629,7 @@ int main( void )
         
 
 		// Render to the screen
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0,0,1024,768); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 
 		// Clear the screen

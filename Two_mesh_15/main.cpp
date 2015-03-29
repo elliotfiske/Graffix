@@ -23,8 +23,7 @@ using namespace glm;
 vector<tinyobj::shape_t> bunny;
 vector<tinyobj::shape_t> hand;
 vector<tinyobj::shape_t> finger;
-vector<tinyobj::material_t> materials;
-
+vector<tinyobj::material_t> materials; 
 int g_SM = 1;
 int g_width;
 int g_height;
@@ -92,7 +91,7 @@ void SetMaterial(int i) {
     glUseProgram(ShadeProg);
     switch (i) {
         case 0: //shiny blue plastic
-            glUniform3f(h_uMatAmb, 0.04, 0.02, 0.2);
+            glUniform3f(h_uMatAmb, 0.54, 0.5, 0.9);
             glUniform3f(h_uMatDif, 0.9, 0.16, 0.0);
             glUniform3f(h_uMatSpec, 0.14, 0.2, 0.8);
             glUniform1f(h_uMatShine, 120.0);
@@ -424,12 +423,12 @@ void initGround() {
 
 
   GLfloat nor_Buf_G[] = { 
-      0.0f, 1.0f, 0.0f,
-      0.0f, 1.0f, 0.0f,
-      0.0f, 1.0f, 0.0f,
-      0.0f, 1.0f, 0.0f,
-      0.0f, 1.0f, 0.0f,
-      0.0f, 1.0f, 0.0f,
+      0.0f, -15.0f, 0.0f,
+      0.0f, -15.0f, 0.0f,
+      0.0f, -15.0f, 0.0f,
+      0.0f, -15.0f, 0.0f,
+      0.0f, -15.0f, 0.0f,
+      0.0f, -15.0f, 0.0f,
   };
 
    glGenBuffers(1, &posBufObjG);
@@ -445,7 +444,7 @@ void initGround() {
 void initGL()
 {
 	// Set the background color
-	glClearColor(0.1f, 0.3f, 0.1f, 1.0f);
+	glClearColor(0.6f, 0.3f, 0.6f, 1.0f);
 	// Enable Z-buffer test
 	glEnable(GL_DEPTH_TEST);
    glPointSize(18);
@@ -547,7 +546,7 @@ void drawFingers(float x, float y, float z, float xRot, float zRot, float scale)
     float fingerRot = 0;
     
     // POINTER
-    fingerRot = sin(fingerRotator) * 10;
+    fingerRot = sin(fingerRotator) * 40;
     glm::mat4 fInitTrans = glm::translate( glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
     glm::mat4 fTrans = glm::translate( glm::mat4(1.0f), glm::vec3(0.1f, 0.16f, -0.6f));
     glm::mat4 fRotateX = glm::rotate( glm::mat4(1.0f), fingerRot, glm::vec3(1.0f, 0.0f, 0));
@@ -559,7 +558,7 @@ void drawFingers(float x, float y, float z, float xRot, float zRot, float scale)
     
     
     // MIDDLE
-    fingerRot = sin(fingerRotator + 20) * 10;
+    fingerRot = sin(fingerRotator + 20) * 40;
     fInitTrans = glm::translate( glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
     fTrans = glm::translate( glm::mat4(1.0f), glm::vec3(-0.15f, 0.16f, -0.6f));
     fRotateX = glm::rotate( glm::mat4(1.0f), fingerRot, glm::vec3(1.0f, 0.0f, 0));
@@ -570,7 +569,7 @@ void drawFingers(float x, float y, float z, float xRot, float zRot, float scale)
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
     
     // ring
-    fingerRot = sin(fingerRotator + 40) * 10;
+    fingerRot = sin(fingerRotator + 40) * 40;
     fInitTrans = glm::translate( glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
     fTrans = glm::translate( glm::mat4(1.0f), glm::vec3(-0.43f, 0.16f, -0.4f));
     fRotateX = glm::rotate( glm::mat4(1.0f), fingerRot, glm::vec3(1.0f, 0.0f, 0));
@@ -581,7 +580,7 @@ void drawFingers(float x, float y, float z, float xRot, float zRot, float scale)
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
     
     // pinky
-    fingerRot = sin(fingerRotator + 60) * 10;
+    fingerRot = sin(fingerRotator + 60) * 40;
     fInitTrans = glm::translate( glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
     fTrans = glm::translate( glm::mat4(1.0f), glm::vec3(-0.72f, 0.16f, -0.2f));
     fRotateX = glm::rotate( glm::mat4(1.0f), fingerRot, glm::vec3(1.0f, 0.0f, 0));
@@ -593,6 +592,77 @@ void drawFingers(float x, float y, float z, float xRot, float zRot, float scale)
 }
 
 float wave = 0;
+
+typedef struct handPos {
+    glm::vec3 position, velocity;
+} HandPos;
+
+HandPos hands[10] = {
+        {     glm::vec3(0.0, 0.0, -5.0), glm::vec3(0.0, 0.0, 0.0) },
+        {     glm::vec3(3.0, 0.0, -5.0), glm::vec3(0.0, 0.0, 0.0) },
+        {     glm::vec3(6.0, 0.0, -5.0), glm::vec3(0.0, 0.0, 0.0) },
+        {     glm::vec3(0.0, 0.0, -2.0), glm::vec3(0.0, 0.0, 0.0) },
+        {     glm::vec3(3.0, 0.0, -2.0), glm::vec3(0.0, 0.0, 0.0) },
+        {     glm::vec3(6.0, 0.0, -2.0), glm::vec3(0.0, 0.0, 0.0) },
+        {     glm::vec3(0.0, 0.0, 1.0),  glm::vec3(0.0, 0.0, 0.0) },
+        {     glm::vec3(3.0, 0.0, 1.0),  glm::vec3(0.0, 0.0, 0.0) },
+        {     glm::vec3(6.0, 0.0, 1.0),  glm::vec3(0.0, 0.0, 0.0) },
+        {     glm::vec3(9.0, 4.0, -3.0), glm::vec3(0.0, 0.0, 0.0) },
+};
+
+glm::vec3 rule1(HandPos hand) {
+    glm::vec3 center = glm::vec3(0, 0, 0);
+    for (int ndx = 0; ndx < 10; ndx++) {
+        center += hands[ndx].position;
+    }
+    center /= 10.0;
+    
+    glm::vec3 diff = center - hand.position;
+    diff /= 500.0;
+    
+    return diff;
+}
+
+
+glm::vec3 rule2(HandPos hand, int andx) {
+    vec3 c = glm::vec3(0, 0, 0);
+    
+    for (int ndx = 0; ndx < 10; ndx++) {
+        if (ndx == andx) {
+            continue;
+        }
+        
+        double dist = glm::distance(hands[ndx].position, hand.position);
+        
+        if (dist < 1.0) {
+            c = c - (hands[ndx].position - hand.position);
+        }
+    }
+    
+    c /= 10.0;
+    return c;
+}
+
+
+glm::vec3 rule3(HandPos hand, int andx) {
+    glm::vec3 pvj = vec3(0, 0, 0);
+    
+    for (int ndx = 0; ndx < 10; ndx++) {
+        if (andx == ndx) {
+            continue;
+        }
+        
+        pvj += hands[ndx].velocity;
+    }
+    
+    pvj /= 9.0;
+    
+    vec3 result = pvj - hand.velocity;
+    result /= 80.0;
+    return result;
+}
+
+
 void drawGL()
 {
     fingerRotator += 0.1;
@@ -626,13 +696,42 @@ void drawGL()
     //draw the hand
     SetMaterial(5);
     float handWave = sin(wave) * 50;
-    drawHand(0.0, 0.0, -5.0, 0.0, 0.0, 1.0);
-    drawHand(5.0, 3.0, 0.0, 0.0, 0.0, 1.0);
-    drawHand(0.0, 3.0, 0.0, 0.0, 180.0, 2.0);
-    drawHand(5.0, 0.0, 10.0, 80.0, handWave, 1.0);
-    drawHand(15.0, 3.0, 4.0, 180.0, 0.0, 0.5);
-    drawHand(-10.0, 1.0, -8.0, 0.0, -handWave, 1.0);
-    drawHand(0.0, 40.0, -40.0, 270.0, handWave / 3.0, 30.0);
+    
+    glm::vec3 v1, v2 = vec3(0, 0, 0), v3 = vec3(0, 0, 0);
+    HandPos currHand;
+    
+    for (int ndx = 0; ndx < 9; ndx++) {
+        currHand = hands[ndx];
+        v1 = rule1(currHand);
+        v2 = rule2(currHand, ndx);
+        v3 = rule3(currHand, ndx);
+        
+        v1 /= 3.0;
+        v2 /= 3.0;
+        v3 /= 3.0;
+        
+        hands[ndx].velocity = currHand.velocity + v1 + v2 +v3;
+        hands[ndx].position += hands[ndx].velocity;
+        printf("hand izzat %f\n", hands[ndx].position.x);
+    }
+    
+    
+    
+    for (int ndx = 0; ndx < 9; ndx++) {
+        drawHand(hands[ndx].position.x, hands[ndx].position.y, hands[ndx].position.z, 0, 0, 0.5);
+    }
+    
+//    drawHand(0.0, 0.0, -5.0, 0.0, 0.0, 0.5);
+//    drawHand(3.0, 0.0, -5.0, 0.0, 0.0, 0.5);
+//    drawHand(6.0, 0.0, -5.0, 0.0, 0.0, 0.5);
+//    drawHand(0.0, 0.0, -2.0, 0.0, 0.0, 0.5);
+//    drawHand(3.0, 0.0, -2.0, 0.0, 0.0, 0.5);
+//    drawHand(6.0, 0.0, -2.0, 0.0, 0.0, 0.5);
+//    drawHand(0.0, 0.0, 1.0, 0.0, 0.0, 0.5);
+//    drawHand(3.0, 0.0, 1.0, 0.0, 0.0, 0.5);
+//    drawHand(6.0, 0.0, 1.0, 0.0, 0.0, 0.5);
+//    
+//    drawHand(9.0, 4.0, -3.0, 0.0, 0.0, 0.75);
 
    GLSL::disableVertexAttribArray(h_aPosition);
 	GLSL::disableVertexAttribArray(h_aNormal);
@@ -655,13 +754,9 @@ void drawGL()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBufObjF);
     
     //draw the fingers
-    drawFingers(0.0, 0.0, -5.0, 0.0, 0.0, 1.0);
-    drawFingers(5.0, 3.0, 0.0, 0.0, 0.0, 1.0);
-    drawFingers(0.0, 3.0, 0.0, 0.0, 180.0, 2.0);
-    drawFingers(5.0, 0.0, 10.0, 80.0, handWave, 1.0);
-    drawFingers(15.0, 3.0, 4.0, 180.0, 0.0, 0.5);
-    drawFingers(-10.0, 1.0, -8.0, 0.0, -handWave, 1.0);
-    drawFingers(0.0, 40.0, -40.0, 270.0, handWave / 3.0, 30.0);
+    for (int ndx = 0; ndx < 9; ndx++) {
+        drawFingers(hands[ndx].position.x, hands[ndx].position.y, hands[ndx].position.z, 0, 0, 0.5);
+    }
     
     GLSL::disableVertexAttribArray(h_aPosition);
     GLSL::disableVertexAttribArray(h_aNormal);
@@ -686,21 +781,21 @@ void drawGL()
     
     //draw the bunnies
    glUniform1i(h_uShadeM, 1);
-    SetMaterial(1);
-    drawBunny(5.0, 60.0, 60.0, handWave/10, handWave/10, 40); // GOD BUNNY
-    SetMaterial(2);
-    drawBunny(5.0, 0.0, 5.0, 38, 0, 1);
-    drawBunny(-10.0, 0.0, 9.0, 0, 90, 0.5);
-    drawBunny(5.0, 3.0, 5.0, 19, 0, 1);
-    SetMaterial(3);
-    drawBunny(-15.0, 0.0, 5.0, 0, 90, 1);
-    drawBunny(-5.0, 0.0, 15.0, 0, 90, 1);
-    drawBunny(5.0, 0.0, -8.0, 0, 0, 2);
-    drawBunny(25.0, 5.0, 5.0, 270, 90, 3);
-    SetMaterial(4);
-    drawBunny(-8.0, 0.0, 5.0, 0, 0, 1);
-    drawBunny(5.0, 0.0, -5.0, 180, 0, 1);
-    drawBunny(5.0, 0.0, -15.0, 270, 0, 1);
+//    SetMaterial(1);
+//    drawBunny(5.0, 60.0, 60.0, handWave/10, handWave/10, 40); // GOD BUNNY
+//    SetMaterial(2);
+//    drawBunny(5.0, 0.0, 5.0, 38, 0, 1);
+//    drawBunny(-10.0, 0.0, 9.0, 0, 90, 0.5);
+//    drawBunny(5.0, 3.0, 5.0, 19, 0, 1);
+//    SetMaterial(3);
+//    drawBunny(-15.0, 0.0, 5.0, 0, 90, 1);
+//    drawBunny(-5.0, 0.0, 15.0, 0, 90, 1);
+//    drawBunny(5.0, 0.0, -8.0, 0, 0, 2);
+//    drawBunny(25.0, 5.0, 5.0, 270, 90, 3);
+//    SetMaterial(4);
+//    drawBunny(-8.0, 0.0, 5.0, 0, 0, 1);
+//    drawBunny(5.0, 0.0, -5.0, 180, 0, 1);
+//    drawBunny(5.0, 0.0, -15.0, 270, 0, 1);
     
     GLSL::disableVertexAttribArray(h_aPosition);
     GLSL::disableVertexAttribArray(h_aNormal);
@@ -812,7 +907,7 @@ int main(int argc, char **argv)
 	 initGL();
 	 installShaders("vert.glsl", "frag.glsl");
 
-	glClearColor(0.1f, 0.3f, 0.1f, 1.0f);
+	glClearColor(0.6f, 0.3f, 0.6f, 1.0f);
 
     do{
       drawGL();

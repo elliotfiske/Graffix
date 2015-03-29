@@ -221,6 +221,8 @@ int main( void )
     
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS);
+    
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 
 	// Create and compile our GLSL program from the shaders
