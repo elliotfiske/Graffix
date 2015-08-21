@@ -9,12 +9,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../Prog5/Debug/frag.glsl"
-            timestampString = "446985408.822343"
+            filePath = "main.cpp"
+            timestampString = "448482730.266763"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "9"
-            endingLineNumber = "9">
+            startingLineNumber = "714"
+            endingLineNumber = "714"
+            landmarkName = "drawGL()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -24,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "main.cpp"
-            timestampString = "446984557.372731"
+            timestampString = "448482730.266763"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "335"
-            endingLineNumber = "335"
-            landmarkName = "initHand(std::vector&lt;tinyobj::shape_t&gt;&amp; shape)"
+            startingLineNumber = "715"
+            endingLineNumber = "715"
+            landmarkName = "drawGL()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

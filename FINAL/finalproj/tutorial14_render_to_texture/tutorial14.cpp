@@ -284,6 +284,18 @@ int main( void )
 	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+    
+    // Set "renderedTexture" as our colour attachement #0
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
+    
+    // Set the list of draw buffers.
+    GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+    glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+    
+    // Always check that our framebuffer is ok
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        return false;
+    
 
     vector<tinyobj::shape_t> slenderFace;
     GLuint pos_slender, nor_slender, ind_slender;
@@ -331,17 +343,6 @@ int main( void )
     
     loadPoints(&pos_collectible);
     
-    
-	// Set "renderedTexture" as our colour attachement #0
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
-
-	// Set the list of draw buffers.
-	GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-
-	// Always check that our framebuffer is ok
-	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		return false;
 
 	static const GLfloat g_quad_vertex_buffer_data[] = { 
 		-1.0f, -1.0f, 0.0f,
@@ -423,7 +424,7 @@ int main( void )
     float bulginess = 1;
     
     
-    int slenderTime = 60 * 70; // Howl ong till slendy shows up
+    int slenderTime = 60 * 2; // Howl ong till slendy shows up
     
     int timeForBOO = INT_MAX; // Slight delay from see slendy -> be slendified
     bool slendyRush = false;
@@ -462,7 +463,7 @@ int main( void )
             glUniform1i(currEffectID, 3);
             glUniform1f(bulginessID, bulginess);
             bulginess += 0.004;
-            stress += 2;
+            stress += 5;
         }
         
         if (showingShadow && !checkAngle(3.07, 4.09, -10, 10) && !shadowGone) {
@@ -477,7 +478,7 @@ int main( void )
         }
         
         if (!dontResetTimeDingus && slendyRendered && checkAngle(2.8, 3.8, -5, 5)) {
-            timeForBOO = timeTicks + 30;
+            timeForBOO = timeTicks + 3;
             dontResetTimeDingus = true;
         }
         
@@ -629,7 +630,7 @@ int main( void )
         
 
 		// Render to the screen
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0,0,1024,768); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 
 		// Clear the screen
